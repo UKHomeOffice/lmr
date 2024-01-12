@@ -1,23 +1,24 @@
 'use strict';
 
-const hof = require('hof');
-const Submit = require('./behaviours/submit');
-const Summary = hof.components.summary;
+const SummaryPageBehaviour = require('hof').components.summary;
 
 module.exports = {
   name: 'lmr',
   steps: {
-    '/privacy': {
-      behaviours: [Summary, Submit],
-      fields: ['privacy-check'],
-      sections: require('./sections/summary-data-sections'),
-      backLink: true,
-      next: '/privacy-declaration'
+    '/tenancy-start': {
+      fields: ['move-date'],
+      next: '/tenant-details',
+      continueOnEdit: true
     },
-    '/privacy-declaration': {
-      behaviours: ['complete'],
-      backLink: false,
-      clearSession: true
+    '/tenant-details': {
+      fields: ['tenant-full-name', 'tenant-dob', 'tenant-nationality'],
+      next: '/summary',
+      backLink: 'tenancy-start'
+    },
+    '/summary': {
+      behaviours: [SummaryPageBehaviour],
+      template: 'confirm',
+      sections: require('./sections/summary-data-sections')
     }
   }
 };

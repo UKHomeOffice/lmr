@@ -1,5 +1,19 @@
 {
-  "privacy-check": {
-    "label": "I confirm that I have read and understood the Data Protection statement above."
+  "move-date": {
+    "label": "Move date",
+    "hint": "Example: 21 3 2017"
+  },
+  "tenant-full-name": {
+    "label": "Full name"
+  },
+  "tenant-dob": {
+    "legend": "Date of birth",
+    "hint": "Example: 21 3 1980"
+  },
+  "tenant-nationality": {
+    "label": "Nationality",
+    "options": {
+      "null": "Select a country"
+    }
   }
 }

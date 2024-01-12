@@ -1,18 +1,34 @@
 {
-  "privacy": {
-    "header": "Privacy policy",
+  "tenancy-start": {
     "title": "Landlords make a report",
-    "p1": "The personal information entered on this form will be used for immigration control purposes. It may also be used to support the work of the Home Office and to prevent and detect fraud. The Home Office is the data controller in relation to the information provided, which will be processed in accordance with the Data Protection Act 1998.",
-    "p2": "To ensure the security of the information provided we will only send responses to the email address that the landlord entered on the form. For further information on how the Home Office uses personal data, please see our <a href='https://www.gov.uk/government/organisations/home-office/about/personal-information-charter'>Personal information charter</a>."
+    "header": "When did the person move into your property?"
   },
-  "privacy-declaration": {
+  "tenant-details": {
     "title": "Landlords make a report",
-    "confirmed": "Report submitted",
-    "p1": "Thank you for making a report to the Home Office about an existing occupant who no longer has the right to rent.",
-    "p2": "An email containing the details of the report has been sent to the address you provided. The email contains a unique reference number which you should keep safe, as you may need it to prove that you’re not liable for a civil penalty."
+    "header": "Existing tenant's information"
+  },
+  "summary": {
+    "header": "Summary"
   },
   "confirm": {
     "sections": {
+      "tenants-information": {
+        "header": "Tenant's information"
+      }
+    },
+    "fields": {
+      "move-date": {
+        "label": "Person moved into property"
+      },
+      "tenant-full-name": {
+        "label": "Full name"
+      },
+      "tenant-dob": {
+        "label": "Date of birth"
+      },
+      "tenant-nationality": {
+        "label": "Nationality"
+      }
     }
   }
 }

@@ -1,5 +1,23 @@
 {
-  "privacy-check": {
-    "required": "You must select the checkbox before submitting"
+  "move-date": {
+    "required": "Tell us when the person moved into your property",
+    "notUrl": "Please do not enter a link/url into your answers",
+    "date": "Please enter a valid date",
+    "before": "This date must not be in the future",
+    "after": "This service only applies to tenancy agreements that started after 30 November 2014"
+  },
+  "tenant-full-name": {
+    "required": "Enter tenant's full name",
+    "notUrl": "Please do not enter a link/url into your answers"
+  },
+  "tenant-dob": {
+    "required": "Please enter the tenant's date of birth",
+    "notUrl": "Please do not enter a link/url into your answers",
+    "date": "Please enter a valid date",
+    "over18": "Date of birth entered must reflect 18 years or older"
+  },
+  "tenant-nationality": {
+    "required": "Please enter the tenant's nationality",
+    "notUrl": "Please do not enter a link/url into your answers"
   }
 }
