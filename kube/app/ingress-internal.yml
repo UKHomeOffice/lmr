@@ -1,0 +1,45 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  {{ if eq .KUBE_NAMESPACE .BRANCH_ENV }}
+  name: {{ .APP_NAME }}-internal-{{ .DRONE_SOURCE_BRANCH }}
+  {{ else }}
+  name: {{ .APP_NAME }}-internal
+  {{ end }}
+{{ file .INGRESS_INTERNAL_ANNOTATIONS | indent 2 }}
+spec:
+  ingressClassName: nginx-internal
+  tls:
+    - hosts:
+      {{ if eq .KUBE_NAMESPACE .BRANCH_ENV }}
+        - {{ .DRONE_BUILD_NUMBER }}.internal.sas-lmr-branch.homeoffice.gov.uk
+        - lmr-{{ .DRONE_SOURCE_BRANCH }}.internal.sas-lmr-branch.homeoffice.gov.uk
+      {{ else if eq .KUBE_NAMESPACE .UAT_ENV }}
+        - lmr.internal.uat.sas-notprod.homeoffice.gov.uk
+      {{ else if eq .KUBE_NAMESPACE .STG_ENV }}
+        - lmr.internal.stg.sas-notprod.homeoffice.gov.uk
+      {{ end }}
+      {{ if eq .KUBE_NAMESPACE .BRANCH_ENV }}
+      secretName: branch-tls-internal
+      {{ else }}
+      secretName: ingress-internal
+      {{ end }}
+  rules:
+    {{ if eq .KUBE_NAMESPACE .BRANCH_ENV }}
+    - host: lmr-{{ .DRONE_SOURCE_BRANCH }}.internal.sas-lmr-branch.homeoffice.gov.uk
+    {{ else if eq .KUBE_NAMESPACE .UAT_ENV }}
+    - host: lmr.internal.uat.sas-notprod.homeoffice.gov.uk
+    {{ else if eq .KUBE_NAMESPACE .STG_ENV }}
+    - host: lmr.internal.stg.sas-notprod.homeoffice.gov.uk
+    {{ end }}
+      http:
+        paths:
+          - path: /
+            backend:
+              {{ if eq .KUBE_NAMESPACE .BRANCH_ENV }}
+              serviceName: {{ .APP_NAME }}-{{ .DRONE_SOURCE_BRANCH }}
+              {{ else }}
+              serviceName: {{ .APP_NAME }}
+              {{ end }}
+              servicePort: 10443

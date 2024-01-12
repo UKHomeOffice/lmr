@@ -1,0 +1,9 @@
+<title>{{#t}}pages.privacy.title{{/t}} – GOV.UK</title>
+{{<partials-page}}
+  {{$page-content}}
+    <p>{{#t}}pages.privacy.p1{{/t}}</p>
+    <p>{{#t}}pages.privacy.p2{{/t}}</p>
+    {{#renderField}}privacy-check{{/renderField}}
+    {{#input-submit}}submit-report{{/input-submit}}
+  {{/page-content}}
+{{/partials-page}}

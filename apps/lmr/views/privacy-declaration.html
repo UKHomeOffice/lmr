@@ -1,0 +1,16 @@
+<title>{{#t}}pages.privacy-declaration.title{{/t}} – GOV.UK</title>
+{{<partials-page}}
+  {{$page-content}}
+    <div class="govuk-panel alert-complete govuk-panel--confirmation">
+      <h1 class="govuk-panel__title">
+        {{#t}}pages.privacy-declaration.confirmed{{/t}}
+      </h1>
+      {{#values.reference-number}}
+        <h2 class="govuk-!-font-weight-regular ref-number-heading">Your reference number</h2>
+        <h2 class="govuk-!-font-weight-bold ref-number"><strong>{{values.reference-number}}</strong></h2>
+      {{/values.reference-number}}
+    </div>
+    <p>{{#t}}pages.privacy-declaration.p1{{/t}}</p>
+    <p>{{#t}}pages.privacy-declaration.p2{{/t}}</p>
+  {{/page-content}}
+{{/partials-page}}
