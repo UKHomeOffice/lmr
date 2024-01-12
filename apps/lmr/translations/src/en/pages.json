@@ -1,33 +1,29 @@
 {
-  "property-address": {
-    "header": "Rental property address",
-    "title": "Landlords make a report",
-    "p1": "The address must be in England. You do not need to check a tenant's right to rent for properties in Wales, Scotland or Northern Ireland."
+  "landlord-details": {
+    "header": "Landlord's or agent's information",
+    "title": "Landlords make a report"
   },
   "summary": {
     "header": "Summary"
   },
   "confirm": {
     "sections": {
-      "tenants-information": {
-        "header": "Tenant's information"
+      "landlord-details": {
+        "header": "Landlord's or agent's information"
       }
     },
     "fields": {
-      "address-line-1": {
-        "label": "Address line 1"
+      "landlord-full-name": {
+        "label": "Full name"
       },
-      "address-line-2": {
-        "label": "Address line 2"
+      "company-name": {
+        "label": "Company name"
       },
-      "town-or-city": {
-        "label": "Town / city"
+      "landlord-email": {
+        "label": "Email address"
       },
-      "county": {
-        "label": "County"
-      },
-      "postcode": {
-        "label": "Postcode"
+      "landlord-phone": {
+        "label": "Phone number"
       }
     }
   }

@@ -6,8 +6,8 @@ const SummaryPageBehaviour = require('hof').components.summary;
 module.exports = {
   name: 'lmr',
   steps: {
-    '/property-address': {
-      fields: ['address-line-1', 'address-line-2', 'town-or-city', 'county', 'postcode'],
+    '/landlord-details': {
+      fields: ['landlord-full-name', 'company-name', 'landlord-email', 'landlord-phone'],
       backLink: true,
       next: '/summary'
     },

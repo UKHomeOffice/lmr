@@ -1,39 +1,35 @@
 'use strict';
 
 module.exports = {
-  'tenants-information': {
+  'landlord-details': {
     steps: [
       {
-        step: '/property-address',
-        field: 'address-line-1'
+        step: '/landlord-details',
+        field: 'landlord-full-name'
       },
       {
-        step: '/property-address',
-        field: 'address-line-2',
+        step: '/landlord-details',
+        field: 'company-name',
         parse: (list, req) => {
-          if (req.sessionModel.get('address-line-2') ===  '') {
+          if (req.sessionModel.get('company-name') ===  '') {
             return ' ';
           }
           return list;
         }
       },
       {
-        step: '/property-address',
-        field: 'town-or-city'
+        step: '/landlord-details',
+        field: 'landlord-email'
       },
       {
-        step: '/property-address',
-        field: 'county',
+        step: '/landlord-details',
+        field: 'landlord-phone',
         parse: (list, req) => {
-          if (req.sessionModel.get('county') ===  '') {
+          if (req.sessionModel.get('landlord-phone') ===  '') {
             return ' ';
           }
           return list;
         }
-      },
-      {
-        step: '/property-address',
-        field: 'postcode'
       }
     ]
   }

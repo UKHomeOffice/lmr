@@ -1,22 +1,18 @@
 {
-  "address-line-1":{
-    "required": "Enter the property address line 1",
-    "notUrl": "Please do not enter a link/URL into your answers"
+  "landlord-full-name":{
+    "required": "Enter the landlord's full name",
+    "notUrl": "Please do not enter a link/url into your answers"
   },
-  "address-line-2":{
-    "notUrl": "Please do not enter a link/URL into your answers"
+  "company-name":{
+    "notUrl": "Please do not enter a link/url into your answers"
   },
-  "town-or-city":{
-    "required": "Enter the town/city",
-    "notUrl": "Please do not enter a link/URL into your answers"
+  "landlord-email":{
+    "required": "Enter the landlord's email",
+    "notUrl": "Please do not enter a link/url into your answers",
+    "email": "Enter a valid email"
   },
-  "county":{
-    "notUrl": "Please do not enter a link/URL into your answers"
-  },
-  "postcode":{
-    "required": "Enter the postcode of the rental property",
-    "notUrl": "Please do not enter a link/URL into your answers",
-    "regex": "Your postcode is not in England. If your property is not in England, you do not have to do a right to rent check",
-    "postcode": "Your postcode is not in England. If your property is not in England, you do not have to do a right to rent check"
+  "landlord-phone":{
+    "notUrl": "Please do not enter a link/url into your answers",
+    "internationalPhoneNumber": "Enter a valid phone number"
   }
 }

@@ -1,17 +1,14 @@
 {
-  "address-line-1": {
-    "label": "Address line 1"
+  "landlord-full-name": {
+    "label": "Landlord's or agent's full name"
   },
-  "address-line-2": {
-    "label": "Address line 2 (optional)"
+  "company-name": {
+    "label": "Company name (optional)"
   },
-  "town-or-city": {
-    "label": "Town/City"
+  "landlord-email": {
+    "label": "Email address"
   },
-  "county": {
-    "label": "County (optional)"
-  },
-  "postcode": {
-    "label": "Postcode"
+  "landlord-phone": {
+    "label": "Phone number (optional)"
   }
 }
