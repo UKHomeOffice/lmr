@@ -1,0 +1,14 @@
+{
+  "appName": "Landlords Make a Report",
+  "theme": "govUK",
+  "behaviours": [
+    "hof/components/clear-session"
+  ],
+  "routes": [
+    "./apps/lmr"
+  ],
+  "session": {
+    "name": "lmr.hof.sid"
+  },
+  "getAccessibility": true
+}

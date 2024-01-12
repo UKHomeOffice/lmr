@@ -1,0 +1,44 @@
+{{<govuk-template}}
+  {{$pageTitle}}{{title}}{{/pageTitle}}
+  {{$bodyClasses}}pdf{{/bodyClasses}}
+  {{$head}}
+    <style>
+      {{{css}}}
+      html {
+        background: white;
+      }
+    </style>
+  {{/head}}
+  {{$main}}
+    <main id="content" class="main" role="main">
+      <img src="{{ho-logo}}" alt="Home Office logo"/>
+      <h1>{{title}}</h1>
+      <h2>Time and date: {{dateTime}}</h2>
+      {{#rows}}
+        {{^omitFromPdf}}
+        <h2>{{section}}</h2>
+          <table data-section="{{section}}" class="table-details">
+            <caption class="visuallyhidden">{{section}}</caption>
+            <tbody{{#name}} data-group="{{name}}"{{/name}}>
+            {{#fields}}
+            {{^omitFromPdf}}
+              {{#isSeparator}}
+                <tr class="spacer">
+                  <td colspan="2"></td>
+                </tr>
+              {{/isSeparator}}
+              {{^isSeparator}}
+                <tr data-id="{{field}}"{{#className}} class="{{className}}"{{/className}}>
+                  <td data-label="{{label}}">{{label}}</td>
+                  <td data-value="{{value}}">{{#parsed}}{{parsed}}{{/parsed}}{{^parsed}}{{value}}{{/parsed}}</td>
+                </tr>
+              {{/isSeparator}}
+            {{/omitFromPdf}}
+            {{/fields}}
+            </tbody>
+          </table>
+        {{/omitFromPdf}}
+      {{/rows}}
+    </main>
+  {{/main}}
+{{/govuk-template}}
