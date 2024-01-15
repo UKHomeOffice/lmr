@@ -1,5 +1,17 @@
 {
-  "privacy-check": {
-    "label": "I confirm that I have read and understood the Data Protection statement above."
+  "address-line-1": {
+    "label": "Address line 1"
+  },
+  "address-line-2": {
+    "label": "Address line 2 (optional)"
+  },
+  "town-or-city": {
+    "label": "Town/City"
+  },
+  "county": {
+    "label": "County (optional)"
+  },
+  "postcode": {
+    "label": "Postcode"
   }
 }
