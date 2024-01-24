@@ -19,6 +19,7 @@ trigger:
     - feature/*
     - TLF-*
     - master
+    - TLF-27-28
 
 linting: &linting
   pull: if-not-exists
