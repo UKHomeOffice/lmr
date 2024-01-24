@@ -21,6 +21,7 @@ trigger:
     - master
     - TLF-27-28
 
+
 linting: &linting
   pull: if-not-exists
   image: node:14
@@ -42,6 +43,22 @@ acceptance_tests: &acceptance_tests
   image: mcr.microsoft.com/playwright:v1.12.3-focal
 
 steps:
+  - name: clone_repos
+    image: alpine/git
+    environment:
+      DRONE_GIT_USERNAME:
+        from_secret: drone_git_username
+      DRONE_GIT_TOKEN:
+        from_secret: drone_git_token
+    commands:
+      - git clone https://$${DRONE_GIT_USERNAME}:$${DRONE_GIT_TOKEN}@github.com/UKHomeOfficeForms/hof-services-config.git
+    when:
+      branch:
+        include:
+        - master
+        - feature/*
+      event: [push, pull_request]
+
   - name: setup_deploy
     pull: if-not-exists
     image: node:14
@@ -84,7 +101,7 @@ steps:
       - name: dockersock
         path: /var/run
     when:
-      branch: TLF-27-28
+      branch: master
       event: [push, pull_request]
 
   - name: image_to_quay
