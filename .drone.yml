@@ -91,10 +91,10 @@ steps:
 
   - name: build_image
     image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
-    # environment:
-    #   DOCKER_PASSWORD:
-    #     from_secret: DOCKER_PASSWORD
-      commands:
+    environment:
+      DOCKER_PASSWORD:
+        from_secret: DOCKER_PASSWORD
+    commands:
       # Wait for the docker service to be up
       - echo "Checking for docker availability."
       - n=0; while [ "$n" -lt 60 ] && ! docker stats --no-stream >/dev/null 2>&1; do n=$(( n + 1 )); sleep 1; done
