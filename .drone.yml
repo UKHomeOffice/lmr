@@ -99,7 +99,7 @@ steps:
       - echo "Checking for docker availability."
       - n=0; while [ "$n" -lt 60 ] && ! docker stats --no-stream >/dev/null 2>&1; do n=$(( n + 1 )); sleep 1; done
       - echo "echo docker now available."
-      - docker build -t :$${IMAGE_REPO}:$${DRONE_COMMIT_SHA} .
+      - docker build -t $${IMAGE_URL}:$${IMAGE_REPO}:$${DRONE_COMMIT_SHA} .
     volumes:
       - name: dockersock
         path: /var/run
