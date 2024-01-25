@@ -61,7 +61,7 @@ steps:
 
   - name: setup_deploy
     pull: if-not-exists
-    image: node:14
+    image: node:18.12.0
     environment:
       NOTIFY_KEY: USE_MOCK
     commands:
@@ -72,7 +72,7 @@ steps:
         include:
         - master
       event: [push, pull_request]
-      
+
   - name: linting_deploy
     <<: *linting
     when:
