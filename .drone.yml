@@ -71,8 +71,8 @@ steps:
       branch:
         include:
         - master
-      event: push
-
+      event: [push, pull_request]
+      
   - name: linting_deploy
     <<: *linting
     when:
