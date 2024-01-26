@@ -11,6 +11,7 @@ environment:
   IMAGE_URL: quay.io/ukhomeofficedigital
   IMAGE_REPO: lmr
   GIT_REPO: UKHomeOffice/lmr
+  HOF_CONFIG: hof-services-config/Land_Make_A_Report
   NON_PROD_AVAILABILITY: Mon-Sun 08:00-23:00 Europe/London
   READY_FOR_TEST_DELAY: 20s
 
