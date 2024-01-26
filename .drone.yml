@@ -8,6 +8,7 @@ environment:
   PROD_ENV: sas-lmr-prod
   BRANCH_ENV: sas-lmr-branch
   STG_ENV: sas-lmr-stg
+  UAT_ENV: sas-lmr-uat
   PRODUCTION_URL: www.home-office-forms-demo.homeoffice.gov.uk
   IMAGE_URL: quay.io/ukhomeofficedigital
   IMAGE_REPO: lmr
