@@ -4,21 +4,26 @@ name: default
 type: kubernetes
 
 environment:
-  APP_NAME: hof-demo
-  PROD_ENV: hof-demo
-  BRANCH_ENV: hof-demo-branch
+  APP_NAME: lmr
+  PROD_ENV: sas-lmr-prod
+  BRANCH_ENV: sas-lmr-branch
+  STG_ENV: sas-lmr-stg
+  UAT_ENV: sas-lmr-uat
   PRODUCTION_URL: www.home-office-forms-demo.homeoffice.gov.uk
   IMAGE_URL: quay.io/ukhomeofficedigital
-  IMAGE_REPO: hof-demo
-  GIT_REPO: UKHomeOffice/home-office-forms-demo
+  IMAGE_REPO: lmr
+  GIT_REPO: UKHomeOffice/lmr
+  HOF_CONFIG: hof-services-config/Land_Make_A_Report
   NON_PROD_AVAILABILITY: Mon-Sun 08:00-23:00 Europe/London
   READY_FOR_TEST_DELAY: 20s
 
 trigger:
   branch:
     - feature/*
+    - TLF-*
     - master
-    
+    - TLF-27-28
+
 
 linting: &linting
   pull: if-not-exists
@@ -41,9 +46,25 @@ acceptance_tests: &acceptance_tests
   image: mcr.microsoft.com/playwright:v1.12.3-focal
 
 steps:
+  - name: clone_repos
+    image: alpine/git
+    environment:
+      DRONE_GIT_USERNAME:
+        from_secret: drone_git_username
+      DRONE_GIT_TOKEN:
+        from_secret: drone_git_token
+    commands:
+      - git clone https://$${DRONE_GIT_USERNAME}:$${DRONE_GIT_TOKEN}@github.com/UKHomeOfficeForms/hof-services-config.git
+    when:
+      branch:
+        include:
+        - master
+        - feature/*
+      event: [push, pull_request]
+
   - name: setup_deploy
     pull: if-not-exists
-    image: node:18
+    image: node:18.12.0
     environment:
       NOTIFY_KEY: USE_MOCK
     commands:
@@ -53,7 +74,7 @@ steps:
       branch:
         include:
         - master
-      event: push
+      event: [push, pull_request]
 
   - name: linting_deploy
     <<: *linting
@@ -73,6 +94,9 @@ steps:
 
   - name: build_image
     image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
+    environment:
+      DOCKER_PASSWORD:
+        from_secret: DOCKER_PASSWORD
     commands:
       - n=0; while [ "$n" -lt 60 ] && [ ! docker stats --no-stream ]; do n=$(( n + 1 )); sleep 1; done
       - docker build --no-cache -t $${IMAGE_REPO}:$${DRONE_COMMIT_SHA} .
@@ -90,7 +114,7 @@ steps:
       DOCKER_PASSWORD:
         from_secret: DOCKER_PASSWORD
     commands:
-    - docker login -u="ukhomeofficedigital+hof_demo" -p=$${DOCKER_PASSWORD} quay.io
+    - docker login -u="ukhomeofficedigital+lmr" -p=$${DOCKER_PASSWORD} quay.io
     - docker tag $${IMAGE_REPO}:$${DRONE_COMMIT_SHA} $${IMAGE_URL}/$${IMAGE_REPO}:$${DRONE_COMMIT_SHA}
     - docker push $${IMAGE_URL}/$${IMAGE_REPO}:$${DRONE_COMMIT_SHA}
     when:
@@ -115,7 +139,7 @@ steps:
 
   - name: setup_branch
     pull: if-not-exists
-    image: node:14
+    image: node:18
     environment:
       NOTIFY_KEY: USE_MOCK
     commands:
@@ -253,13 +277,6 @@ steps:
 services:
   - name: docker
     image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
-
-  # Redis session setup in background so integration tests can run
-  - name: session
-    image: redis
-    volumes:
-      - name: dockersock
-        path: /var/run
 
 volumes:
   - name: dockersock
