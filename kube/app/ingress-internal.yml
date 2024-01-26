@@ -13,12 +13,12 @@ spec:
   tls:
     - hosts:
       {{ if eq .KUBE_NAMESPACE .BRANCH_ENV }}
-        - {{ .DRONE_BUILD_NUMBER }}.internal.{{ .BRANCH_ENV }}.homeoffice.gov.uk
-        - lmr-{{ .DRONE_SOURCE_BRANCH }}.internal.{{ .BRANCH_ENV }}.homeoffice.gov.uk
+        - {{ .DRONE_BUILD_NUMBER }}.internal.branch.sas-notprod.homeoffice.gov.uk
+        - ima-{{ .DRONE_SOURCE_BRANCH }}.internal.branch.sas-notprod.homeoffice.gov.uk
       {{ else if eq .KUBE_NAMESPACE .UAT_ENV }}
         - lmr.internal.uat.sas-notprod.homeoffice.gov.uk
       {{ else if eq .KUBE_NAMESPACE .STG_ENV }}
-        - lmr.internal.stg.sas-notprod.homeoffice.gov.uk
+        - lmr.internal.stg.sas.homeoffice.gov.uk
       {{ end }}
       {{ if eq .KUBE_NAMESPACE .BRANCH_ENV }}
       secretName: branch-tls-internal
@@ -27,11 +27,11 @@ spec:
       {{ end }}
   rules:
     {{ if eq .KUBE_NAMESPACE .BRANCH_ENV }}
-    - host: lmr-{{ .DRONE_SOURCE_BRANCH }}.internal.branch.homeoffice.gov.uk
+    - host: ima-{{ .DRONE_SOURCE_BRANCH }}.internal.branch.sas-notprod.homeoffice.gov.uk
     {{ else if eq .KUBE_NAMESPACE .UAT_ENV }}
     - host: lmr.internal.uat.sas-notprod.homeoffice.gov.uk
     {{ else if eq .KUBE_NAMESPACE .STG_ENV }}
-    - host: lmr.internal.stg.sas-notprod.homeoffice.gov.uk
+    - host: lmr.internal.stg.sas.homeoffice.gov.uk
     {{ end }}
       http:
         paths:

@@ -13,10 +13,12 @@ spec:
   tls:
     - hosts:
       {{ if eq .KUBE_NAMESPACE .BRANCH_ENV }}
-        - {{ .DRONE_BUILD_NUMBER }}.sas-lmr-branch.homeoffice.gov.uk
-        - lmr-{{ .DRONE_SOURCE_BRANCH }}.sas-lmr-branch.homeoffice.gov.uk
+        - {{ .DRONE_BUILD_NUMBER }}.branch.sas-notprod.homeoffice.gov.uk
+        - ima-{{ .DRONE_SOURCE_BRANCH }}.branch.sas-notprod.homeoffice.gov.uk
       {{ else if eq .KUBE_NAMESPACE .UAT_ENV }}
         - lmr.uat.sas-notprod.homeoffice.gov.uk
+      {{ else if eq .KUBE_NAMESPACE .STG_ENV }}
+        - lmr.stg.sas.homeoffice.gov.uk
       {{ else if eq .KUBE_NAMESPACE .PROD_ENV }}
         - {{ .PRODUCTION_URL }}
       {{ end }}
@@ -27,9 +29,11 @@ spec:
       {{ end }}
   rules:
     {{ if eq .KUBE_NAMESPACE .BRANCH_ENV }}
-    - host: lmr-{{ .DRONE_SOURCE_BRANCH }}.sas-lmr-branch.homeoffice.gov.uk
+    - host: ima-{{ .DRONE_SOURCE_BRANCH }}.branch.sas-notprod.homeoffice.gov.uk
     {{ else if eq .KUBE_NAMESPACE .UAT_ENV }}
     - host: lmr.uat.sas-notprod.homeoffice.gov.uk
+    {{ else if eq .KUBE_NAMESPACE .STG_ENV }}
+    - host: lmr.stg.sas.homeoffice.gov.uk
     {{ else if eq .KUBE_NAMESPACE .PROD_ENV }}
     - host: {{ .PRODUCTION_URL }}
     {{ end }}
