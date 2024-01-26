@@ -29,7 +29,7 @@ spec:
       {{ end }}
   rules:
     {{ if eq .KUBE_NAMESPACE .BRANCH_ENV }}
-    - host: ima-{{ .DRONE_SOURCE_BRANCH }}.branch.sas-notprod.homeoffice.gov.uk
+    - host: lmr-{{ .DRONE_SOURCE_BRANCH }}.branch.sas-notprod.homeoffice.gov.uk
     {{ else if eq .KUBE_NAMESPACE .UAT_ENV }}
     - host: lmr.uat.sas-notprod.homeoffice.gov.uk
     {{ else if eq .KUBE_NAMESPACE .STG_ENV }}
