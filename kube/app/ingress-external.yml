@@ -25,6 +25,7 @@ spec:
       {{ else }}
       secretName: cert-cmio
       {{ end }}
+      
   rules:
     {{ if eq .KUBE_NAMESPACE .BRANCH_ENV }}
     - host: lmr-{{ .DRONE_SOURCE_BRANCH }}.internal.sas-lmr-branch.homeoffice.gov.uk
