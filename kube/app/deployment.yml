@@ -146,8 +146,6 @@ spec:
               memory: 256Mi
           env:
 {{ file .NGINX_SETTINGS | indent 12 }}
-            - name: PROXY_SERVICE_PORT
-              value: "8081"
           ports:
             - containerPort: 10080
             - containerPort: 10443
