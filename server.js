@@ -9,6 +9,9 @@ settings = Object.assign({}, settings, {
   behaviours: settings.behaviours.map(require)
 });
 
+if (process.env.REDIS_URL) {
+  settings.redis = process.env.REDIS_URL;
+}
 const app = hof(settings);
 
 app.use((req, res, next) => {
