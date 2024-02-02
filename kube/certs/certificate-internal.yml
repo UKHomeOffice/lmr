@@ -3,7 +3,7 @@ kind: Certificate
 metadata:
   name: branch-tls-internal
   labels:
-    cert-manager.io/solver: http01
+    cert-manager.io/solver: route53
 spec:
   commonName: "*.sas-lmr-branch.homeoffice.gov.uk"
   dnsNames:
