@@ -81,13 +81,13 @@ steps:
           - master
       event: push
 
-  # - name: unit_tests_deploy
-  #   <<: *unit_tests
-  #   when:
-  #     branch:
-  #       include:
-  #         - master
-  #     event: push
+  - name: unit_tests_deploy
+    <<: *unit_tests
+    when:
+      branch:
+        include:
+          - master
+      event: push
 
   - name: build_image
     image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
