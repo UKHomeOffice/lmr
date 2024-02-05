@@ -18,8 +18,8 @@ if [[ $1 == 'tear_down' ]]; then
   export DRONE_SOURCE_BRANCH=$(cat /root/.dockersock/branch_name.txt)
 
   $kd --delete -f kube/configmaps/configmap.yml
-  $kd --delete -f kube/html-pdf -f kube/app
-  echo "Torn Down UAT Branch - lmr-$DRONE_SOURCE_BRANCH.internal.sas-notprod.homeoffice.gov.uk"
+  $kd --delete -f kube/html-pdf -f kube/app -f kube/redis 
+  echo "Torn Down UAT Branch - lmr-$DRONE_SOURCE_BRANCH.internal.sas-lmr-branch.homeoffice.gov.uk"
   exit 0
 fi
 
@@ -28,27 +28,27 @@ export DRONE_SOURCE_BRANCH=$(echo $DRONE_SOURCE_BRANCH | tr '[:upper:]' '[:lower
 
 if [[ ${KUBE_NAMESPACE} == ${BRANCH_ENV} ]]; then
   $kd -f kube/configmaps -f kube/certs
-  $kd -f kube/html-pdf -f kube/hof-rds-api
-  $kd -f kube/app
+  $kd -f kube/html-pdf 
+  $kd -f kube/redis -f kube/app
 elif [[ ${KUBE_NAMESPACE} == ${UAT_ENV} ]]; then
   $kd -f kube/configmaps/configmap.yml
   $kd -f kube/html-pdf
-  $kd -f kube/app
+  $kd -f kube/redis -f kube/app
 elif [[ ${KUBE_NAMESPACE} == ${STG_ENV} ]]; then
   $kd -f kube/configmaps/configmap.yml -f kube/app/service.yml
   $kd -f kube/html-pdf
   $kd -f kube/app/ingress-internal.yml -f kube/app/networkpolicy-internal.yml
-  $kd -f kube/app/deployment.yml
+  $kd -f kube/redis -f kube/app/deployment.yml
 elif [[ ${KUBE_NAMESPACE} == ${PROD_ENV} ]]; then
   $kd -f kube/configmaps/configmap.yml  -f kube/app/service.yml
   $kd -f kube/html-pdf
   $kd -f kube/app/ingress-external.yml -f kube/app/networkpolicy-external.yml
-  $kd -f kube/app/deployment.yml
+  $kd -f kube/redis -f kube/app/deployment.yml
 fi
 
 sleep $READY_FOR_TEST_DELAY
 
 if [[ ${KUBE_NAMESPACE} == ${BRANCH_ENV} ]]; then
-  echo "App Branch - lmr-$DRONE_SOURCE_BRANCH.internal.sas-notprod.homeoffice.gov.uk"
+  echo "App Branch - lmr-$DRONE_SOURCE_BRANCH.internal.sas-lmr-branch.homeoffice.gov.uk"
   echo "Data Service Branch - data-service-$DRONE_SOURCE_BRANCH.sas-lmr-branch.homeoffice.gov.uk"
 fi
