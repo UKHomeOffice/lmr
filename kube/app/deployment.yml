@@ -1,0 +1,177 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  {{ if eq .KUBE_NAMESPACE .PROD_ENV }}
+  name: {{ .APP_NAME }}
+  {{ else if eq .KUBE_NAMESPACE .BRANCH_ENV }}
+  annotations:
+    downscaler/uptime: {{ .NON_PROD_AVAILABILITY }}
+  name: {{ .APP_NAME }}-{{ .DRONE_SOURCE_BRANCH }}
+  {{ else }}
+  annotations:
+    downscaler/uptime: {{ .NON_PROD_AVAILABILITY }}
+  name: {{ .APP_NAME }}
+  {{ end }}
+spec:
+  {{ if or (eq .KUBE_NAMESPACE .STG_ENV) (eq .KUBE_NAMESPACE .PROD_ENV) }}
+  replicas: 2
+  {{ else }}
+  replicas: 1
+  {{ end }}
+  selector:
+    matchLabels:
+      {{ if eq .KUBE_NAMESPACE .BRANCH_ENV }}
+      name: {{ .APP_NAME }}-{{ .DRONE_SOURCE_BRANCH }}
+      {{ else }}
+      name: {{ .APP_NAME }}
+      {{ end }}
+  template:
+    metadata:
+      labels:
+        {{ if eq .KUBE_NAMESPACE .BRANCH_ENV }}
+        name: {{ .APP_NAME }}-{{ .DRONE_SOURCE_BRANCH }}
+        app: {{ .APP_NAME }}-{{ .DRONE_SOURCE_BRANCH }}
+        service: {{ .APP_NAME }}-{{ .DRONE_SOURCE_BRANCH }}
+        {{ else }}
+        name: {{ .APP_NAME }}
+        app: {{ .APP_NAME }}
+        service: {{ .APP_NAME }}
+        {{ end }}
+    spec:
+      containers:
+        - name: {{ .APP_NAME }}
+          image: {{ .IMAGE_URL }}/{{ .IMAGE_REPO }}:{{.DRONE_COMMIT_SHA}}
+          imagePullPolicy: Always
+          securityContext:
+            runAsNonRoot: true
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                {{ if eq .KUBE_NAMESPACE .BRANCH_ENV }}
+                name: configmap-{{ .DRONE_SOURCE_BRANCH }}
+                {{ else }}
+                name: configmap
+                {{ end }}
+          env:
+            # because some internal services have self signed certs
+            # SERVICE_URL is temporary, can be removed once forwarded headers through keycloak work
+            - name: TZ
+              value: Europe/London
+            - name: REDIS_PORT
+              value: "6379"
+            - name: REDIS_HOST
+              {{ if eq .KUBE_NAMESPACE .BRANCH_ENV }}
+              value: redis-{{ .DRONE_SOURCE_BRANCH }}
+              {{ else }}
+              value: redis
+              {{ end }}
+            - name: TZ
+              value: Europe/London
+            - name: NODE_TLS_REJECT_UNAUTHORIZED
+              value: "0"
+            - name: SERVICE_URL
+              {{ if eq .KUBE_NAMESPACE .BRANCH_ENV }}
+              value: lmr-{{ .DRONE_SOURCE_BRANCH }}.internal.sas-lmr-branch.homeoffice.gov.uk
+              {{ else if eq .KUBE_NAMESPACE .UAT_ENV }}
+              value: lmr.uat.sas-notprod.homeoffice.gov.uk
+              {{ else if eq .KUBE_NAMESPACE .STG_ENV }}
+              value: lmr.internal.stg.sas-notprod.homeoffice.gov.uk
+              {{ else }}
+              value: {{ .PRODUCTION_URL }}
+              {{ end }}
+            {{ if eq .KUBE_NAMESPACE .BRANCH_ENV }}
+            - name: DATASERVICE_SERVICE_HOST
+              value: dataservice-{{ .DRONE_SOURCE_BRANCH }}
+            - name: DATASERVICE_SERVICE_PORT_HTTPS
+              value: "10443"
+            {{ end }}
+            {{ if or (eq .KUBE_NAMESPACE .BRANCH_ENV) (eq .KUBE_NAMESPACE .UAT_ENV) }}
+            - name: ALLOW_SKIP
+              value: "true"
+            - name: SKIP_EMAIL
+              value: "sas-hof-test@digital.homeoffice.gov.uk"
+            {{ end }}
+            - name: SESSION_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: session-secret
+                  key: session-secret
+            - name: NOTIFY_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: notify-key
+                  key: notify-key
+            - name: PDF_CONVERTER_URL
+              {{ if eq .KUBE_NAMESPACE .BRANCH_ENV }}
+              value: https://html-pdf-converter-{{ .DRONE_SOURCE_BRANCH }}:10443/convert
+              {{ else }}
+              value: https://html-pdf-converter:10443/convert
+              {{ end }}
+          {{ if not (eq .KUBE_NAMESPACE .BRANCH_ENV) }}
+          livenessProbe:
+            httpGet:
+              path: /healthz/ping
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /healthz/readiness
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 5
+          {{ end }}
+          resources:
+            requests:
+              memory: 20Mi
+              cpu: 20m
+            limits:
+              memory: 256Mi
+              cpu: 300m
+          volumeMounts:
+            - mountPath: /public
+              name: public
+
+
+        - name: nginx-proxy
+          # nginx-proxy-govuk:v4
+          image: quay.io/ukhomeofficedigital/nginx-proxy-govuk@sha256:4470064d0b1d20ae08c5fd85551576cb687f342a22d6cb456fda9b2c4ce8c8df
+          resources:
+            requests:
+              memory: 10Mi
+              cpu: 10m
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          env:
+{{ file .NGINX_SETTINGS | indent 12 }}
+          ports:
+            - containerPort: 10443
+          securityContext:
+            runAsNonRoot: true
+          volumeMounts:
+            - mountPath: /public
+              name: public
+            - mountPath: /certs
+              name: certs
+              readOnly: true
+            - name: bundle
+              mountPath: /etc/ssl/certs
+              readOnly: true
+      volumes:
+        - name: public
+          emptyDir: {}
+        - name: certs
+          secret:
+            {{ if eq .KUBE_NAMESPACE .BRANCH_ENV }}
+            secretName: branch-tls-external
+            {{ else if not (eq .KUBE_NAMESPACE .PROD_ENV) }}
+            secretName: ingress-internal
+            {{ else }}
+            secretName: cert-cmio
+            {{ end }}
+        - name: bundle
+          configMap:
+            name: bundle

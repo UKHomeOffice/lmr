@@ -1,0 +1,45 @@
+{
+  "name": "lmr",
+  "version": "1.0.0",
+  "description": "",
+  "license": "MIT",
+  "main": "index.js",
+  "engines": {
+    "node": ">=18.12.0"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "start:dev": "hof-build watch --env",
+    "test": "yarn run test:unit && yarn run test:lint",
+    "test:lint": "eslint . --config ./node_modules/eslint-config-hof/default.js",
+    "test:unit": "LOG_LEVEL=error nyc _mocha \"test/**/*.spec.js\"",
+    "test:acceptance": "TAGS=\"${TAGS:=@feature}\" npm run test:cucumber",
+    "test:acceptance_browser": "ACCEPTANCE_WITH_BROWSER=true TAGS=\"${TAGS:=@feature}\" yarn run test:cucumber",
+    "test:cucumber": "cucumber-js -f @cucumber/pretty-formatter \"test/_features/**/*.feature\" --require test/_features/test.setup.js --require \"test/_features/step_definitions/**/*.js\" --tags $TAGS",
+    "build": "hof-build",
+    "postinstall": "yarn run build"
+  },
+  "author": "",
+  "dependencies": {
+    "hof": "^20.2.11",
+    "homeoffice-countries": "^0.1.0",
+    "jquery": "^3.6.0",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.4",
+    "notifications-node-client": "^7.0.0",
+    "typeahead-aria": "^1.0.4"
+  },
+  "devDependencies": {
+    "@cucumber/cucumber": "^7.2.1",
+    "@cucumber/pretty-formatter": "^1.0.0-alpha.1",
+    "chai": "^4.3.5",
+    "eslint": "7.30.0",
+    "eslint-config-hof": "^1.3.1",
+    "mocha": "^9.2.0",
+    "nyc": "^15.1.0",
+    "playwright": "^1.2.3"
+  },
+  "mocha": {
+    "require": "test/setup.js"
+  }
+}
