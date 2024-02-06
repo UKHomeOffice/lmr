@@ -7,6 +7,7 @@ const SummaryPageBehaviour = require('hof').components.summary;
 module.exports = {
   name: 'lmr',
   baseUrl: '/',
+  confirmStep: '/summary',
   steps: {
     '/start': {
       next: 'tenancy-start'
@@ -14,39 +15,41 @@ module.exports = {
     '/tenancy-start': {
       fields: ['move-date'],
       next: '/tenant-details',
-      continueOnEdit: true
+      backLink: 'start'
     },
     '/tenant-details': {
       fields: ['tenant-full-name', 'tenant-dob', 'tenant-nationality'],
       next: '/property-address',
-      backLink: '/tenancy-start'
+      backLink: 'tenancy-start'
     },
     '/property-address': {
       fields: ['address-line-1', 'address-line-2', 'town-or-city', 'county', 'postcode'],
-      backLink: true,
-      next: '/landlord-details'
+      next: '/landlord-details',
+      backLink: 'tenant-details',
     },
     '/landlord-details': {
       fields: ['landlord-full-name', 'company-name', 'landlord-email', 'landlord-phone'],
-      backLink: true,
-      next: '/summary'
+      next: '/summary',
+      backLink: 'property-address',
     },
     '/summary': {
       behaviours: [SummaryPageBehaviour],
       template: 'confirm',
       sections: require('./sections/summary-data-sections'),
-      next: '/privacy'
+      next: '/privacy',
+      backLink: 'landlord-details'
     },
     '/privacy': {
       behaviours: [SummaryPageBehaviour, Submit],
       fields: ['privacy-check'],
       sections: require('./sections/summary-data-sections'),
-      backLink: true,
-      next: '/privacy-declaration'
+      next: '/privacy-declaration',
+      backLink: 'summary'
     },
-    '/summary': {
-      behaviours: [SummaryPageBehaviour],
-      sections: require('./sections/summary-data-sections')
+    '/privacy-declaration': {
+      behaviours: ['complete'],
+      backLink: false,
+      clearSession: true
     }
   }
 };
