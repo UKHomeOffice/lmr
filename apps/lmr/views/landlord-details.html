@@ -1,0 +1,10 @@
+<title>{{#t}}pages.landlord-details.title{{/t}} – GOV.UK</title>
+{{<partials-page}}
+  {{$page-content}}
+    {{#renderField}}landlord-full-name{{/renderField}}
+    {{#renderField}}company-name{{/renderField}}
+    {{#renderField}}landlord-email{{/renderField}}
+    {{#renderField}}landlord-phone{{/renderField}}
+    {{#input-submit}}continue{{/input-submit}}
+  {{/page-content}}
+{{/partials-page}}

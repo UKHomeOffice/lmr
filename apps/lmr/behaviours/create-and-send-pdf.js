@@ -1,15 +1,18 @@
 
 const fs = require('fs');
 const path = require('path');
+const moment = require('moment');
 const config = require('../../../config');
 const utilities = require('../../../lib/utilities');
 const _ = require('lodash');
 const NotifyClient = utilities.NotifyClient;
 const PDFModel = require('hof').apis.pdfConverter;
+const { uuid } = require('uuidv4');
 
 const submissionTemplateId = config.govukNotify.submissionTemplateId;
 const caseworkerEmail = config.govukNotify.caseworkerEmail;
 const notifyKey = config.govukNotify.notifyApiKey;
+const dateTimeFormat = config.dateTimeFormat;
 
 const notifyClient = new NotifyClient(notifyKey);
 
@@ -45,8 +48,14 @@ module.exports = class CreateAndSendPDF {
     }
 
     locals.title = 'Landlords make a report';
+    locals.dateTime = moment().format(dateTimeFormat);
     locals.values = req.sessionModel.toJSON();
     locals.htmlLang = res.locals.htmlLang || 'en';
+
+    // Generate reference number using UUID and set it in the session to be accessed on the declaration page
+    const refNumber = uuid();
+    req.sessionModel.set('reference-number', refNumber);
+    locals.referenceNumber = refNumber;
 
     locals.css = await this.readCss(req);
     locals['ho-logo'] = await this.readHOLogo();
@@ -68,20 +77,22 @@ module.exports = class CreateAndSendPDF {
           link_to_file: notifyClient.prepareUpload(pdfData, { confirmEmailBeforeDownload: false }),
           full_name: req.sessionModel.get('tenant-full-name'),
           ref_number: req.sessionModel.get('reference-number'),
+          has_company_name: req.sessionModel.get('company-name').length > 0 ? 'yes' : 'no',
           company_name: req.sessionModel.get('company-name'),
-          tenancy_start_date: req.sessionModel.get('tenancy_start_date'),
-          date_of_birth: req.sessionModel.get('date_of_birth'),
-          nationality: req.sessionModel.get('nationality'),
-          address_1: req.sessionModel.get('address_1'),
-          has_address_2: req.sessionModel.get('has_address_2'),
-          address_2: req.sessionModel.get('address_2'),
-          has_county: req.sessionModel.get('has_county'),
+          tenancy_start_date: req.sessionModel.get('move-date'),
+          date_of_birth: req.sessionModel.get('tenant-dob'),
+          nationality: req.sessionModel.get('tenant-nationality'),
+          address_1: req.sessionModel.get('address-line-1'),
+          has_address_2: req.sessionModel.get('address-line-2').length > 0 ? 'yes' : 'no',
+          address_2: req.sessionModel.get('address-line-2'),
+          has_county: req.sessionModel.get('county').length > 0 ? 'yes' : 'no',
           county: req.sessionModel.get('county'),
-          town: req.sessionModel.get('town'),
+          town: req.sessionModel.get('town-or-city'),
           postcode: req.sessionModel.get('postcode'),
-          landlord_name: req.sessionModel.get('landlord_name'),
-          email: req.sessionModel.get('email'),
-          phone: req.sessionModel.get('phone')
+          landlord_name: req.sessionModel.get('landlord-full-name'),
+          email: req.sessionModel.get('landlord-email'),
+          has_phone: req.sessionModel.get('landlord-phone').length > 0 ? 'yes' : 'no',
+          phone: req.sessionModel.get('landlord-phone')
         })
       });
 
