@@ -1,0 +1,13 @@
+{{<partials-page}}
+  {{$page-content}}
+    <p class="govuk-body">Check these details carefully before continuing. If any of the details are incorrect, change them.</p>
+
+    <div class="table-details">
+      {{#rows}}
+        {{> partials-summary-table}}
+      {{/rows}}
+    </div>
+
+    {{#input-submit}}continue{{/input-submit}}
+  {{/page-content}}
+{{/partials-page}}

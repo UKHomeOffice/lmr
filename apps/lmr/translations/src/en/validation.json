@@ -1,5 +1,22 @@
 {
-  "privacy-check": {
-    "required": "You must select the checkbox before submitting"
+  "address-line-1":{
+    "required": "Enter the property address line 1",
+    "notUrl": "Please do not enter a link/URL into your answers"
+  },
+  "address-line-2":{
+    "notUrl": "Please do not enter a link/URL into your answers"
+  },
+  "town-or-city":{
+    "required": "Enter the town/city",
+    "notUrl": "Please do not enter a link/URL into your answers"
+  },
+  "county":{
+    "notUrl": "Please do not enter a link/URL into your answers"
+  },
+  "postcode":{
+    "required": "Enter the postcode of the rental property",
+    "notUrl": "Please do not enter a link/URL into your answers",
+    "regex": "Your postcode is not in England. If your property is not in England, you do not have to do a right to rent check",
+    "postcode": "Your postcode is not in England. If your property is not in England, you do not have to do a right to rent check"
   }
 }
