@@ -11,8 +11,9 @@
   {{/head}}
   {{$main}}
     <main id="content" class="main" role="main">
-      <img src="{{ho-logo}}" alt="Home Office logo"/>
+      <img class="ho-logo" src="{{ho-logo}}" alt="Home Office logo"/>
       <h1>{{title}}</h1>
+      <h2>Your reference number: {{referenceNumber}}</h2>
       <h2>Time and date: {{dateTime}}</h2>
       {{#rows}}
         {{^omitFromPdf}}
