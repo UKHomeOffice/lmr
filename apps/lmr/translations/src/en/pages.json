@@ -30,14 +30,10 @@
   "privacy": {
     "header": "Privacy policy",
     "title": "Landlords make a report",
-    "p1": "The personal information entered on this form will be used for immigration control purposes. It may also be used to support the work of the Home Office and to prevent and detect fraud. The Home Office is the data controller in relation to the information provided, which will be processed in accordance with the Data Protection Act 1998.",
-    "p2": "To ensure the security of the information provided we will only send responses to the email address that the landlord entered on the form. For further information on how the Home Office uses personal data, please see our <a href='https://www.gov.uk/government/organisations/home-office/about/personal-information-charter'>Personal information charter</a>."
-  },
-  "privacy-declaration": {
-    "title": "Landlords make a report",
-    "confirmed": "Report submitted",
-    "p1": "Thank you for making a report to the Home Office about an existing occupant who no longer has the right to rent.",
-    "p2": "An email containing the details of the report has been sent to the address you provided. The email contains a unique reference number which you should keep safe, as you may need it to prove that you’re not liable for a civil penalty."
+    "p1": "Before making a report you must be confident that an existing occupier on whom you carried out initial checks at the start of their tenancy no longer has the right to rent by <a href='https://www.gov.uk/government/publications/right-to-rent-document-checks-a-user-guide' class='govuk-link'>checking their relevant documents</a>.",
+    "p2": "If the documents are being held by the Home Office or the person has an outstanding application or appeal, you must get <a href='https://eforms.homeoffice.gov.uk/outreach/lcs-application.ofml' class='govuk-link'>verification from the Home Office</a> first regarding the person’s ongoing right to rent.",
+    "p3": "If you have not carried out further document checks on someone who is renting your property, but you suspect a person is in the UK illegally, you can report them in confidence by using the <a href='https://www.gov.uk/report-immigration-crime' class='govuk-link'>immigration crime reporting service</a>.",
+    "p4": "If you have problems accessing these forms or need help completing them, call the Landlords' Helpline on 0300 790 6268"
   },
   "confirm": {
     "sections": {

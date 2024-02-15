@@ -9,6 +9,7 @@ module.exports = {
   baseUrl: '/',
   steps: {
     '/start': {
+      next: '/tenancy-start'
     },
     '/tenancy-start': {
       fields: ['move-date'],
@@ -43,10 +44,9 @@ module.exports = {
       backLink: true,
       next: '/privacy-declaration'
     },
-    '/privacy-declaration': {
-      behaviours: ['complete'],
-      backLink: false,
-      clearSession: true
+    '/summary': {
+      behaviours: [SummaryPageBehaviour],
+      sections: require('./sections/summary-data-sections')
     }
   }
 };
