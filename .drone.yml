@@ -13,7 +13,7 @@ environment:
   IMAGE_URL: quay.io/ukhomeofficedigital
   IMAGE_REPO: lmr
   GIT_REPO: UKHomeOffice/lmr
-  HOF_CONFIG: hof-services-config/Land_Make_A_Report
+  HOF_CONFIG: hof-services-config/Landlords_Make_A_Report
   NON_PROD_AVAILABILITY: Mon-Sun 08:00-23:00 Europe/London
   READY_FOR_TEST_DELAY: 20s
 
@@ -177,6 +177,20 @@ steps:
       branch: master
       event: pull_request
 
+  - name: deploy_to_uat
+    pull: if-not-exists
+    image: quay.io/ukhomeofficedigital/kd:v1.14.0
+    environment:
+      KUBE_SERVER:
+        from_secret: kube_server_dev
+      KUBE_TOKEN:
+        from_secret: kube_token_dev
+    commands:
+      - sh bin/deploy.sh $${UAT_ENV}
+    when:
+      branch: master
+      event: push
+
   # Get pull request branch so correct PR UAT environment is torn down in the tear_down_branch step that follows
   - name: get_pr_branch
     pull: if-not-exists
@@ -225,8 +239,8 @@ steps:
     commands:
       - bin/deploy.sh $${PROD_ENV}
     when:
-      branch: master
-      event: push
+      target: PROD
+      event: promote
 
   - name: acceptance_tests_deploy
     <<: *acceptance_tests
