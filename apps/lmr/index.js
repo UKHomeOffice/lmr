@@ -9,7 +9,7 @@ module.exports = {
   baseUrl: '/',
   steps: {
     '/start': {
-      next: '/tenancy-start'
+      next: 'tenancy-start'
     },
     '/tenancy-start': {
       fields: ['move-date'],
