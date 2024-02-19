@@ -28,7 +28,8 @@
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "notifications-node-client": "^7.0.0",
-    "typeahead-aria": "^1.0.4"
+    "typeahead-aria": "^1.0.4",
+    "uuidv4": "^6.2.13"
   },
   "devDependencies": {
     "@cucumber/cucumber": "^7.2.1",

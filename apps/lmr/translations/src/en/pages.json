@@ -1,4 +1,12 @@
 {
+  "start": {
+    "header": "Make a report",
+    "title": "Landlords make a report",
+    "p1": "Before making a report you must be confident that an existing occupier on whom you carried out initial checks at the start of their tenancy no longer has the right to rent by <a href='https://www.gov.uk/government/publications/right-to-rent-document-checks-a-user-guide' class='govuk-link'>checking their relevant documents</a>.",
+    "p2": "If the documents are being held by the Home Office or the person has an outstanding application or appeal, you must get <a href='https://eforms.homeoffice.gov.uk/outreach/lcs-application.ofml' class='govuk-link'>verification from the Home Office</a> first regarding the person’s ongoing right to rent.",
+    "p3": "If you have not carried out further document checks on someone who is renting your property, but you suspect a person is in the UK illegally, you can report them in confidence by using the <a href='https://www.gov.uk/report-immigration-crime' class='govuk-link'>immigration crime reporting service</a>.",
+    "p4": "If you have problems accessing these forms or need help completing them, call the Landlords' Helpline on 0300 790 6268"
+  },
   "tenancy-start": {
     "title": "Landlords make a report",
     "header": "When did the person move into your property?"
@@ -7,13 +15,33 @@
     "title": "Landlords make a report",
     "header": "Existing tenant's information"
   },
+  "property-address": {
+    "header": "Rental property address",
+    "title": "Landlords make a report",
+    "p1": "The address must be in England. You do not need to check a tenant's right to rent for properties in Wales, Scotland or Northern Ireland."
+  },
+  "landlord-details": {
+    "header": "Landlord's or agent's information",
+    "title": "Landlords make a report"
+  },
   "summary": {
     "header": "Summary"
+  },
+  "privacy": {
+    "header": "Privacy policy",
+    "title": "Landlords make a report",
+    "p1": "Before making a report you must be confident that an existing occupier on whom you carried out initial checks at the start of their tenancy no longer has the right to rent by <a href='https://www.gov.uk/government/publications/right-to-rent-document-checks-a-user-guide' class='govuk-link'>checking their relevant documents</a>.",
+    "p2": "If the documents are being held by the Home Office or the person has an outstanding application or appeal, you must get <a href='https://eforms.homeoffice.gov.uk/outreach/lcs-application.ofml' class='govuk-link'>verification from the Home Office</a> first regarding the person’s ongoing right to rent.",
+    "p3": "If you have not carried out further document checks on someone who is renting your property, but you suspect a person is in the UK illegally, you can report them in confidence by using the <a href='https://www.gov.uk/report-immigration-crime' class='govuk-link'>immigration crime reporting service</a>.",
+    "p4": "If you have problems accessing these forms or need help completing them, call the Landlords' Helpline on 0300 790 6268"
   },
   "confirm": {
     "sections": {
       "tenants-information": {
         "header": "Tenant's information"
+      },
+      "landlord-information": {
+        "header": "Landlord's or agent's information"
       }
     },
     "fields": {
@@ -28,6 +56,33 @@
       },
       "tenant-nationality": {
         "label": "Nationality"
+      },
+      "address-line-1": {
+        "label": "Address line 1"
+      },
+      "address-line-2": {
+        "label": "Address line 2"
+      },
+      "town-or-city": {
+        "label": "Town / city"
+      },
+      "county": {
+        "label": "County"
+      },
+      "postcode": {
+        "label": "Postcode"
+      },
+      "landlord-full-name": {
+        "label": "Full name"
+      },
+      "company-name": {
+        "label": "Company name"
+      },
+      "landlord-email": {
+        "label": "Email address"
+      },
+      "landlord-phone": {
+        "label": "Phone number"
       }
     }
   }

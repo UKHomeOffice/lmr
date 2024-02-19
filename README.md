@@ -6,6 +6,7 @@ Landlords Make a Report (LMR) form built using the HOF (Home Office Forms) Frame
 - [Node.js](https://nodejs.org/en/) - Tested against LTS
 - NPM (installed with Node.js) - Works with version 18+
 - [Html-pdf-converter](https://github.com/UKHomeOffice/html-pdf-converter) service running on a separate port to this service
+- [Redis server](http://redis.io/download) running on the default port
 
 ### GovUK Notify
 You'll need to have the relevant GovNotify API key to run the app. Notify is needed for the form submission element, in order to send an email. Save this value as `NOTIFY_KEY` in your `.env` file. 

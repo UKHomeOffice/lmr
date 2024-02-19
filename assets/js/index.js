@@ -13,4 +13,13 @@ $('.typeahead').each(function applyTypeahead() {
   });
 });
 
+$(document).ready(function () {
+  if ($('#loader-container')) {
+    $('.govuk-button').on('click', function () {
+      $('#loader-container').addClass('spinner-loader');
+      $('#report-submit').addClass('visuallyhidden');
+    });
+  }
+});
+
 govuk.initAll();

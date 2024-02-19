@@ -1,7 +1,7 @@
 {
   "move-date": {
     "required": "Tell us when the person moved into your property",
-    "notUrl": "Please do not enter a link/url into your answers",
+    "notUrl": "Please do not enter a link/URL into your answers",
     "date": "Please enter a valid date",
     "before": "This date must not be in the future",
     "after": "This service only applies to tenancy agreements that started after 30 November 2014"
@@ -12,12 +12,50 @@
   },
   "tenant-dob": {
     "required": "Please enter the tenant's date of birth",
-    "notUrl": "Please do not enter a link/url into your answers",
+    "notUrl": "Please do not enter a link/URL into your answers",
     "date": "Please enter a valid date",
     "over18": "Date of birth entered must reflect 18 years or older"
   },
   "tenant-nationality": {
     "required": "Please enter the tenant's nationality",
-    "notUrl": "Please do not enter a link/url into your answers"
+    "notUrl": "Please do not enter a link/URL into your answers"
+  },
+  "address-line-1": {
+    "required": "Enter the property address line 1",
+    "notUrl": "Please do not enter a link/URL into your answers"
+  },
+  "address-line-2": {
+    "notUrl": "Please do not enter a link/URL into your answers"
+  },
+  "town-or-city": {
+    "required": "Enter the town/city",
+    "notUrl": "Please do not enter a link/URL into your answers"
+  },
+  "county": {
+    "notUrl": "Please do not enter a link/URL into your answers"
+  },
+  "postcode": {
+    "required": "Enter the postcode of the rental property",
+    "notUrl": "Please do not enter a link/URL into your answers",
+    "regex": "Your postcode is not in England. If your property is not in England, you do not have to do a right to rent check",
+    "postcode": "Your postcode is not in England. If your property is not in England, you do not have to do a right to rent check"
+  },
+  "landlord-full-name": {
+    "required": "Enter the landlord's full name",
+    "notUrl": "Please do not enter a link/URL into your answers"
+  },
+  "company-name": {
+    "notUrl": "Please do not enter a link/URL into your answers"
+  },
+  "landlord-email": {
+    "required": "Enter the landlord's email",
+    "email": "Enter a valid email"
+  },
+  "landlord-phone": {
+    "notUrl": "Please do not enter a link/URL into your answers",
+    "internationalPhoneNumber": "Enter a valid phone number"
+  },
+  "privacy-check": {
+    "required": "You must select the checkbox before submitting"
   }
 }
