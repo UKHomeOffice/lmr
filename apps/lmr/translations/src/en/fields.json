@@ -19,11 +19,11 @@
   "address-line-1": {
     "label": "Address line 1"
   },
-  "company-name": {
-    "label": "Company name (optional)"
+  "address-line-2": {
+    "label": "Address line 2 (optional)"
   },
-  "landlord-email": {
-    "label": "Email address"
+  "town-or-city": {
+    "label": "Town/City"
   },
   "county": {
     "label": "County (optional)"
