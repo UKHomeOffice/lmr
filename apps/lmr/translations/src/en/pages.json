@@ -60,11 +60,11 @@
       "address-line-1": {
         "label": "Address line 1"
       },
-      "address-line-2": {
-        "label": "Address line 2"
+      "company-name": {
+        "label": "Company name"
       },
-      "town-or-city": {
-        "label": "Town / city"
+      "landlord-email": {
+        "label": "Email address"
       },
       "county": {
         "label": "County"

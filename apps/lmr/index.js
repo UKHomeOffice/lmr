@@ -43,10 +43,6 @@ module.exports = {
       sections: require('./sections/summary-data-sections'),
       backLink: true,
       next: '/privacy-declaration'
-    },
-    '/summary': {
-      behaviours: [SummaryPageBehaviour],
-      sections: require('./sections/summary-data-sections')
     }
   }
 };
