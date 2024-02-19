@@ -29,15 +29,19 @@ module.exports = {
     mixin: 'input-text',
     validate: ['required', 'notUrl']
   },
-  'company-name': {
+  'address-line-2': {
     mixin: 'input-text',
     validate: 'notUrl'
   },
-  'landlord-email': {
+  'town-or-city': {
     mixin: 'input-text',
-    validate: ['required', 'email']
+    validate: ['required', 'notUrl']
   },
-  'postcode': {
+  county: {
+    mixin: 'input-text',
+    validate: 'notUrl'
+  },
+  postcode: {
     mixin: 'input-text',
     // Regex validation to only allow postcodes within England.
     // Includes Wales/England and Scotland/England postcode areas which are cross-bordered
