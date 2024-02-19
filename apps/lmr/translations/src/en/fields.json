@@ -1,4 +1,36 @@
 {
+  "move-date": {
+    "label": "Move date",
+    "hint": "Example: 21 3 2017"
+  },
+  "tenant-full-name": {
+    "label": "Full name"
+  },
+  "tenant-dob": {
+    "legend": "Date of birth",
+    "hint": "Example: 21 3 1980"
+  },
+  "tenant-nationality": {
+    "label": "Nationality",
+    "options": {
+      "null": "Select a country"
+    }
+  },
+  "address-line-1": {
+    "label": "Address line 1"
+  },
+  "company-name": {
+    "label": "Company name (optional)"
+  },
+  "landlord-email": {
+    "label": "Email address"
+  },
+  "county": {
+    "label": "County (optional)"
+  },
+  "postcode": {
+    "label": "Postcode"
+  },
   "landlord-full-name": {
     "label": "Landlord's or agent's full name"
   },
@@ -10,5 +42,8 @@
   },
   "landlord-phone": {
     "label": "Phone number (optional)"
+  },
+  "privacy-check": {
+    "label": "I confirm that I have read and understood the Data Protection statement above."
   }
 }
