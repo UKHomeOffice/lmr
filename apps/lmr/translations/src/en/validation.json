@@ -8,7 +8,7 @@
   },
   "tenant-full-name": {
     "required": "Enter tenant's full name",
-    "notUrl": "Please do not enter a link/URL into your answers"
+    "notUrl": "Please do not enter a link/url into your answers"
   },
   "tenant-dob": {
     "required": "Please enter the tenant's date of birth",
