@@ -272,7 +272,7 @@ steps:
       branch: master
       event: push
 
-  # Tear down pull request UAT environment.
+# Tear down pull request UAT environment.
   - name: tear_down_branch
     pull: if-not-exists
     image: quay.io/ukhomeofficedigital/kd:v1.14.0
@@ -290,8 +290,7 @@ steps:
       branch: master
       event: push
 
-
-    # Deploy to Staging environment
+# Deploy to Staging environment
   # - name: deploy_to_stg
   #   pull: if-not-exists
   #   image: quay.io/ukhomeofficedigital/kd:v1.14.0
@@ -321,7 +320,7 @@ steps:
   #     target: PROD
   #     event: promote
 
-    - name: clone_repos_prod
+  - name: clone_repos_prod
     image: alpine/git
     environment:
       DRONE_GIT_USERNAME:
