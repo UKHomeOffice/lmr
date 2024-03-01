@@ -225,7 +225,7 @@ steps:
   # Snyk  security scans which run after branch deployment to prevent blocking of PR UAT tests.
   - name: snyk_scan
     pull: if-not-exists
-    image: node:18
+    image: node:lts
     environment:
       NOTIFY_STUB: true
       SNYK_TOKEN:
@@ -399,7 +399,7 @@ steps:
 
   - name: cron_snyk_scan
     pull: if-not-exists
-    image: node:18
+    image: node:lts
     environment:
       SNYK_TOKEN:
         from_secret: snyk_token
