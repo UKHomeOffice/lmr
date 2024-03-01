@@ -8,7 +8,8 @@
   },
   "tenant-full-name": {
     "required": "Enter tenant's full name",
-    "notUrl": "Please do not enter a link/url into your answers"
+    "notUrl": "Please do not enter a link/url into your answers",
+    "maxlength": "Full name must be 1000 characters or less"
   },
   "tenant-dob": {
     "required": "Please enter the tenant's date of birth",
@@ -22,17 +23,21 @@
   },
   "address-line-1": {
     "required": "Enter the property address line 1",
-    "notUrl": "Please do not enter a link/URL into your answers"
+    "notUrl": "Please do not enter a link/URL into your answers",
+    "maxlength": "Address line 1 must be 250 characters or less"
   },
   "address-line-2": {
-    "notUrl": "Please do not enter a link/URL into your answers"
+    "notUrl": "Please do not enter a link/URL into your answers",
+    "maxlength": "Address line 2 must be 250 characters or less"
   },
   "town-or-city": {
     "required": "Enter the town/city",
-    "notUrl": "Please do not enter a link/URL into your answers"
+    "notUrl": "Please do not enter a link/URL into your answers",
+    "maxlength": "Town/City must be 250 characters or less"
   },
   "county": {
-    "notUrl": "Please do not enter a link/URL into your answers"
+    "notUrl": "Please do not enter a link/URL into your answers",
+    "maxlength": "County must be 250 characters or less"
   },
   "postcode": {
     "required": "Enter the postcode of the rental property",
@@ -42,18 +47,22 @@
   },
   "landlord-full-name": {
     "required": "Enter the landlord's full name",
-    "notUrl": "Please do not enter a link/URL into your answers"
+    "notUrl": "Please do not enter a link/URL into your answers",
+    "maxlength": "Landlord's or agent's full name must be 1000 characters or less"
   },
   "company-name": {
-    "notUrl": "Please do not enter a link/URL into your answers"
+    "notUrl": "Please do not enter a link/URL into your answers",
+    "maxlength": "Company name must be 200 characters or less"
   },
   "landlord-email": {
     "required": "Enter the landlord's email",
-    "email": "Enter a valid email"
+    "email": "Enter a valid email",
+    "maxlength": "Email address must be 254 characters or less"
   },
   "landlord-phone": {
     "notUrl": "Please do not enter a link/URL into your answers",
-    "internationalPhoneNumber": "Enter a valid phone number"
+    "internationalPhoneNumber": "Enter a valid phone number",
+    "maxlength": "Telephone number must be 16 characters or less"
   },
   "privacy-check": {
     "required": "You must select the checkbox before submitting"
