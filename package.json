@@ -17,6 +17,7 @@
     "test:acceptance_browser": "ACCEPTANCE_WITH_BROWSER=true TAGS=\"${TAGS:=@feature}\" yarn run test:cucumber",
     "test:cucumber": "cucumber-js -f @cucumber/pretty-formatter \"test/_features/**/*.feature\" --require test/_features/test.setup.js --require \"test/_features/step_definitions/**/*.js\" --tags $TAGS",
     "build": "hof-build",
+    "test:snyk": "snyk config set api=SNYK_TOKEN && snyk test",
     "postinstall": "yarn run build"
   },
   "author": "",
@@ -29,7 +30,8 @@
     "moment": "^2.29.4",
     "notifications-node-client": "^7.0.0",
     "typeahead-aria": "^1.0.4",
-    "uuidv4": "^6.2.13"
+    "uuidv4": "^6.2.13",
+    "snyk": "^1.1126.0"
   },
   "devDependencies": {
     "@cucumber/cucumber": "^7.2.1",
