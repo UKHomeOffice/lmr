@@ -9,8 +9,8 @@ module.exports = {
     validate: ['required', 'notUrl', 'date', 'before', { type: 'after', arguments: '2014-11-30' }]
   }),
   'tenant-full-name': {
-    mixin: 'input-text',
-    validate: ['required', 'notUrl']
+    validate: ['required', 'notUrl', { type: 'maxlength', arguments: [1000] }],
+    className: ['govuk-input']
   },
   'tenant-dob': dateComponent('tenant-dob', {
     isPageHeading: false,
@@ -27,19 +27,19 @@ module.exports = {
   },
   'address-line-1': {
     mixin: 'input-text',
-    validate: ['required', 'notUrl']
+    validate: ['required', 'notUrl', { type: 'maxlength', arguments: [250] }]
   },
   'address-line-2': {
     mixin: 'input-text',
-    validate: 'notUrl'
+    validate: ['notUrl', { type: 'maxlength', arguments: [250] }]
   },
   'town-or-city': {
     mixin: 'input-text',
-    validate: ['required', 'notUrl']
+    validate: ['required', 'notUrl', { type: 'maxlength', arguments: [250] }]
   },
   county: {
     mixin: 'input-text',
-    validate: 'notUrl'
+    validate: ['notUrl', { type: 'maxlength', arguments: [250] }]
   },
   postcode: {
     mixin: 'input-text',
@@ -52,19 +52,19 @@ module.exports = {
   },
   'landlord-full-name': {
     mixin: 'input-text',
-    validate: ['required', 'notUrl']
+    validate: ['required', 'notUrl', { type: 'maxlength', arguments: [1000] }]
   },
   'company-name': {
     mixin: 'input-text',
-    validate: 'notUrl'
+    validate: ['notUrl', { type: 'maxlength', arguments: [200] }]
   },
   'landlord-email': {
     mixin: 'input-text',
-    validate: ['required', 'email']
+    validate: ['required', 'email', { type: 'maxlength', arguments: [254] }]
   },
   'landlord-phone': {
     mixin: 'input-text',
-    validate: ['internationalPhoneNumber', 'notUrl', {type: 'maxlength', arguments: [200]}]
+    validate: ['internationalPhoneNumber', 'notUrl', {type: 'maxlength', arguments: [16]}]
   },
   'privacy-check': {
     mixin: 'checkbox',
