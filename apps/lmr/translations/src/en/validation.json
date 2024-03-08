@@ -56,6 +56,6 @@
     "internationalPhoneNumber": "Enter a valid phone number"
   },
   "privacy-check": {
-    "required": "You must select the checkbox before submitting"
+    "required": "Confirm you have read the Data Protection statement"
   }
 }
