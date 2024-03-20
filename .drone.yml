@@ -16,7 +16,6 @@ environment:
   HOF_CONFIG: hof-services-config/Landlords_Make_A_Report
   NON_PROD_AVAILABILITY: Mon-Sun 08:00-23:00 Europe/London
   READY_FOR_TEST_DELAY: 20s
-  # NOTIFY_STUB: stub
 
 trigger:
   branch:
@@ -153,7 +152,6 @@ steps:
       - push
       - tag
 
-
   # Deploy to pull request UAT environment
   - name: deploy_to_branch
     pull: if-not-exists
@@ -272,36 +270,6 @@ steps:
       branch: master
       event: push
 
-# Deploy to Staging environment
-  # - name: deploy_to_stg
-  #   pull: if-not-exists
-  #   image: quay.io/ukhomeofficedigital/kd:v1.14.0
-  #   environment:
-  #     KUBE_SERVER:
-  #       from_secret: kube_server_stg
-  #     KUBE_TOKEN:
-  #       from_secret: kube_token_stg
-  #   commands:
-  #     - bin/deploy.sh $${STG_ENV}
-  #   when:
-  #     branch: master
-  #     event: push
-
-  # Checks a build being promoted has passed, is on main which effectively means a healthy build on UAT.
-  # - name: sanity_check_build_prod
-  #   pull: if-not-exists
-  #   image: drone/cli:alpine@sha256:14409f7f7247befb9dd2effdb2f61ac40d1f5fbfb1a80566cf6f2f8d21f3be11
-  #   environment:
-  #     DRONE_SERVER:
-  #       from_secret: drone_server
-  #     DRONE_TOKEN:
-  #       from_secret: drone_token
-  #   commands:
-  #     - bin/sanity_check_build.sh
-  #   when:
-  #     target: PROD
-  #     event: promote
-
   - name: clone_repos_prod
     image: alpine/git
     environment:
@@ -372,19 +340,20 @@ steps:
     when:
       cron: tear_down_pr_envs
       event: cron
+
   # # CRON job steps that runs security scans using Snyk & Trivy
-  # - name: cron_clone_repos
-  #   image: alpine/git
-  #   environment:
-  #     DRONE_GIT_USERNAME:
-  #       from_secret: drone_git_username
-  #     DRONE_GIT_TOKEN:
-  #       from_secret: drone_git_token
-  #   commands:
-  #     - git clone https://$${DRONE_GIT_USERNAME}:$${DRONE_GIT_TOKEN}@github.com/UKHomeOfficeForms/hof-services-config.git
-  #   when:
-  #     cron: security_scans
-  #     event: cron
+  - name: cron_clone_repos
+    image: alpine/git
+    environment:
+      DRONE_GIT_USERNAME:
+        from_secret: drone_git_username
+      DRONE_GIT_TOKEN:
+        from_secret: drone_git_token
+    commands:
+      - git clone https://$${DRONE_GIT_USERNAME}:$${DRONE_GIT_TOKEN}@github.com/UKHomeOfficeForms/hof-services-config.git
+    when:
+      cron: security_scans
+      event: cron
 
   - name: cron_build_image
     image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
@@ -458,7 +427,6 @@ steps:
       cron: security_scans
       event: cron
       status: failure
-
 
 services:
   - name: docker
