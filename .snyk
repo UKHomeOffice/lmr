@@ -1,0 +1,57 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.19.0
+# ignores vulnerabilities until expiry date; change duration by modifying expiry date
+ignore:
+  SNYK-JS-REQUEST-3361831:
+  - '*':
+      reason: No upgrade or patch available
+      expires: '2024-11-01T17:02:21.865Z'
+  SNYK-JS-XML2JS-5414874:
+  - '*':
+      reason: No direct upgrade or patch available
+      expires: '2024-11-01T17:02:21.865Z'
+  SNYK-JS-DICER-2311764:
+    - '*':
+      reason: No upgrade or patch available
+      expires: '2024-11-01T17:02:21.865Z'
+  SNYK-JS-FILETYPE-2958042:
+    - '*':
+      reason: No upgrade or patch available
+      expires: '2024-11-01T17:02:21.865Z'
+  SNYK-JS-UNDERSCORE-1080984:
+    - '*':
+      reason: No upgrade or patch available
+      expires: '2024-11-01T17:02:21.865Z'
+  SNYK-JS-USERAGENT-174737:
+    - '*':
+      reason: No upgrade or patch available
+      expires: '2024-11-01T17:02:21.865Z'
+  SNYK-JS-AXIOS-6032459:
+    - '*':
+      reason: To be updated to a newer version in hof
+      expires: '2024-11-01T17:02:21.865Z'
+  SNYK-JS-AXIOS-6124857:
+    - '*':
+      reason: To be updated to a newer version in hof
+      expires: '2024-11-01T17:02:21.865Z'
+  SNYK-JS-AXIOS-6144788:
+    - '*':
+      reason: To be updated to a newer version in hof
+      expires: '2024-11-01T17:02:21.865Z'
+  SNYK-JS-FOLLOWREDIRECTS-6141137:
+    - '*':
+      reason: To be updated to a newer version in hof
+      expires: '2024-11-01T17:02:21.865Z'
+  SNYK-JS-INFLIGHT-6095116:
+    - '*':
+      reason: To be updated to a newer version in hof
+      expires: '2024-11-01T17:02:21.865Z'
+  SNYK-JS-NODEMAILER-6219989:
+    - '*':
+      reason: To be updated to a newer version in hof
+      expires: '2024-11-01T17:02:21.865Z'
+  SNYK-JS-TOUGHCOOKIE-5672873:
+    - '*':
+      reason: To be updated to a newer version in hof
+      expires: '2024-11-01T17:02:21.865Z'
+patch: {}
