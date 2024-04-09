@@ -9,7 +9,7 @@ environment:
   BRANCH_ENV: sas-lmr-branch
   STG_ENV: sas-lmr-stg
   UAT_ENV: sas-lmr-uat
-  PRODUCTION_URL: www.home-office-forms-demo.homeoffice.gov.uk
+  PRODUCTION_URL: www.landlords-reporting.homeoffice.gov.uk
   IMAGE_URL: quay.io/ukhomeofficedigital
   IMAGE_REPO: lmr
   GIT_REPO: UKHomeOffice/lmr
@@ -157,7 +157,6 @@ steps:
     pull: if-not-exists
     image: quay.io/ukhomeofficedigital/kd:v1.14.0
     environment:
-      # NOTIFY_STUB: stub
       KUBE_SERVER:
         from_secret: kube_server_dev
       KUBE_TOKEN:
