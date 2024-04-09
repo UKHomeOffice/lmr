@@ -4330,6 +4330,14 @@ normalize-path@^3.0.0, normalize-path@~3.0.0:
   resolved "https://registry.npmjs.org/normalize-path/-/normalize-path-3.0.0.tgz"
   integrity sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==
 
+notifications-node-client@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.npmjs.org/notifications-node-client/-/notifications-node-client-6.0.0.tgz"
+  integrity sha512-QP4BSODBJROy2YU6sLHSx0uXKeINNyFcdMSHjczeffTMLlQ51SHrP+0n+UHMA0ta+gWuGGsjHfG3tpPtsZ1uNg==
+  dependencies:
+    axios "^0.25.0"
+    jsonwebtoken "^9.0.0"
+
 notifications-node-client@^8.0.0:
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/notifications-node-client/-/notifications-node-client-8.0.0.tgz#474dd69c60a91a41f629be145bb6d361ccee63b6"
