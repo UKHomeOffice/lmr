@@ -10,6 +10,7 @@ const PDFModel = require('hof').apis.pdfConverter;
 const { uuid } = require('uuidv4');
 
 const submissionTemplateId = config.govukNotify.submissionTemplateId;
+const caseworkersubmissionTemplateId = config.govukNotify.caseworkerSubmissionTemplateId;
 const caseworkerEmail = config.govukNotify.caseworkerEmail;
 const notifyKey = config.govukNotify.notifyApiKey;
 const dateTimeFormat = config.dateTimeFormat;
@@ -64,7 +65,7 @@ module.exports = class CreateAndSendPDF {
     });
   }
 
-  async sendEmailWithAttachment(req, pdfData) {
+  async sendLandlordEmailWithAttachment(req, pdfData) {
     const personalisations = this.behaviourConfig.notifyPersonalisations;
 
     try {
@@ -72,7 +73,51 @@ module.exports = class CreateAndSendPDF {
         req.log('warn', '*** Notify API Key set to USE_MOCK. Ensure disabled in production! ***');
       }
 
-      await notifyClient.sendEmail(submissionTemplateId, caseworkerEmail, {
+      await notifyClient.sendEmail(submissionTemplateId, req.sessionModel.get('landlord-email'), {
+        personalisation: Object.assign({}, personalisations, {
+          link_to_file: notifyClient.prepareUpload(pdfData, { confirmEmailBeforeDownload: false }),
+          full_name: req.sessionModel.get('tenant-full-name'),
+          ref_number: req.sessionModel.get('reference-number'),
+          has_company_name: req.sessionModel.get('company-name').length > 0 ? 'yes' : 'no',
+          company_name: req.sessionModel.get('company-name'),
+          tenancy_start_date: req.sessionModel.get('move-date'),
+          date_of_birth: req.sessionModel.get('tenant-dob'),
+          nationality: req.sessionModel.get('tenant-nationality'),
+          address_1: req.sessionModel.get('address-line-1'),
+          has_address_2: req.sessionModel.get('address-line-2').length > 0 ? 'yes' : 'no',
+          address_2: req.sessionModel.get('address-line-2'),
+          has_county: req.sessionModel.get('county').length > 0 ? 'yes' : 'no',
+          county: req.sessionModel.get('county'),
+          town: req.sessionModel.get('town-or-city'),
+          postcode: req.sessionModel.get('postcode'),
+          landlord_name: req.sessionModel.get('landlord-full-name'),
+          email: req.sessionModel.get('landlord-email'),
+          has_phone: req.sessionModel.get('landlord-phone').length > 0 ? 'yes' : 'no',
+          phone: req.sessionModel.get('landlord-phone')
+        })
+      });
+
+      const trackedPageStartTime = Number(req.sessionModel.get('session.started.timestamp'));
+      const timeSpentOnForm = utilities.secondsBetween(trackedPageStartTime, new Date());
+
+      req.log('info', 'lmr.submit_form.create_email_with_file_notify.successful');
+      req.log('info', `lmr.submission.duration=[${timeSpentOnForm}] seconds`);
+    } catch (err) {
+      const error = _.get(err, 'response.data.errors[0]', err.message || err);
+      req.log('error', 'lmr.submit_form.create_email_with_file_notify.error', error);
+      throw new Error(error);
+    }
+  }
+
+  async sendCaseworkerEmailWithAttachment(req, pdfData) {
+    const personalisations = this.behaviourConfig.notifyPersonalisations;
+
+    try {
+      if (notifyKey === 'USE_MOCK') {
+        req.log('warn', '*** Notify API Key set to USE_MOCK. Ensure disabled in production! ***');
+      }
+
+      await notifyClient.sendEmail(caseworkersubmissionTemplateId, caseworkerEmail, {
         personalisation: Object.assign({}, personalisations, {
           link_to_file: notifyClient.prepareUpload(pdfData, { confirmEmailBeforeDownload: false }),
           full_name: req.sessionModel.get('tenant-full-name'),
@@ -116,7 +161,8 @@ module.exports = class CreateAndSendPDF {
       pdfModel.set({ template: html });
       const pdfData = await pdfModel.save();
 
-      await this.sendEmailWithAttachment(req, pdfData);
+      await this.sendLandlordEmailWithAttachment(req, pdfData);
+      await this.sendCaseworkerEmailWithAttachment(req, pdfData);
 
       req.log('info', 'lmr.form.submit_form.successful');
     } catch(e) {
