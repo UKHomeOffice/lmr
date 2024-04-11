@@ -1,4 +1,4 @@
-#### LMR
+### LMR
 Landlords Make a Report (LMR) form built using the HOF (Home Office Forms) Framework.
 
 ## Getting Started
