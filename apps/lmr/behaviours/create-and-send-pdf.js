@@ -48,7 +48,7 @@ module.exports = class CreateAndSendPDF {
       locals = this.sortSections(locs);
     }
 
-    locals.title = 'Landlords make a report';
+    locals.title = 'Landlords make a request';
     locals.dateTime = moment().format(dateTimeFormat);
     locals.values = req.sessionModel.toJSON();
     locals.htmlLang = res.locals.htmlLang || 'en';
