@@ -50,6 +50,9 @@ module.exports = {
       behaviours: ['complete'],
       backLink: false,
       clearSession: true
+    },
+    '/accessibility': {
+      backLink: 'start'
     }
   }
 };
