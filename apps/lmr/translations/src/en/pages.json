@@ -82,5 +82,8 @@
         "label": "Phone number"
       }
     }
+  },
+  "accessibility": {
+    "header": "Accessibility statement"
   }
 }
