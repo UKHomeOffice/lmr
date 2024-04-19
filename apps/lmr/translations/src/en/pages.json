@@ -84,6 +84,8 @@
     }
   },
   "accessibility": {
-    "header": "Accessibility statement"
+    "header": "Accessibility statement",
+    "preparation-p1": "This statement was prepared on 19 April 2024. It was last reviewed on 19 April 2024.",
+    "preparation-p2": "This website was last tested on 18 March 2024. The test was carried out internally by the Home Office."
   }
 }
