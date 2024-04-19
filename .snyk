@@ -59,11 +59,11 @@ ignore:
       reason: Need to update markdown-it in HOF to version 13.0.2.
       expires: '2024-07-03T00:00:00.000Z'
   SNYK-JS-FOLLOWREDIRECTS-6444610:
-    - notifications-node-client > axios:
+    - hof > notifications-node-client > axios:
       reason: No upgrade or patch available
       expires: '2024-06-21T00:00:00.000Z'
   SNYK-JS-EXPRESS-6474509:
-    - hof > express:
+    - hof > reqres > express:
       reason: Need to update follow-redirects in HOF to version 1.15.6.
       expires: '2024-06-21T00:00:00.000Z'
 patch: {}
