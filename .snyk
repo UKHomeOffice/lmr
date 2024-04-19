@@ -63,11 +63,7 @@ ignore:
       reason: No upgrade or patch available
       expires: '2024-06-21T00:00:00.000Z'
   SNYK-JS-EXPRESS-6474509:
-    - hof > reqres > express:
-      reason: Need to update follow-redirects in HOF to version 1.15.6.
-      expires: '2024-06-21T00:00:00.000Z'
-  SNYK-JS-EXPRESS-6474509:
-    - hof > express:
+    - hof > *:
       reason: Need to update follow-redirects in HOF to version 1.15.6.
       expires: '2024-06-21T00:00:00.000Z'
   SNYK-JS-FOLLOWREDIRECTS-6444610:
