@@ -66,8 +66,14 @@ ignore:
     - hof > *:
       reason: Need to update follow-redirects in HOF to version 1.15.6.
       expires: '2024-06-21T00:00:00.000Z'
+    - hof > reqres > express:
+      reason: Need to update follow-redirects in HOF to version 1.15.6.
+      expires: '2024-06-21T00:00:00.000Z'
   SNYK-JS-FOLLOWREDIRECTS-6444610:
     - notifications-node-client > axios > follow-redirects:
+      reason: Need to update follow-redirects in HOF to version 1.15.6.
+      expires: '2024-06-21T00:00:00.000Z'
+    - hof > notifications-node-client > axios > follow-redirects:
       reason: Need to update follow-redirects in HOF to version 1.15.6.
       expires: '2024-06-21T00:00:00.000Z'
 patch: {}
