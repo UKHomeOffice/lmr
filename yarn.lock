@@ -4406,10 +4406,10 @@ notifications-node-client@^6.0.0:
     axios "^0.25.0"
     jsonwebtoken "^9.0.0"
 
-notifications-node-client@^8.0.0:
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/notifications-node-client/-/notifications-node-client-8.0.0.tgz#474dd69c60a91a41f629be145bb6d361ccee63b6"
-  integrity sha512-65BxorFYVFOpJ9c2lud/4Ju+Bfn3L/vkih+FuzMhBw1wcOPjwgu4doVH6xO91fHYiAi/0uIx0Mc+NorXeANMHw==
+notifications-node-client@^8.1.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/notifications-node-client/-/notifications-node-client-8.1.0.tgz#aaf007ccb864eae56942a6fed176c4b310d4e975"
+  integrity sha512-2NJqPEcvlFRxuPMMWqoVXVUDz9EWl8dQVAhnLfRdv61PaHMqIRiQTdwn2qge8sC3kAsLnJoTl0qxhwDUarkYsQ==
   dependencies:
     axios "^1.6.1"
     jsonwebtoken "^9.0.0"
