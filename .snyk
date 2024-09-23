@@ -1,75 +1,140 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
-version: v1.19.0
+version: v1.25.0
 # ignores vulnerabilities until expiry date; change duration by modifying expiry date
 ignore:
   SNYK-JS-REQUEST-3361831:
-  - '*':
-      reason: No upgrade or patch available
-      expires: '2024-11-01T17:02:21.865Z'
-  SNYK-JS-XML2JS-5414874:
-  - '*':
-      reason: No direct upgrade or patch available
-      expires: '2024-11-01T17:02:21.865Z'
-  SNYK-JS-DICER-2311764:
     - '*':
-      reason: No upgrade or patch available
-      expires: '2024-11-01T17:02:21.865Z'
-  SNYK-JS-FILETYPE-2958042:
-    - '*':
-      reason: No upgrade or patch available
-      expires: '2024-11-01T17:02:21.865Z'
-  SNYK-JS-UNDERSCORE-1080984:
-    - '*':
-      reason: No upgrade or patch available
-      expires: '2024-11-01T17:02:21.865Z'
-  SNYK-JS-USERAGENT-174737:
-    - '*':
-      reason: No upgrade or patch available
-      expires: '2024-11-01T17:02:21.865Z'
-  SNYK-JS-AXIOS-6032459:
-    - '*':
-      reason: To be updated to a newer version in hof
-      expires: '2024-11-01T17:02:21.865Z'
-  SNYK-JS-AXIOS-6124857:
-    - '*':
-      reason: To be updated to a newer version in hof
-      expires: '2024-11-01T17:02:21.865Z'
-  SNYK-JS-AXIOS-6144788:
-    - '*':
-      reason: To be updated to a newer version in hof
-      expires: '2024-11-01T17:02:21.865Z'
-  SNYK-JS-FOLLOWREDIRECTS-6141137:
-    - '*':
-      reason: To be updated to a newer version in hof
-      expires: '2024-11-01T17:02:21.865Z'
-  SNYK-JS-INFLIGHT-6095116:
-    - '*':
-      reason: To be updated to a newer version in hof
-      expires: '2024-11-01T17:02:21.865Z'
-  SNYK-JS-NODEMAILER-6219989:
-    - '*':
-      reason: To be updated to a newer version in hof
-      expires: '2024-11-01T17:02:21.865Z'
+        reason: HOF framework needs updating to remove request.js
+        expires: 2024-12-01T00:00:00.000Z
+        created: 2023-03-23T23:12:47.350Z
   SNYK-JS-TOUGHCOOKIE-5672873:
     - '*':
-      reason: To be updated to a newer version in hof
-      expires: '2024-11-01T17:02:21.865Z'
-  SNYK-JS-MARKDOWNIT-6483324:
-    - hof > markdown-it:
-      reason: Need to update markdown-it in HOF to version 13.0.2.
-      expires: '2024-07-03T00:00:00.000Z'
+        reason: HOF framework needs updating to remove request.js of which this is a dependency
+        expires: 2024-12-01T00:00:00.000Z
+        created: 2023-04-14T23:12:47.350Z
+  SNYK-JS-XLSX-5457926:
+    - '*':
+        reason: No direct upgrade or patch available
+        expires: 2024-12-01T00:00:00.000Z
+        created: 2023-07-14T23:12:47.350Z
+  SNYK-JS-XML2JS-5414874:
+    - '*':
+        reason: No direct upgrade or patch available
+        expires: 2024-12-01T00:00:00.000Z
+        created: 2023-07-14T23:12:47.350Z
+  SNYK-JS-BRACES-6838727:
+    - '*':
+        reason: will be update whit hof upgraded versions >21 
+        expires: 2024-12-01T00:00:00.000Z
+        created: 2023-09-23T16:12:47.350Z
+  SNYK-JS-BROWSERIFYSIGN-6037026:
+    - '*':
+        reason: will be update whit hof upgraded versions >21
+        expires: 2024-12-01T00:00:00.000Z
+        created: 2023-09-23T16:12:47.350Z
+  SNYK-JS-FOLLOWREDIRECTS-6141137:
+    - '*':
+        reason: will be update whit hof upgraded versions >21
+        expires: 2024-10-01T00:00:00.000Z
+        created: 2023-09-23T16:12:47.350Z
   SNYK-JS-FOLLOWREDIRECTS-6444610:
-    - hof > notifications-node-client > * :
-      reason: No upgrade or patch available
-      expires: '2024-06-21T00:00:00.000Z'
-    - notifications-node-client > axios > follow-redirects:
-      reason: Need to update follow-redirects in HOF to version 1.15.6.
-      expires: '2024-06-21T00:00:00.000Z'
+    - '*':
+        reason: will be update whit hof upgraded versions >21
+        expires: 2024-12-01T00:00:00.000Z
+        created: 2023-09-23T16:12:47.350Z
+  SNYK-JS-INFLIGHT-6095116:
+    - '*':
+        reason: will be update whit hof upgraded versions >21
+        expires: 2024-12-01T00:00:00.000Z
+        created: 2023-09-23T16:12:47.350Z
+  SNYK-JS-MARKDOWNIT-6483324:
+    - '*':
+        reason: will be update whit hof upgraded versions >21
+        expires: 2024-12-01T00:00:00.000Z
+        created: 2023-09-23T16:12:47.350Z
+  SNYK-JS-NODEMAILER-6219989:
+    - '*':
+        reason: will be update whit hof upgraded versions >21
+        expires: 2024-12-01T00:00:00.000Z
+        created: 2023-09-23T16:12:47.350Z
+  SNYK-JS-XLSX-6252523:
+    - '*':
+        reason: No upgrade or patch available
+        expires: 2024-12-01T00:00:00.000Z
+        created: 2023-09-23T16:12:47.350Z
+  SNYK-JS-AXIOS-6124857:
+    - '*':
+        reason: will be update whit hof upgraded versions >21
+        expires: 2024-12-01T00:00:00.000Z
+        created: 2023-09-23T16:12:47.350Z
+  SNYK-JS-AXIOS-6144788:
+    - '*':
+        reason: will be update whit hof upgraded versions >21
+        expires: 2024-12-01T00:00:00.000Z
+        created: 2023-09-23T16:12:47.350Z
+  SNYK-JS-AXIOS-6032459:
+    - '*':
+        reason: will be update whit hof upgraded versions >21
+        expires: 2024-12-01T00:00:00.000Z
+        created: 2023-09-23T16:12:47.350Z
+  SNYK-JS-AXIOS-7361793:
+    - '*':
+        reason: will be update whit hof upgraded versions >21
+        expires: 2024-12-01T00:00:00.000Z
+        created: 2023-09-23T16:12:47.350Z
+  SNYK-JS-PHIN-6598077:
+    - '*':
+        reason: will be update whit hof upgraded versions >21
+        expires: 2024-12-01T00:00:00.000Z
+        created: 2023-09-23T16:12:47.350Z
+  SNYK-JS-BODYPARSER-7926860:
+    - '*':
+        reason: will be update whit hof upgraded versions >21
+        expires: 2024-12-01T00:00:00.000Z
+        created: 2023-09-23T16:12:47.350Z
+  SNYK-JS-ELLIPTIC-7577916:
+    - '*':
+        reason: will be update whit hof upgraded versions >21
+        expires: 2024-10-01T00:00:00.000Z
+        created: 2023-09-23T16:12:47.350Z 
+  SNYK-JS-ELLIPTIC-7577917:
+    - '*':
+        reason: will be update whit hof upgraded versions >21
+        expires: 2024-12-01T00:00:00.000Z
+        created: 2023-09-23T16:12:47.350Z 
+  SNYK-JS-ELLIPTIC-7577918:
+    - '*':
+        reason: will be update whit hof upgraded versions >21
+        expires: 2024-12-01T00:00:00.000Z
+        created: 2023-09-23T16:12:47.350Z 
   SNYK-JS-EXPRESS-6474509:
-    - hof > *:
-      reason: Need to update follow-redirects in HOF to version 1.15.6.
-      expires: '2024-06-21T00:00:00.000Z'
-    - hof > reqres > express:
-      reason: Need to update follow-redirects in HOF to version 1.15.6.
-      expires: '2024-06-21T00:00:00.000Z'
+    - '*':
+        reason: will be update whit hof upgraded versions >21
+        expires: 2024-12-01T00:00:00.000Z
+        created: 2023-09-23T16:12:47.350Z
+  SNYK-JS-EXPRESS-7926867:
+    - '*':
+        reason: will be update whit hof upgraded versions >21
+        expires: 2024-10-01T00:00:00.000Z
+        created: 2023-09-23T16:12:47.350Z
+  SNYK-JS-PATHTOREGEXP-7925106:
+    - '*':
+        reason: will be update whit hof upgraded versions >21
+        expires: 2024-10-01T00:00:00.000Z
+        created: 2023-09-23T16:12:47.350Z
+  SNYK-JS-SEND-7926862:
+    - '*':
+        reason: will be update whit hof upgraded versions >21
+        expires: 2024-12-01T00:00:00.000Z
+        created: 2023-09-23T16:12:47.350Z
+  SNYK-JS-SERVESTATIC-7926865:
+    - '*':
+        reason: will be update whit hof upgraded versions >21
+        expires: 2024-12-01T00:00:00.000Z
+        created: 2023-09-23T16:12:47.350Z
+  SNYK-JS-UNDERSCORE-1080984:
+    - '*':
+        reason: will be update whit hof upgraded versions >21
+        expires: 2024-12-01T00:00:00.000Z
+        created: 2023-09-23T16:12:47.350Z
 patch: {}
