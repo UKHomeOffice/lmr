@@ -85,7 +85,16 @@
   },
   "accessibility": {
     "header": "Accessibility statement",
-    "preparation-p1": "This statement was prepared on 19 April 2024. It was last reviewed on 19 April 2024.",
-    "preparation-p2": "This website was last tested on 18 March 2024. The test was carried out internally by the Home Office."
+    "intro-p2-li2":"zoom in up to 400% without the text spilling off the screen",
+    "reporting-header": "Reporting accessibility problems with this service", 
+    "enforcement-p2-pre-link":"If you are in Northern Ireland and are not happy with how we respond to your complaint you can contact the ",
+    "enforcement-p2-link":"Equalities Commission for Northern Ireland ",
+    "enforcement-p2-post-link":"who are responsible for enforcing the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018 (the ‘accessibility regulations’) in Northern Ireland.",
+    "compliance-p1": "This website is partially compliant with the <a href='https://www.w3.org/TR/WCAG22/'>Web Content Accessibility Guidelines (WCAG) 2.2</a> AA standard, due to the non-compliances listed below.",
+    "non-compliance-p2":"If you find an issue that we have yet to identify, please contact us using one of the routes described in the ‘Reporting accessibility problems with this website’ section of this statement.",
+    "disproportionate-burden-p1":"Not applicable.",
+    "outside-scope-p1":"Not applicable.",
+    "preparation-p1": "This statement was prepared on 18 September 2024. It was last reviewed on 18 September 2024.",
+    "preparation-p2": "This website was last tested on 18 September 2024. The test was carried out internally by the Home Office."
   }
 }
