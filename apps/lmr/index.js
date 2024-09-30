@@ -1,8 +1,10 @@
 /* eslint-disable */
 'use strict';
 
+const hof = require('hof');
 const Submit = require('./behaviours/submit');
 const SummaryPageBehaviour = require('hof').components.summary;
+const PostcodeLookup = hof.components.postcodeLookup;
 
 module.exports = {
   name: 'lmr',
@@ -19,8 +21,17 @@ module.exports = {
     },
     '/tenant-details': {
       fields: ['tenant-full-name', 'tenant-dob', 'tenant-nationality'],
-      next: '/property-address',
+      next: '/postcode',
       backLink: 'tenancy-start'
+    },
+    '/postcode': {
+      behaviours: [PostcodeLookup({
+        addressFieldNamePrefix: 'address-one',
+        apiURL: process.env.POSTCODE_API_URL,
+        apiKey: process.env.POSTCODE_API_KEY,
+        required: true
+      })],
+      next: '/property-address'
     },
     '/property-address': {
       fields: ['address-line-1', 'address-line-2', 'town-or-city', 'county', 'postcode'],

@@ -66,5 +66,18 @@
   },
   "privacy-check": {
     "required": "Confirm you have read the Data Protection statement"
+  },
+  "address-one-postcode": {
+    "required": "You must enter a postcode",
+    "postcodeValidation": "Enter a full, valid UK postcode"
+  },
+  "address-one-select": {
+    "required": "You must select an option"
+  },
+  "address-one": {
+    "required": "You must enter the address"
+  },
+  "address-one-postcode-manual": {
+    "required": "You must enter the postcode"
   }
 }
