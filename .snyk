@@ -137,4 +137,8 @@ ignore:
         reason: will be update whit hof upgraded versions >21
         expires: 2024-12-01T00:00:00.000Z
         created: 2023-09-23T16:12:47.350Z
+  SNYK-JS-ELLIPTIC-8187303:
+    - '*':
+      reason: No direct patch or upgrade.
+      expires: '2025-01-18T00:00:00.000Z'
 patch: {}
