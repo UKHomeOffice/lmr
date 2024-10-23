@@ -16,6 +16,10 @@
     "header": "Rental property address",
     "p1": "The address must be in England. You do not need to check a tenant's right to rent for properties in Wales, Scotland or Northern Ireland."
   },
+  "address-lookup": {
+    "manual-address-heading": "Rental property address",
+    "manual-address-paragraph": "The address must be in England. You do not need to check a tenant's right to rent for properties in Wales, Scotland or Northern Ireland."
+  },
   "landlord-details": {
     "header": "Landlord's or agent's information"
   },
@@ -69,6 +73,18 @@
       "postcode": {
         "label": "Postcode"
       },
+      "address-one": {
+        "label": "Address line 1"
+      },
+      "address-one-address-line-2": {
+        "label": "Address line 2"
+      },
+      "address-one-town-or-city": {
+        "label": "Town / city"
+      },
+      "address-one-postcode-manual": {
+        "label": "Postcode"
+      },
       "landlord-full-name": {
         "label": "Full name"
       },
@@ -85,15 +101,15 @@
   },
   "accessibility": {
     "header": "Accessibility statement",
-    "intro-p2-li2":"zoom in up to 400% without the text spilling off the screen",
-    "reporting-header": "Reporting accessibility problems with this service", 
-    "enforcement-p2-pre-link":"If you are in Northern Ireland and are not happy with how we respond to your complaint you can contact the ",
-    "enforcement-p2-link":"Equalities Commission for Northern Ireland ",
-    "enforcement-p2-post-link":"who are responsible for enforcing the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018 (the ‘accessibility regulations’) in Northern Ireland.",
+    "intro-p2-li2": "zoom in up to 400% without the text spilling off the screen",
+    "reporting-header": "Reporting accessibility problems with this service",
+    "enforcement-p2-pre-link": "If you are in Northern Ireland and are not happy with how we respond to your complaint you can contact the ",
+    "enforcement-p2-link": "Equalities Commission for Northern Ireland ",
+    "enforcement-p2-post-link": "who are responsible for enforcing the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018 (the ‘accessibility regulations’) in Northern Ireland.",
     "compliance-p1": "This website is partially compliant with the <a href='https://www.w3.org/TR/WCAG22/'>Web Content Accessibility Guidelines (WCAG) 2.2</a> AA standard, due to the non-compliances listed below.",
-    "non-compliance-p2":"If you find an issue that we have yet to identify, please contact us using one of the routes described in the ‘Reporting accessibility problems with this website’ section of this statement.",
-    "disproportionate-burden-p1":"Not applicable.",
-    "outside-scope-p1":"Not applicable.",
+    "non-compliance-p2": "If you find an issue that we have yet to identify, please contact us using one of the routes described in the ‘Reporting accessibility problems with this website’ section of this statement.",
+    "disproportionate-burden-p1": "Not applicable.",
+    "outside-scope-p1": "Not applicable.",
     "preparation-p1": "This statement was prepared on 18 September 2024. It was last reviewed on 18 September 2024.",
     "preparation-p2": "This website was last tested on 18 September 2024. The test was carried out internally by the Home Office."
   }
