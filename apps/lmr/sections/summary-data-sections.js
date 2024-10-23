@@ -55,6 +55,22 @@ module.exports = {
       {
         step: '/property-address',
         field: 'postcode'
+      },
+      {
+        step: '/postcode?step=manual',
+        field: 'address-one'
+      },
+      {
+        step: '/postcode?step=manual',
+        field: 'address-one-address-line-2'
+      },
+      {
+        step: '/postcode?step=manual',
+        field: 'address-one-town-or-city'
+      },
+      {
+        step: '/postcode?step=manual',
+        field: 'address-one-postcode-manual'
       }
     ]
   },
