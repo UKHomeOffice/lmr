@@ -4,7 +4,7 @@ Landlords Make a Report (LMR) form built using the HOF (Home Office Forms) Frame
 ## Getting Started
 ### Prerequisites
 - [Node.js](https://nodejs.org/en/) - Tested against LTS
-- NPM (installed with Node.js) - Works with version 18+
+- NPM (installed with Node.js) - Works with version 20.18.0
 - [Html-pdf-converter](https://github.com/UKHomeOffice/html-pdf-converter) service running on a separate port to this service
 - [Redis server](http://redis.io/download) running on the default port
 
