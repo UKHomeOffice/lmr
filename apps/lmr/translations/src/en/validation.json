@@ -42,8 +42,7 @@
   "postcode": {
     "required": "Enter the postcode of the rental property",
     "notUrl": "Please do not enter a link/URL into your answers",
-    "regex": "Your postcode is not in England. If your property is not in England, you do not have to do a right to rent check",
-    "postcode": "Your postcode is not in England. If your property is not in England, you do not have to do a right to rent check"
+    "englandPostcodeValidator": "Your postcode is not in England. If your property is not in England, you do not have to do a right to rent check"
   },
   "landlord-full-name": {
     "required": "Enter the landlord's full name",
