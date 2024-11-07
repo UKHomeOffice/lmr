@@ -24,15 +24,14 @@ trigger:
 
 linting: &linting
   pull: if-not-exists
-  image: node:18
-  environment:
+  image: node:20.18.0-alpine3.20@sha256:d504f23acdda979406cf3bdbff0dff7933e5c4ec183dda404ed24286c6125e60
     NOTIFY_KEY: USE_MOCK
   commands:
     - yarn run test:lint
 
 unit_tests: &unit_tests
   pull: if-not-exists
-  image: node:18
+  image: node:20.18.0-alpine3.20@sha256:d504f23acdda979406cf3bdbff0dff7933e5c4ec183dda404ed24286c6125e60
   environment:
     NOTIFY_KEY: USE_MOCK
   commands:
@@ -67,7 +66,7 @@ steps:
 
   - name: setup_deploy
     pull: if-not-exists
-    image: node:18.12.0
+    image: node:20.18.0-alpine3.20@sha256:d504f23acdda979406cf3bdbff0dff7933e5c4ec183dda404ed24286c6125e60
     environment:
       NOTIFY_KEY: USE_MOCK
     commands:
@@ -169,7 +168,7 @@ steps:
 
   - name: setup_branch
     pull: if-not-exists
-    image: node:18
+    image: node:20.18.0-alpine3.20@sha256:d504f23acdda979406cf3bdbff0dff7933e5c4ec183dda404ed24286c6125e60
     environment:
       NOTIFY_KEY: USE_MOCK
     commands:
