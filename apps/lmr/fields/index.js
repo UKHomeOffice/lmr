@@ -3,12 +3,12 @@
 const dateComponent = require('hof').components.date;
 const countries = require('hof').utils.countries();
 const validators = require('hof/controller/validation/validators');
-const formatters = require('hof/controller/formatting/formatters');
 
 /**
  * Validation rule to validate the postcode for 'England'.
  * @param {string} value - The value to be checked.
- * @constant isValidPostcode - The value to check the input is valid postcode or not using HOF 'postcode' validator. if its not valid, it will return false.
+ * @constant isValidPostcode - The value to check the input is valid postcode or not using HOF 'postcode' validator.
+ * isValidPostcode value will be false for the invalid postcode
  * @returns {boolean} - Returns true if the value is valid England postcode, otherwise false.
  */
 function englandPostcodeValidator(value) {
