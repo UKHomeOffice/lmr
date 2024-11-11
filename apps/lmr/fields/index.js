@@ -2,6 +2,22 @@
 
 const dateComponent = require('hof').components.date;
 const countries = require('hof').utils.countries();
+const validators = require('hof/controller/validation/validators');
+
+/**
+ * Validation rule to validate the postcode for 'England'.
+ * @param {string} value - The value to be checked.
+ * @constant isValidPostcode - The value to check the input is valid postcode or not using HOF 'postcode' validator.
+ * isValidPostcode value will be false for the invalid postcode
+ * @returns {boolean} - Returns true if the value is valid England postcode, otherwise false.
+ */
+function englandPostcodeValidator(value) {
+  const isValidPostcode = validators.postcode(value);
+  // Regex validation to only allow postcodes within England.
+  // Includes Wales/England and Scotland/England postcode areas which are cross-bordered (DG, HR, LD, LL, NP, SY)
+  // eslint-disable-next-line
+  return isValidPostcode && validators.regex(value, /^(A[L]|B[ABDHLNRS]?|C[ABHMORTVW]|D[AEGHLNTY]|E[CNX]?|F[Y]|G[LU]|H[ADGPRUX]|I[GP]|K[T]|L[ADELNSU]?|M[EK]?|N[EGNPRW]?|O[LX]|P[ELOR]|R[GHM]|S[EGKLMNOPRSTWY]?|T[AFNQRSW]|UB|W[ACDFNRSV]?|YO)([A-Za-z\d]{1,2})\s?([A-Za-z\d]{3})$/);
+}
 
 module.exports = {
   'move-date': dateComponent('move-date', {
@@ -43,10 +59,7 @@ module.exports = {
   },
   postcode: {
     mixin: 'input-text',
-    // Regex validation to only allow postcodes within England.
-    // Includes Wales/England and Scotland/England postcode areas which are cross-bordered
-    // eslint-disable-next-line
-    validate: ['required', 'notUrl', { type: 'regex', arguments:/^(AL|B|B[ABDHLNRS]|C[ABHMORTVW]|D[AEGHLNTY]|E|E[CNX]|FY|G[LU]|H[ADGPUX]|I[G​P]‌​|KT|L|L[ADENSU]|M|ME|MK|N|N[EGNRW]|O[LX]|P[ELOR]|R[GHM]|S|S[EGKLMNOPRSTW]|T[AFNQ‌​‌​RSW]|UB|W|W[ACDFNRSV]|YO)\d{1,2}\s?(\d[\w]{2})?$/}],
+    validate: ['required', 'notUrl', englandPostcodeValidator],
     formatter: ['ukPostcode'],
     className: ['govuk-input', 'govuk-input--width-10']
   },
