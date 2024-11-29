@@ -35,7 +35,7 @@ spec:
     {{ else if eq .KUBE_NAMESPACE .UAT_ENV }}
     - host: lmr.uat.sas-notprod.homeoffice.gov.uk
     {{ else if eq .KUBE_NAMESPACE .STG_ENV }}
-    - host: preprod.notprod.{{ .APP_NAME }}.homeoffice.gov.uk
+    - host: lmr.stg.sas.homeoffice.gov.uk
     {{ else }}
     - host: {{ .PRODUCTION_URL }}
     {{ end }}
