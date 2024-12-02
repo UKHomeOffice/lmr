@@ -12,6 +12,26 @@ ignore:
         reason: HOF framework needs updating to remove request.js of which this is a dependency
         expires: 2024-12-01T00:00:00.000Z
         created: 2023-04-14T23:12:47.350Z
+  SNYK-JS-AXIOS-6671926:
+    - '*':
+        reason: Cross-site Scripting (XSS) Issues with no direct upgrade or patch
+        expires: 2025-01-01T00:00:00.000Z
+        created: 2024-12-02T23:12:47.350Z
+  SNYK-JS-INFLIGHT-6095116:
+    - '*':
+        reason: introduced by hof@21.1.1 > browserify@17.0.1 > glob@7.2.3 > inflight@1.0.6
+        expires: 2025-11-01T00:00:00.000Z
+        created: 2024-12-02T23:12:47.350Z
+  SNYK-JS-MARKDOWNIT-6483324:
+    - '*':
+        reason: No upgrade or patch available
+        expires: 2025-11-01T00:00:00.000Z
+        created: 2024-12-02T23:12:47.350Z
+  SNYK-JS-UNDERSCORE-1080984:
+    - '*':
+        reason: No upgrade or patch available
+        expires: 2025-01-01T00:00:00.000Z
+        created: 2024-12-02T23:12:47.350Z
   SNYK-JS-XLSX-5457926:
     - '*':
         reason: No direct upgrade or patch available
@@ -38,16 +58,6 @@ ignore:
         expires: 2024-10-01T00:00:00.000Z
         created: 2023-09-23T16:12:47.350Z
   SNYK-JS-FOLLOWREDIRECTS-6444610:
-    - '*':
-        reason: will be update whit hof upgraded versions >21
-        expires: 2024-12-01T00:00:00.000Z
-        created: 2023-09-23T16:12:47.350Z
-  SNYK-JS-INFLIGHT-6095116:
-    - '*':
-        reason: will be update whit hof upgraded versions >21
-        expires: 2024-12-01T00:00:00.000Z
-        created: 2023-09-23T16:12:47.350Z
-  SNYK-JS-MARKDOWNIT-6483324:
     - '*':
         reason: will be update whit hof upgraded versions >21
         expires: 2024-12-01T00:00:00.000Z
@@ -128,11 +138,6 @@ ignore:
         expires: 2024-12-01T00:00:00.000Z
         created: 2023-09-23T16:12:47.350Z
   SNYK-JS-SERVESTATIC-7926865:
-    - '*':
-        reason: will be update whit hof upgraded versions >21
-        expires: 2024-12-01T00:00:00.000Z
-        created: 2023-09-23T16:12:47.350Z
-  SNYK-JS-UNDERSCORE-1080984:
     - '*':
         reason: will be update whit hof upgraded versions >21
         expires: 2024-12-01T00:00:00.000Z

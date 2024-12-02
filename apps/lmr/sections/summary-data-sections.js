@@ -22,7 +22,13 @@ module.exports = {
       },
       {
         step: '/tenant-details',
-        field: 'tenant-nationality'
+        field: 'tenant-nationality',
+        parse: (list, req) => {
+          if (req.sessionModel.get('tenant-nationality') ===  '') {
+            return ' ';
+          }
+          return list;
+        }
       },
       {
         step: '/property-address',

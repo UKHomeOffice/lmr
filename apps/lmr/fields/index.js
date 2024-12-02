@@ -35,7 +35,7 @@ module.exports = {
   'tenant-nationality': {
     mixin: 'select',
     className: ['typeahead'],
-    validate: ['required', 'notUrl'],
+    validate: ['notUrl'],
     options: [{
       value: '',
       label: 'fields.tenant-nationality.options.null'

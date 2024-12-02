@@ -18,7 +18,6 @@
     "over18": "Date of birth entered must reflect 18 years or older"
   },
   "tenant-nationality": {
-    "required": "Please enter the tenant's nationality",
     "notUrl": "Please do not enter a link/URL into your answers"
   },
   "address-line-1": {
