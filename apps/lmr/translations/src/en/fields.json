@@ -11,7 +11,7 @@
     "hint": "Example: 21 3 1980"
   },
   "tenant-nationality": {
-    "label": "Nationality",
+    "label": "Nationality (optional)",
     "options": {
       "null": "Select a country"
     }

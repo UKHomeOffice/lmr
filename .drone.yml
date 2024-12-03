@@ -133,7 +133,27 @@ steps:
       event: [push, pull_request]
 
   # Trivy Security Scannner
-  - name: scan-image
+  # - name: scan-image
+  #   pull: always
+  #   image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/trivy/client:latest
+  #   resources:
+  #     limits:
+  #       cpu: 1000
+  #       memory: 1024Mi
+  #   environment:
+  #     IMAGE_NAME: lmr:${DRONE_COMMIT_SHA}
+  #     SEVERITY: MEDIUM,HIGH,CRITICAL
+  #     FAIL_ON_DETECTION: false
+  #     IGNORE_UNFIXED: true
+  #     ALLOW_CVE_LIST_FILE: hof-services-config/Landlords_Make_A_Report/trivy-cve-exceptions.txt
+  #   when:
+  #     event:
+  #     - pull_request
+  #     - push
+  #     - tag
+
+  # Trivy Security Scannner for scanning OS related vulnerabilities in Base image of Dockerfile
+  - name: scan_base_image_os
     pull: always
     image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/trivy/client:latest
     resources:
@@ -141,17 +161,18 @@ steps:
         cpu: 1000
         memory: 1024Mi
     environment:
-      IMAGE_NAME: lmr:${DRONE_COMMIT_SHA}
-      SEVERITY: MEDIUM,HIGH,CRITICAL
+      IMAGE_NAME: node:20.18.0-alpine3.20@sha256:d504f23acdda979406cf3bdbff0dff7933e5c4ec183dda404ed24286c6125e60
+      SERVICE_URL: https://acp-trivy-helm.acp-trivy.svc.cluster.local:443
+      SEVERITY: MEDIUM,HIGH,CRITICAL  --dependency-tree
       FAIL_ON_DETECTION: false
-      IGNORE_UNFIXED: true
-      ALLOW_CVE_LIST_FILE: hof-services-config/Landlords_Make_A_Report/trivy-cve-exceptions.txt
+      IGNORE_UNFIXED: false
+      ALLOW_CVE_LIST_FILE: hof-services-config/infrastructure/trivy/.trivyignore.yaml
+    volumes:
+      - name: dockersock
+        path: /root/.dockersock
     when:
-      event:
-      - pull_request
-      - push
-      - tag
-
+      event: [push, pull_request]
+  
   # Deploy to pull request UAT environment
   - name: deploy_to_branch
     pull: if-not-exists
