@@ -19,5 +19,6 @@ module.exports = {
   },
   hosts: {
     acceptanceTests: process.env.ACCEPTANCE_HOST_NAME || `http://localhost:${process.env.PORT || 8080}`
-  }
+  },
+  feedbackUrl: process.env.FEEDBACK_URL
 };
