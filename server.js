@@ -3,6 +3,7 @@
 
 const hof = require('hof');
 let settings = require('./hof.settings');
+const config = require('./config');
 
 settings = Object.assign({}, settings, {
   routes: settings.routes.map(require),
@@ -15,7 +16,7 @@ app.use((req, res, next) => {
   // Set HTML Language
   res.locals.htmlLang = 'en';
   // Set feedback link and phase banner
-  res.locals.feedbackUrl = 'https://eforms.homeoffice.gov.uk/outreach/feedback.ofml';
+  res.locals.feedbackUrl = config.feedbackUrl;
   next();
 });
 
