@@ -1,5 +1,17 @@
-{{<partials-page}}
-  {{$page-content}}
+{{<layout}}
+  {{$journeyHeader}}
+    {{#t}}journey.header{{/t}}
+  {{/journeyHeader}}
+
+  {{$propositionHeader}}
+    {{> partials-navigation}}
+  {{/propositionHeader}}
+
+  {{$header}}
+    {{header}}
+  {{/header}}
+
+  {{$content}}
     <br>
     <p>{{#t}}pages.start.p1{{/t}}</p>
     <p>{{#t}}pages.start.p2{{/t}}</p>
@@ -11,5 +23,5 @@
       </svg>
     </a>
     <p>{{#t}}pages.start.p4{{/t}}</p>
-  {{/page-content}}
-{{/partials-page}}
+  {{/content}}
+{{/layout}}
