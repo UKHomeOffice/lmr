@@ -1,10 +1,17 @@
-{{<partials-page}}
-  {{$pageTitle}}
-    {{#t}}pages.accessibility.header{{/t}} &ndash; {{#t}}journey.serviceName{{/t}} &ndash; GOV.UK
-  {{/pageTitle}}
+{{<layout}}
+  {{$journeyHeader}}
+    {{#t}}journey.header{{/t}}
+  {{/journeyHeader}}
 
+  {{$propositionHeader}}
+    {{> partials-navigation}}
+  {{/propositionHeader}}
 
-  {{$page-content}}
+  {{$header}}
+    {{#t}}pages.accessibility.header{{/t}}
+  {{/header}}
+
+  {{$content}}
     <p class="govuk-body">{{#t}}accessibility.intro-p2{{/t}}</p>
     <ul class="govuk-list govuk-list--bullet">
         <li>{{#t}}accessibility.intro-p2-li1{{/t}}</li>
@@ -39,5 +46,5 @@
     <p class="govuk-body">{{#t}}pages.accessibility.preparation-p1{{/t}}</p>
     <p class="govuk-body">{{#t}}pages.accessibility.preparation-p2{{/t}}</p>
     <p class="govuk-body">{{#t}}accessibility.preparation-p3{{/t}}</p>
-  {{/page-content}}
-{{/partials-page}}
+  {{/content}}
+{{/layout}}

@@ -53,6 +53,8 @@ module.exports = {
     },
     '/accessibility': {
       backLink: 'start'
-    }
+    },
+    '/session-timeout': {},
+    '/exit': {}
   }
 };
