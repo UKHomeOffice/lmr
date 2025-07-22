@@ -73,11 +73,11 @@ spec:
               value: "0"
             - name: SERVICE_URL
               {{ if eq .KUBE_NAMESPACE .BRANCH_ENV }}
-              value: lmr-{{ .DRONE_SOURCE_BRANCH }}.internal.sas-lmr-branch.homeoffice.gov.uk
+              value: {{ .APP_NAME }}-{{ .DRONE_SOURCE_BRANCH }}.internal.{{ .BRANCH_ENV }}.homeoffice.gov.uk
               {{ else if eq .KUBE_NAMESPACE .UAT_ENV }}
-              value: lmr.uat.sas-notprod.homeoffice.gov.uk
+              value: {{ .APP_NAME }}.uat.sas-notprod.homeoffice.gov.uk
               {{ else if eq .KUBE_NAMESPACE .STG_ENV }}
-              value: lmr.internal.stg.sas-notprod.homeoffice.gov.uk
+              value: {{ .APP_NAME }}.internal.stg.sas-notprod.homeoffice.gov.uk
               {{ else }}
               value: {{ .PRODUCTION_URL }}
               {{ end }}
@@ -133,7 +133,6 @@ spec:
           volumeMounts:
             - mountPath: /public
               name: public
-
 
         - name: nginx-proxy
           # nginx-proxy-govuk:v4
