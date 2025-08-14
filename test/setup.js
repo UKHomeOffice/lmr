@@ -1,8 +1,9 @@
 'use strict';
 
 (async () => {
-  global.chai = await import('chai');
+  const chai = await import('chai');
 
+  global.chai = chai;
   global.should = chai.should();
   global.expect = chai.expect;
 })();
