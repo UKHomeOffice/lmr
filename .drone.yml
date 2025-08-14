@@ -48,7 +48,7 @@ unit_tests: &unit_tests
 
 acceptance_tests: &acceptance_tests
   pull: if-not-exists
-  image: mcr.microsoft.com/playwright:v1.44.0-jammy
+  image: mcr.microsoft.com/playwright:v1.48.2-focal-amd64
 
 sonar_scanner: &sonar_scanner
   pull: if-not-exists
