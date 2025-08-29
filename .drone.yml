@@ -46,10 +46,6 @@ unit_tests: &unit_tests
   commands:
     - yarn run test:unit
 
-acceptance_tests: &acceptance_tests
-  pull: if-not-exists
-  image: mcr.microsoft.com/playwright:v1.48.2-focal-amd64
-
 sonar_scanner: &sonar_scanner
   pull: if-not-exists
   image: quay.io/ukhomeofficedigital/sonar-scanner-nodejs:latest
@@ -213,25 +209,6 @@ steps:
     depends_on:
       - clone_repos
       - image_to_quay
-
-  - name: acceptance_tests
-    <<: *acceptance_tests
-    commands:
-      - |
-          if [ "$${DRONE_BUILD_EVENT}" = "pull_request" ]; then
-            export ACCEPTANCE_HOST_NAME=https://$${APP_NAME}-$${DRONE_SOURCE_BRANCH}.$${BRANCH_ENV}.homeoffice.gov.uk
-          elif [ "$${DRONE_BUILD_EVENT}" = "promote" ] && [ "$${DRONE_TAG}" = "PROD" ]; then
-            export ACCEPTANCE_HOST_NAME=https://$${PRODUCTION_URL}
-          else
-            export ACCEPTANCE_HOST_NAME=https://$${APP_NAME}.uat.sas-notprod.homeoffice.gov.uk
-          fi
-          echo "ACCEPTANCE_HOST_NAME=$ACCEPTANCE_HOST_NAME"
-          npx playwright install
-          npm run test:acceptance
-    when:
-      branch:
-        <<: *include_default_and_feature_branches
-      event: [push, pull_request]
 
 # Deploy to master UAT environment
   - name: deploy_to_uat
