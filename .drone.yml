@@ -92,7 +92,6 @@ steps:
         <<: *include_default_and_feature_branches
       event: [push, pull_request]
     depends_on:
-      - setup
       - clone_repos
 
   - name: unit_tests
@@ -211,7 +210,6 @@ steps:
         <<: *include_default_and_feature_branches
       event: pull_request
     depends_on:
-      - setup
       - clone_repos
       - image_to_quay
 
@@ -250,7 +248,6 @@ steps:
         <<: *include_default_branch
       event: push
     depends_on:
-      - setup
       - clone_repos
       - image_to_quay
 
@@ -339,8 +336,6 @@ steps:
     when:
       target: PROD
       event: promote
-    depends_on:
-      - setup
 
   # CRON job step that tears down our pull request UAT environments
   - name: cron_tear_down
