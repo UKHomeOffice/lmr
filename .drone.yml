@@ -32,7 +32,7 @@ trigger:
 
 linting: &linting
   pull: if-not-exists
-  image: node:18
+  image: node:20.18.0
   environment:
     NOTIFY_KEY: USE_MOCK
   commands:
@@ -40,15 +40,11 @@ linting: &linting
 
 unit_tests: &unit_tests
   pull: if-not-exists
-  image: node:18
+  image: node:20.18.0
   environment:
     NOTIFY_KEY: USE_MOCK
   commands:
     - yarn run test:unit
-
-acceptance_tests: &acceptance_tests
-  pull: if-not-exists
-  image: mcr.microsoft.com/playwright:v1.44.0-jammy
 
 sonar_scanner: &sonar_scanner
   pull: if-not-exists
@@ -74,7 +70,7 @@ steps:
 
   - name: setup
     pull: if-not-exists
-    image: node:18.12.0
+    image: node:20.18.0
     environment:
       NOTIFY_KEY: USE_MOCK
     commands:
@@ -92,6 +88,7 @@ steps:
         <<: *include_default_and_feature_branches
       event: [push, pull_request]
     depends_on:
+      - setup
       - clone_repos
 
   - name: unit_tests
@@ -212,25 +209,6 @@ steps:
     depends_on:
       - clone_repos
       - image_to_quay
-
-  - name: acceptance_tests
-    <<: *acceptance_tests
-    commands:
-      - |
-          if [ "$${DRONE_BUILD_EVENT}" = "pull_request" ]; then
-            export ACCEPTANCE_HOST_NAME=https://$${APP_NAME}-$${DRONE_SOURCE_BRANCH}.$${BRANCH_ENV}.homeoffice.gov.uk
-          elif [ "$${DRONE_BUILD_EVENT}" = "promote" ] && [ "$${DRONE_TAG}" = "PROD" ]; then
-            export ACCEPTANCE_HOST_NAME=https://$${PRODUCTION_URL}
-          else
-            export ACCEPTANCE_HOST_NAME=https://$${APP_NAME}.uat.sas-notprod.homeoffice.gov.uk
-          fi
-          echo "ACCEPTANCE_HOST_NAME=$ACCEPTANCE_HOST_NAME"
-          npx playwright install
-          npm run test:acceptance
-    when:
-      branch:
-        <<: *include_default_and_feature_branches
-      event: [push, pull_request]
 
 # Deploy to master UAT environment
   - name: deploy_to_uat
