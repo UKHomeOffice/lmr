@@ -851,9 +851,9 @@ aws-sdk@^2.2.36:
     xml2js "0.6.2"
 
 axios@^1.12.2, axios@^1.7.2:
-  version "1.12.2"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-1.12.2.tgz#6c307390136cf7a2278d09cec63b136dfc6e6da7"
-  integrity sha512-vMJzPewAlRyOgxV2dU0Cuz2O8zzzx9VYtbJOaBgXFeLc4IV/Eg50n4LowmehOOR61S8ZMpc2K5Sa7g6A4jfkUw==
+  version "1.13.0"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.13.0.tgz#ead6f495f41f9c8869dcf7b0f24f5a4ab89707f0"
+  integrity sha512-zt40Pz4zcRXra9CVV31KeyofwiNvAbJ5B6YPz9pMJ+yOSLikvPT4Yi5LjfgjRa9CawVYBaD1JQzIVcIvBejKeA==
   dependencies:
     follow-redirects "^1.15.6"
     form-data "^4.0.4"
@@ -3043,11 +3043,6 @@ hogan.js@>=3.0.0, hogan.js@^3.0.2:
     mkdirp "0.3.0"
     nopt "1.0.10"
 
-homeoffice-countries@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/homeoffice-countries/-/homeoffice-countries-0.1.0.tgz#940d74b9067f13c7ee2037bb3bcfebc30fa9316e"
-  integrity sha512-7U3JLaBkL6AltQ2RdWVwAey/soiN2ktsLewo9A7UFIUf5mvrElAtrO43whsPc9EqUn4qDqnnFYpFwm435ar+cw==
-
 homeoffice-countries@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/homeoffice-countries/-/homeoffice-countries-0.2.0.tgz#c4c6c9bb12534d06556ae6f3ddcd7c589e0b2876"
@@ -3542,7 +3537,7 @@ jmespath@0.16.0:
   resolved "https://registry.yarnpkg.com/jmespath/-/jmespath-0.16.0.tgz#b15b0a85dfd4d930d43e69ed605943c802785076"
   integrity sha512-9FzQjJ7MATs1tSpnco1K6ayiYE3figslrXA72G2HQ/n76RzvYlofyi5QM+iX4YRs/pu3yzxlVQSST23+dMDknw==
 
-jquery@>=1.11, jquery@^3.6.0, jquery@^3.7.1:
+jquery@^3.6.0, jquery@^3.7.1:
   version "3.7.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.7.1.tgz#083ef98927c9a6a74d05a6af02806566d16274de"
   integrity sha512-m4avr8yL8kmFN8psrbFFFmB/If14iN5o9nw/NgnnM+kybDJpRsAynV2BsfpTYrTRysYUdADVD7CkUUizgkpLfg==
@@ -5423,13 +5418,6 @@ type-is@~1.6.18:
   dependencies:
     media-typer "0.3.0"
     mime-types "~2.1.24"
-
-typeahead-aria@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/typeahead-aria/-/typeahead-aria-1.0.4.tgz#d2829cc01c0226a367627f3098a468c4e0343f00"
-  integrity sha512-6g0XtcM1AiPMlyXOuAb90Lg0WGi9PdbH68La7kUJmZwxUdpE80IC6tewBg0a/ug1Betoz1xCfEqTgkhuN6wo4w==
-  dependencies:
-    jquery ">=1.11"
 
 typed-array-buffer@^1.0.3:
   version "1.0.3"
