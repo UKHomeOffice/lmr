@@ -5,6 +5,7 @@
     "hof/components/clear-session",
     "hof/components/session-timeout-warning"
   ],
+  "translations": "./apps/lmr/translations",
   "routes": [
     "./apps/lmr"
   ],
