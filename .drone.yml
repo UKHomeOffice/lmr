@@ -32,7 +32,7 @@ trigger:
 
 linting: &linting
   pull: if-not-exists
-  image: node:20.18.0
+  image: quay.io/ukhomeofficedigital/hof-nodejs:20.20.0-alpine3.23@sha256:55fe012b09506d6b70ecef4c425f149bd7f738839fee3dd05085bc45deceb4c3
   environment:
     NOTIFY_KEY: USE_MOCK
   commands:
@@ -40,7 +40,7 @@ linting: &linting
 
 unit_tests: &unit_tests
   pull: if-not-exists
-  image: node:20.18.0
+  image: quay.io/ukhomeofficedigital/hof-nodejs:20.20.0-alpine3.23@sha256:55fe012b09506d6b70ecef4c425f149bd7f738839fee3dd05085bc45deceb4c3
   environment:
     NOTIFY_KEY: USE_MOCK
   commands:
@@ -48,7 +48,7 @@ unit_tests: &unit_tests
 
 sonar_scanner: &sonar_scanner
   pull: if-not-exists
-  image: quay.io/ukhomeofficedigital/sonar-scanner-nodejs:latest
+  image: quay.io/ukhomeofficedigital/hof-nodejs:20.20.0-alpine3.23@sha256:55fe012b09506d6b70ecef4c425f149bd7f738839fee3dd05085bc45deceb4c3
   commands:
     - sonar-scanner -Dproject.settings=./sonar-project.properties
 
@@ -70,7 +70,7 @@ steps:
 
   - name: setup
     pull: if-not-exists
-    image: node:20.18.0
+    image: quay.io/ukhomeofficedigital/hof-nodejs:20.20.0-alpine3.23@sha256:55fe012b09506d6b70ecef4c425f149bd7f738839fee3dd05085bc45deceb4c3
     environment:
       NOTIFY_KEY: USE_MOCK
     commands:
