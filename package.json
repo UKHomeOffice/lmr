@@ -20,7 +20,7 @@
   "author": "",
   "dependencies": {
     "accessible-autocomplete": "^3.0.1",
-    "hof": "^22.10.4",
+    "hof": "^22.11.1",
     "jquery": "^3.6.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
