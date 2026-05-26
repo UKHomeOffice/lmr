@@ -49,4 +49,9 @@ spec:
               memory: "200Mi"
       volumes:
         - name: data
+          {{ if eq .REDIS_PERSISTENCE_ENABLED "true" }}
+          persistentVolumeClaim:
+            claimName: {{ if .REDIS_PERSISTENCE_EXISTING_CLAIM }}{{ .REDIS_PERSISTENCE_EXISTING_CLAIM }}{{ else }}redis-data{{ end }}
+          {{ else }}
           emptyDir: {}
+          {{ end }}
