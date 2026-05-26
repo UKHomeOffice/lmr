@@ -51,7 +51,11 @@ spec:
         - name: data
           {{ if eq .REDIS_PERSISTENCE_ENABLED "true" }}
           persistentVolumeClaim:
-            claimName: {{ if .REDIS_PERSISTENCE_EXISTING_CLAIM }}{{ .REDIS_PERSISTENCE_EXISTING_CLAIM }}{{ else }}redis-data{{ end }}
+            {{ if .REDIS_PERSISTENCE_EXISTING_CLAIM }}
+            claimName: {{ .REDIS_PERSISTENCE_EXISTING_CLAIM }}
+            {{ else }}
+            claimName: redis-data
+            {{ end }}
           {{ else }}
           emptyDir: {}
           {{ end }}
