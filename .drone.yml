@@ -248,6 +248,7 @@ steps:
     depends_on:
       - clone_repos
       - image_to_quay
+      - deploy_to_branch
 
   # Get pull request branch so correct PR UAT environment is torn down in the tear_down_branch step that follows
   - name: get_pr_branch
