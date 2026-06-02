@@ -43,6 +43,13 @@ apply_redis_persistence_rules() {
   fi
 
   normalize_redis_env
+
+  if [[ "${REDIS_PERSISTENCE_ENABLED}" == "true" && -z "${REDIS_PERSISTENCE_EXISTING_CLAIM}" && -z "${REDIS_PERSISTENCE_STORAGE_CLASS}" ]]; then
+    echo "Error: REDIS persistence is enabled for ${KUBE_NAMESPACE}, but REDIS_PERSISTENCE_STORAGE_CLASS is not set." >&2
+    echo "This cluster has multiple default StorageClasses, so the PVC must set spec.storageClassName explicitly." >&2
+    echo "Set REDIS_PERSISTENCE_STORAGE_CLASS (e.g. via Drone step environment) or provide REDIS_PERSISTENCE_EXISTING_CLAIM." >&2
+    exit 1
+  fi
 }
 
 deploy_redis() {
