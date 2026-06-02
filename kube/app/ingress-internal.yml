@@ -16,7 +16,7 @@ spec:
       {{ else if eq .KUBE_NAMESPACE .UAT_ENV }}
         - {{ .APP_NAME }}.internal.uat.sas-notprod.homeoffice.gov.uk
       {{ else if eq .KUBE_NAMESPACE .STG_ENV }}
-        - {{ .APP_NAME }}.internal.stg.sas-notprod.homeoffice.gov.uk
+        - {{ .APP_NAME }}.internal.stg.sas-prod.homeoffice.gov.uk
       {{ end }}
       {{ if eq .KUBE_NAMESPACE .BRANCH_ENV }}
       secretName: branch-tls-internal
@@ -29,7 +29,7 @@ spec:
     {{ else if eq .KUBE_NAMESPACE .UAT_ENV }}
     - host: {{ .APP_NAME }}.internal.uat.sas-notprod.homeoffice.gov.uk
     {{ else if eq .KUBE_NAMESPACE .STG_ENV }}
-    - host: {{ .APP_NAME }}.internal.stg.sas-notprod.homeoffice.gov.uk
+    - host: {{ .APP_NAME }}.internal.stg.sas-prod.homeoffice.gov.uk
     {{ end }}
       http:
         paths:
