@@ -244,7 +244,7 @@ steps:
     when:
       branch:
         <<: *include_default_branch
-      event: push
+      event: [push, pull_request]
     depends_on:
       - clone_repos
       - image_to_quay
