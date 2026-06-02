@@ -77,7 +77,7 @@ spec:
               {{ else if eq .KUBE_NAMESPACE .UAT_ENV }}
               value: {{ .APP_NAME }}.uat.sas-notprod.homeoffice.gov.uk
               {{ else if eq .KUBE_NAMESPACE .STG_ENV }}
-              value: {{ .APP_NAME }}.internal.stg.sas-prod.homeoffice.gov.uk
+              value: {{ .APP_NAME }}.internal.stg.sas.homeoffice.gov.uk
               {{ else }}
               value: {{ .PRODUCTION_URL }}
               {{ end }}
