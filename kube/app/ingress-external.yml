@@ -9,9 +9,6 @@ metadata:
   {{ end }}
 {{ file .INGRESS_EXTERNAL_ANNOTATIONS | indent 2 }}
 spec:
-  {{ if or (eq .KUBE_NAMESPACE .BRANCH_ENV) (eq .KUBE_NAMESPACE .UAT_ENV) }}
-  ingressClassName: nginx-external
-  {{ end }}
   tls:
     - hosts:
       {{ if eq .KUBE_NAMESPACE .BRANCH_ENV }}
