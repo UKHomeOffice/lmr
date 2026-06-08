@@ -41,6 +41,23 @@ spec:
           image: quay.io/ukhomeofficedigital/hof-docker-redis:7.0.15@sha256:cd4965fbb8aa6e4eba058985cc52f6a3ececdfa6d79ba44206f051f72a1f0611
           ports:
             - containerPort: 6379
+          startupProbe:
+            tcpSocket:
+              port: 6379
+            periodSeconds: 5
+            failureThreshold: 24
+          readinessProbe:
+            tcpSocket:
+              port: 6379
+            initialDelaySeconds: 2
+            periodSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            tcpSocket:
+              port: 6379
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            failureThreshold: 3
           volumeMounts:
             - mountPath: /var/lib/redis
               name: data

@@ -221,7 +221,26 @@ steps:
       KUBE_TOKEN:
         from_secret: kube_token_dev
     commands:
-      - sh bin/deploy.sh $${UAT_ENV}
+      - bin/deploy.sh $${UAT_ENV}
+    when:
+      branch:
+        <<: *include_default_branch
+      event: push
+    depends_on:
+      - clone_repos
+      - image_to_quay
+
+  # Deploy to master STG environment
+  - name: deploy_to_stg
+    pull: if-not-exists
+    image: quay.io/ukhomeofficedigital/kd:v1.14.0
+    environment:
+      KUBE_SERVER:
+        from_secret: kube_server_prod
+      KUBE_TOKEN:
+        from_secret: kube_token_prod
+    commands:
+      - bin/deploy.sh $${STG_ENV}
     when:
       branch:
         <<: *include_default_branch

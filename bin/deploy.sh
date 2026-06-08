@@ -43,6 +43,10 @@ apply_redis_persistence_rules() {
   fi
 
   normalize_redis_env
+
+  if [[ "${REDIS_PERSISTENCE_ENABLED}" == "true" && -z "${REDIS_PERSISTENCE_EXISTING_CLAIM}" ]]; then
+    export REDIS_PERSISTENCE_STORAGE_CLASS="${REDIS_PERSISTENCE_STORAGE_CLASS:-gp2-encrypted-eu-west-2b}"
+  fi
 }
 
 deploy_redis() {
