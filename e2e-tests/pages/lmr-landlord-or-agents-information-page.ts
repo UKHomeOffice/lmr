@@ -1,5 +1,5 @@
 import { Page, Locator } from '@playwright/test';
-import { BasePage } from './BasePage';
+import { BasePage } from './base-page';
 
 export class LmrLandlordOrAgentsInformationPage extends BasePage {
     readonly fullNameField: Locator;
@@ -19,8 +19,8 @@ export class LmrLandlordOrAgentsInformationPage extends BasePage {
         const title = await this.page.title();
 
         return title.startsWith('Error')
-                ? "Error: Landlord's or agent's information – Landlords make a report – GOV.UK"
-                : "Landlord's or agent's information – Landlords make a report – GOV.UK";
+            ? "Error: Landlord's or agent's information – Landlords make a report – GOV.UK"
+            : "Landlord's or agent's information – Landlords make a report – GOV.UK";
     }
 
     async completeLandlordOrAgentInformationPage(fullName: string, companyName: string, email: string, phoneNumber: string) {

@@ -1,7 +1,7 @@
 import { expect } from '@playwright/test';
 import { createBdd } from 'playwright-bdd';
 import { test } from '../fixture/fixtures';
-import { ConstantsLib as c } from '../utilityHelper/ConstantsLib';
+import { ConstantsLib as c } from '../utility-helper/constants-lib';
 import { DataTable } from '@cucumber/cucumber';
 
 export const { Given, When, Then } = createBdd(test);
@@ -70,7 +70,7 @@ Then('I should see {string} error summary', async ({ pages }, expectedErrorMessa
 
   const actualText = await pages.basePage.getErrorSummaryListText();
   const actualErrorArray = actualText!
-    .replace(/\t/g, '') // remove ALL tabs
+    .replaceAll('\t', '') // remove ALL tabs
     .trim()             // remove leading/trailing whitespace
     .split(/\r?\n/);    // handle all newline types
 

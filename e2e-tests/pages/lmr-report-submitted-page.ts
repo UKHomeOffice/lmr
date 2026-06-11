@@ -1,5 +1,5 @@
-import { Page, Locator } from '@playwright/test';
-import { BasePage } from './BasePage';
+import { Page } from '@playwright/test';
+import { BasePage } from './base-page';
 
 export class LmrReportSubmittedPage extends BasePage {
 

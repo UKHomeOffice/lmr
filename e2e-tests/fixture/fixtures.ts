@@ -1,13 +1,13 @@
 import { test as base } from 'playwright-bdd';
-import { BasePage } from '../pages/BasePage';
-import { LmrMakeAReportPage } from '../pages/LmrMakeAReportPage';
-import { LmrWhenDidThePersonMoveIntoYourPropertyPage } from '../pages/LmrWhenDidThePersonMoveIntoYourPropertyPage';
-import { LmrExistingTenantsInformationPage } from '../pages/LmrExistingTenantsInformationPage';
-import { LmrRentalPropertyAddressPage } from '../pages/LmrRentalPropertyAddressPage';
-import { LmrLandlordOrAgentsInformationPage } from '../pages/LmrLandlordOrAgentsInformationPage';
-import { LmrSummaryPage } from '../pages/LmrSummaryPage';
-import { LmrPrivacyPolicyPage } from '../pages/LmrPrivacyPolicyPage';
-import { LmrReportSubmittedPage } from '../pages/LmrReportSubmittedPage';
+import { BasePage } from '../pages/base-page';
+import { LmrMakeAReportPage } from '../pages/lmr-make-a-report-page';
+import { LmrWhenDidThePersonMoveIntoYourPropertyPage } from '../pages/lmr-when-did-the-perso-move-into-your-property-page';
+import { LmrExistingTenantsInformationPage } from '../pages/lmr-existing-tenants-information-page';
+import { LmrRentalPropertyAddressPage } from '../pages/lmr-rental-property-address-page';
+import { LmrLandlordOrAgentsInformationPage } from '../pages/lmr-landlord-or-agents-information-page';
+import { LmrSummaryPage } from '../pages/lmr-summary-page';
+import { LmrPrivacyPolicyPage } from '../pages/lmr-privacy-policy-page';
+import { LmrReportSubmittedPage } from '../pages/lmr-report-submitted-page';
 
 type Pages = {
   basePage: BasePage;

@@ -1,5 +1,5 @@
 import { Page, Locator } from '@playwright/test';
-import { BasePage } from './BasePage';
+import { BasePage } from './base-page';
 
 export class LmrRentalPropertyAddressPage extends BasePage {
     readonly addressLine1TextField: Locator;

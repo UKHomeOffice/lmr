@@ -21,3 +21,4 @@ acceptance-test/temp-downloads/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+.features-gen/

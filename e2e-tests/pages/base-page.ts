@@ -1,4 +1,4 @@
-import { chromium, Page, Locator, expect } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
 
 export class BasePage {
     readonly page: Page;
@@ -144,7 +144,7 @@ export class BasePage {
         return await this.errorSummaryList.textContent();
     }
 
-    
+
 
     // // Assertion helper (optional)
     // async expectToBeVisible(locator: Locator) {
