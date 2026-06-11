@@ -1,7 +1,7 @@
 import { Page, Locator } from '@playwright/test';
-import { BasePage } from './base-page';
+import { basePage } from './base-page';
 
-export class LmrExistingTenantsInformationPage extends BasePage {
+export class lmrExistingTenantsInformationPage extends basePage {
 	readonly fullNameField: Locator;
 	readonly nationalityField: Locator;
 

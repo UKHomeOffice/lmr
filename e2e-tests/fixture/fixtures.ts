@@ -1,38 +1,38 @@
 import { test as base } from 'playwright-bdd';
-import { BasePage } from '../pages/base-page';
-import { LmrMakeAReportPage } from '../pages/lmr-make-a-report-page';
-import { LmrWhenDidThePersonMoveIntoYourPropertyPage } from '../pages/lmr-when-did-the-person-move-into-your-property-page';
-import { LmrExistingTenantsInformationPage } from '../pages/lmr-existing-tenants-information-page';
-import { LmrRentalPropertyAddressPage } from '../pages/lmr-rental-property-address-page';
-import { LmrLandlordOrAgentsInformationPage } from '../pages/lmr-landlord-or-agents-information-page';
-import { LmrSummaryPage } from '../pages/lmr-summary-page';
-import { LmrPrivacyPolicyPage } from '../pages/lmr-privacy-policy-page';
-import { LmrReportSubmittedPage } from '../pages/lmr-report-submitted-page';
+import { basePage } from '../pages/base-page';
+import { lmrMakeAReportPage } from '../pages/lmr-make-a-report-page';
+import { lmrWhenDidThePersonMoveIntoYourPropertyPage } from '../pages/lmr-when-did-the-person-move-into-your-property-page';
+import { lmrExistingTenantsInformationPage } from '../pages/lmr-existing-tenants-information-page';
+import { lmrRentalPropertyAddressPage } from '../pages/lmr-rental-property-address-page';
+import { lmrLandlordOrAgentsInformationPage } from '../pages/lmr-landlord-or-agents-information-page';
+import { lmrSummaryPage } from '../pages/lmr-summary-page';
+import { lmrPrivacyPolicyPage } from '../pages/lmr-privacy-policy-page';
+import { lmrReportSubmittedPage } from '../pages/lmr-report-submitted-page';
 
 type Pages = {
-  basePage: BasePage;
-  lmrMakeAReportPage: LmrMakeAReportPage;
-  lmrWhenDidThePersonMoveIntoYourPropertyPage: LmrWhenDidThePersonMoveIntoYourPropertyPage;
-  lmrExistingTenantsInformationPage: LmrExistingTenantsInformationPage;
-  lmrRentalPropertyAddressPage: LmrRentalPropertyAddressPage;
-  lmrLandlordOrAgentsInformationPage: LmrLandlordOrAgentsInformationPage;
-  lmrSummaryPage: LmrSummaryPage;
-  lmrPrivacyPolicyPage: LmrPrivacyPolicyPage;
-  lmrReportSubmittedPage: LmrReportSubmittedPage;
+  basePage: basePage;
+  lmrMakeAReportPage: lmrMakeAReportPage;
+  lmrWhenDidThePersonMoveIntoYourPropertyPage: lmrWhenDidThePersonMoveIntoYourPropertyPage;
+  lmrExistingTenantsInformationPage: lmrExistingTenantsInformationPage;
+  lmrRentalPropertyAddressPage: lmrRentalPropertyAddressPage;
+  lmrLandlordOrAgentsInformationPage: lmrLandlordOrAgentsInformationPage;
+  lmrSummaryPage: lmrSummaryPage;
+  lmrPrivacyPolicyPage: lmrPrivacyPolicyPage;
+  lmrReportSubmittedPage: lmrReportSubmittedPage;
 };
 
 export const test = base.extend<{ pages: Pages }>({
   pages: async ({ page }, use) => {
     await use({
-      basePage: new BasePage(page),
-      lmrMakeAReportPage: new LmrMakeAReportPage(page),
-      lmrWhenDidThePersonMoveIntoYourPropertyPage: new LmrWhenDidThePersonMoveIntoYourPropertyPage(page),
-      lmrExistingTenantsInformationPage: new LmrExistingTenantsInformationPage(page),
-      lmrRentalPropertyAddressPage: new LmrRentalPropertyAddressPage(page),
-      lmrLandlordOrAgentsInformationPage: new LmrLandlordOrAgentsInformationPage(page),
-      lmrSummaryPage: new LmrSummaryPage(page),
-      lmrPrivacyPolicyPage: new LmrPrivacyPolicyPage(page),
-      lmrReportSubmittedPage: new LmrReportSubmittedPage(page),
+      basePage: new basePage(page),
+      lmrMakeAReportPage: new lmrMakeAReportPage(page),
+      lmrWhenDidThePersonMoveIntoYourPropertyPage: new lmrWhenDidThePersonMoveIntoYourPropertyPage(page),
+      lmrExistingTenantsInformationPage: new lmrExistingTenantsInformationPage(page),
+      lmrRentalPropertyAddressPage: new lmrRentalPropertyAddressPage(page),
+      lmrLandlordOrAgentsInformationPage: new lmrLandlordOrAgentsInformationPage(page),
+      lmrSummaryPage: new lmrSummaryPage(page),
+      lmrPrivacyPolicyPage: new lmrPrivacyPolicyPage(page),
+      lmrReportSubmittedPage: new lmrReportSubmittedPage(page),
     });
   },
 });

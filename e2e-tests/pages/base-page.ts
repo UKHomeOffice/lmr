@@ -1,6 +1,6 @@
 import { Page, Locator, expect } from '@playwright/test';
 
-export class BasePage {
+export class basePage {
     readonly page: Page;
 
     // Common locators (example)

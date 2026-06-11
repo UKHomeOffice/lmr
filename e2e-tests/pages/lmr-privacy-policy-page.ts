@@ -1,7 +1,7 @@
 import { Page, Locator } from '@playwright/test';
-import { BasePage } from './base-page';
+import { basePage } from './base-page';
 
-export class LmrPrivacyPolicyPage extends BasePage {
+export class lmrPrivacyPolicyPage extends basePage {
 
     readonly submitReportButton: Locator;
 

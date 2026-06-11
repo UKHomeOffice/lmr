@@ -1,7 +1,7 @@
 import { Page, Locator } from '@playwright/test';
-import { BasePage } from './base-page';
+import { basePage } from './base-page';
 
-export class LmrMakeAReportPage extends BasePage {
+export class lmrMakeAReportPage extends basePage {
 
     readonly startButton: Locator;
     readonly acceptCookieButton: Locator;
