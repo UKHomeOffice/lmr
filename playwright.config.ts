@@ -45,6 +45,7 @@ export default defineConfig({
     video: 'retain-on-failure',
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
+    headless: true,
   },
   
   webServer: process.env.PLAYWRIGHT_BASE_URL
@@ -59,8 +60,17 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] }
-    }
+      name: 'Google Chrome',
+      use: {
+        browserName: 'chromium',
+        // Note: If we want to use the native browser ('chromium'), simply replace 'chrome' with 'chromium'.
+        channel: 'chrome',
+        launchOptions: {
+          args: ['--start-maximized'],
+        },
+        video: 'retain-on-failure', //Options => 'on', 'off', 'retain-on-failure' or 'on-first-retry'
+        screenshot: 'only-on-failure',
+      },
+    },
   ],
 });

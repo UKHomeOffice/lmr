@@ -1,7 +1,7 @@
 import { test as base } from 'playwright-bdd';
 import { BasePage } from '../pages/base-page';
 import { LmrMakeAReportPage } from '../pages/lmr-make-a-report-page';
-import { LmrWhenDidThePersonMoveIntoYourPropertyPage } from '../pages/lmr-when-did-the-perso-move-into-your-property-page';
+import { LmrWhenDidThePersonMoveIntoYourPropertyPage } from '../pages/lmr-when-did-the-person-move-into-your-property-page';
 import { LmrExistingTenantsInformationPage } from '../pages/lmr-existing-tenants-information-page';
 import { LmrRentalPropertyAddressPage } from '../pages/lmr-rental-property-address-page';
 import { LmrLandlordOrAgentsInformationPage } from '../pages/lmr-landlord-or-agents-information-page';

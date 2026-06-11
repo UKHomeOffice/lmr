@@ -19,7 +19,7 @@ Feature: LMR - Landlords make a report
     When I enter "Tomorrow's date" into "When did the person move into your property?" field and page for LMR
     Then I should see "There is a problem" error message displayed
     And I should see "This date must not be in the future" error summary
-    # Entered past date tenancy agreements that started after 30 November 2014 
+    # Entered past date tenancy agreements that started after 30 November 2014
     When I enter "30/11/2014" into "When did the person move into your property?" field and page for LMR
     Then I should see "There is a problem" error message displayed
     And I should see "This service only applies to tenancy agreements that started after 30 November 2014" error summary
@@ -57,7 +57,7 @@ Feature: LMR - Landlords make a report
       | Address line 1 | 12      |
       | Address line 2 | Kings   |
       | Town or City   | Leeds   |
-      | Country        | UK      |
+      | County         | UK      |
       | Postcode       | L!2 1PP |
     Then I should see "There is a problem" error message displayed
     And I should see "Your postcode is not in England. If your property is not in England, you do not have to do a right to rent check" error summary
@@ -65,7 +65,7 @@ Feature: LMR - Landlords make a report
       | Address line 1 | 12      |
       | Address line 2 | Kings   |
       | Town or City   | Leeds   |
-      | Country        | UK      |
+      | County         | UK      |
       | Postcode       | M12 1PP |
     # Landlord's or agent's information page
     # No data entered in any of the fields

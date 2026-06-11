@@ -42,15 +42,15 @@ export class BasePage {
         return await locator.isVisible();
     }
 
-    async selectRadioOptionWithText(page: Page, optionText: string): Promise<void> {
+    async selectCheckboxOptionWithText(page: Page, optionText: string){
         if (!optionText || optionText.trim() === '') {
-            throw new Error('Radio option text value cannot be null or blank.');
+            throw new Error('Checkbox option text value cannot be null or blank.');
         }
 
-        const radioOption: Locator = page.getByRole('checkbox', { name: optionText });
+        const checkboxOption: Locator = page.getByRole('checkbox', { name: optionText });
 
         // Check the option
-        await radioOption.check();
+        await checkboxOption.check();
     }
 
 
@@ -92,7 +92,7 @@ export class BasePage {
             "more than 3 years ago": () => addYears(now, -3),
             "less than 16 years ago": () => addDays(addYears(now, -16), 1),
             "less than 18 years ago": () => addDays(addYears(now, -18), 1),
-            "19 years ago": () => addYears(now, -20),
+            "19 years ago": () => addYears(now, -19),
             "more than 50 years ago": () => addDays(addYears(now, -50), -1),
             "more than 100 years ago": () => addDays(addYears(now, -100), -1),
             "more than 120 years ago": () => addDays(addYears(now, -120), -1),

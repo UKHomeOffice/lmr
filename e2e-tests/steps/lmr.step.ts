@@ -98,10 +98,10 @@ When('I complete Rental property address with the below details:', async ({ page
   const addressLine1 = data['Address line 1'];
   const addressLine2 = data['Address line 2'];
   const townOrCity = data['Town or City'];
-  const country = data['Country'];
+  const county = data['County'];
   const postcode = data['Postcode'];
 
-  await pages.lmrRentalPropertyAddressPage.completeRentalPropertyAddressPage(addressLine1, addressLine2, townOrCity, country, postcode);
+  await pages.lmrRentalPropertyAddressPage.completeRentalPropertyAddressPage(addressLine1, addressLine2, townOrCity, county, postcode);
 });
 
 When('I complete Landlord\'s or agent\'s information with the below details:', async ({ pages }, dataTable: DataTable) => {

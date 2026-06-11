@@ -24,7 +24,7 @@ export class LmrPrivacyPolicyPage extends BasePage {
 
     async completePrivacyPolicyPage(option: string) {
         await this.assertPageTitle(this.page, await this.expectedPageTitle());
-        await this.selectRadioOptionWithText(this.page, option)
+        await this.selectCheckboxOptionWithText(this.page, option)
         await this.click(this.submitReportButton);
     }
 }
