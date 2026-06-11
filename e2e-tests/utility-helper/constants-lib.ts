@@ -1,0 +1,16 @@
+export const ConstantsLib = {
+  FULL_NAME: 'HOF TEST',
+  ADDRESS_LINE_1: '100',
+  ADDRESS_LINE_2: 'Tenth St',
+  TOWN_OR_CITY: 'HULL',
+  POSTCODE: 'M11 1HH',
+  COUNTRY_UK: 'United Kingdom',
+  TELEPHONE: '01616699548',
+  SAS_HOF_EMAIL: 'sas-hof-test@digital.homeoffice.gov.uk',
+  LAND_LORD_AGENT_NAME: 'HOF LandLord Agent',
+  LANDLORD_NAME: 'HOF LandLord',
+  COMPANY_NAME: 'Test UK Ltd',
+  DOB_1978: '01/01/1978',
+  NATIONALITY: 'Spain',
+  YESTERDAY_S_DATE: "yesterday's date",
+} as const;

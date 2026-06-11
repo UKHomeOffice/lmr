@@ -14,3 +14,11 @@ dump.rdb
 coverage
 anchore-reports/
 acceptance-test/temp-downloads/
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+.features-gen/

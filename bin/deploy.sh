@@ -118,8 +118,23 @@ fi
 sleep $READY_FOR_TEST_DELAY
 
 if [[ ${KUBE_NAMESPACE} == ${BRANCH_ENV} ]]; then
+  BRANCH_HOST="visa-web-messenger-$DRONE_SOURCE_BRANCH.internal.branch.sas-notprod.homeoffice.gov.uk"
+  echo "Branch - $BRANCH_HOST"
+  if [[ -d /root/.dockersock ]]; then
+    echo "$BRANCH_HOST" > /root/.dockersock/branch_url.txt
+  fi
+fi
+
+if [[ ${KUBE_NAMESPACE} == ${BRANCH_ENV} ]]; then
   echo "External Branch url - $APP_NAME-$DRONE_SOURCE_BRANCH.$BRANCH_ENV.homeoffice.gov.uk"
   echo "Internal Branch url - $APP_NAME-$DRONE_SOURCE_BRANCH.internal.$BRANCH_ENV.homeoffice.gov.uk"
+  
+  # Add branch URL to a file for use in e2e tests, if the directory exists (it won't in production)
+  BRANCH_HOST="$APP_NAME-$DRONE_SOURCE_BRANCH.internal.$BRANCH_ENV.homeoffice.gov.uk"
+  echo "Branch - $BRANCH_HOST"
+  if [[ -d /root/.dockersock ]]; then
+    echo "$BRANCH_HOST" > /root/.dockersock/branch_url.txt
+  fi
 elif [[ ${KUBE_NAMESPACE} == ${UAT_ENV} ]]; then
   echo "External UAT url - $APP_NAME.uat.sas-notprod.homeoffice.gov.uk"
   echo "Internal UAT url - $APP_NAME.internal.uat.sas-notprod.homeoffice.gov.uk"
