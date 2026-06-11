@@ -12,8 +12,8 @@ export class LmrMakeAReportPage extends BasePage {
     constructor(page: Page) {
         super(page);
         this.startButton = page.locator('a:has-text("Start now")');
-        this.acceptCookieButton = page.locator('button').filter({ hasText: 'Accept additional cookies' });
-        this.hideThisMessageButton = page.locator('button').filter({ hasText: 'Hide this ' })
+        this.acceptCookieButton = page.locator('#accept-cookies-button');
+        this.hideThisMessageButton = page.locator('#hide-accept-cookie-banner');
     }
 
     async expectedPageTitle(): Promise<string> {
@@ -31,8 +31,15 @@ export class LmrMakeAReportPage extends BasePage {
 
     async completeLandingPageForm() {
         await this.assertPageTitle(this.page, await this.expectedPageTitle());
-        await this.click(this.acceptCookieButton);
-        await this.click(this.hideThisMessageButton);
+
+        if (await this.acceptCookieButton.isVisible()) {
+            await this.click(this.acceptCookieButton);
+        }
+
+        if (await this.hideThisMessageButton.isVisible()) {
+            await this.click(this.hideThisMessageButton);
+        }
+
         await this.click(this.startButton);
     }
 }
