@@ -104,7 +104,7 @@ steps:
       OUTPUT_TOKEN_FILE: /root/.dockersock/github_app_token_for_clone.txt
     when:
       branch:
-        <<: *include_all_branches
+        <<: *include_default_and_feature_branches
       event: [push, pull_request]
 
   - name: clone_repos
@@ -115,7 +115,7 @@ steps:
       CLONE_REPOS_PRUNE: "true"
     when:
       branch:
-        <<: *include_all_branches
+        <<: *include_default_and_feature_branches
       event: [push, pull_request]
     depends_on:
       - generate_github_app_token_for_clone
@@ -314,7 +314,7 @@ steps:
       - rm -f /root/.dockersock/github_app_token.txt
     when:
       branch:
-        <<: *include_all_branches
+        <<: *include_default_and_feature_branches
       event: pull_request
     depends_on:
       - generate_github_app_token
