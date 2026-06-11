@@ -16,6 +16,7 @@ environment:
   HOF_CONFIG: hof-services-config/Landlords_Make_A_Report
   NON_PROD_AVAILABILITY: Mon-Fri 08:00-23:00 Europe/London
   READY_FOR_TEST_DELAY: 20s
+  NIGHTLY_E2E_BASE_URL: lmr.internal.uat.sas-notprod.homeoffice.gov.uk
 
 include_default_branch: &include_default_branch
   include:
@@ -585,6 +586,47 @@ steps:
     depends_on:
       - cron_trivy_scan_image_os
       - cron_trivy_scan_node_packages
+
+  # CRON job step that runs nightly Playwright E2E tests against a fixed environment
+  - name: cron_nightly_e2e_tests
+    pull: if-not-exists
+    image: mcr.microsoft.com/playwright:v1.60.0-noble
+    commands:
+      - yarn playwright install --with-deps
+      - yarn install --frozen-lockfile
+      - test -n "$NIGHTLY_E2E_BASE_URL" || (echo "Missing NIGHTLY_E2E_BASE_URL environment value." && exit 1)
+      - CI=true PLAYWRIGHT_BASE_URL="$${NIGHTLY_E2E_BASE_URL}" yarn test:e2e
+    when:
+      cron: nightly_e2e_playwright
+      event: cron
+
+  # Slack notification for nightly E2E cron runs
+  - name: cron_notify_slack_nightly_e2e
+    pull: if-not-exists
+    image: plugins/slack:1.4.1
+    settings:
+      channel: hof-auto-tests
+      failure: ignore
+      icon.url: https://readme.drone.io/logo.svg
+      template: >
+            *{{ uppercasefirst build.status }}*: CRON Job `nightly_e2e_playwright` for *Landlords Make A Report* Playwright BDD tests completed.
+
+          Environment URL is configured via `NIGHTLY_E2E_BASE_URL`.
+
+            Branch <https://github.com/{{ repo.owner }}/{{ repo.name }}/commits/{{ build.branch }}|{{build.branch}}> | Commit <https://github.com/{{ repo.owner }}/{{ repo.name }}/commit/{{ build.commit }}|{{ truncate build.commit 8 }}>
+
+            *Build <{{build.link}}|#{{build.number}}>*
+      username: Drone_CI
+      webhook:
+        from_secret: slack_sas_hof_auto_tests_webhook
+    when:
+      cron: nightly_e2e_playwright
+      event: cron
+      status:
+        - success
+        - failure
+    depends_on:
+      - cron_nightly_e2e_tests
 
 services:
   - name: docker
