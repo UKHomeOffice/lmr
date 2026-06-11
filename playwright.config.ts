@@ -66,8 +66,8 @@ export default defineConfig({
         launchOptions: {
           args: ['--start-maximized'],
         },
-        video: 'retain-on-failure', //Options => 'on', 'off', 'retain-on-failure' or 'on-first-retry'
-        screenshot: 'only-on-failure',
+        video: 'on', //Options => 'on', 'off', 'retain-on-failure' or 'on-first-retry'
+        screenshot: 'on',
       },
     },
   ],
