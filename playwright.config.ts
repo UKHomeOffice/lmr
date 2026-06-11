@@ -60,11 +60,9 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
-      name: 'Google Chrome',
-      use: {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'],
         browserName: 'chromium',
-        // Note: If we want to use the native browser ('chromium'), simply replace 'chrome' with 'chromium'.
-        channel: 'chrome',
         launchOptions: {
           args: ['--start-maximized'],
         },
