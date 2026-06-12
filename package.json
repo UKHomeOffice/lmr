@@ -32,12 +32,12 @@
     "jquery": "^3.6.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
-    "notifications-node-client": "^8.2.1",
+    "notifications-node-client": "^8.4.0",
     "uuidv4": "^6.2.13"
   },
   "devDependencies": {
     "@playwright/test": "^1.60.0",
-    "@types/node": "^25.9.2",
+    "@types/node": "^25.9.3",
     "chai": "^5.2.1",
     "dotenv": "^17.4.2",
     "eslint": "8.57.0",
@@ -45,7 +45,7 @@
     "mocha": "^11.7.6",
     "nyc": "^17.1.0",
     "playwright-bdd": "^9.0.0",
-    "snyk": "^1.1288.0"
+    "snyk": "^1.1305.1"
   },
   "mocha": {
     "require": "test/setup.js"
