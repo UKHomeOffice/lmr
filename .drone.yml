@@ -609,9 +609,7 @@ steps:
       failure: ignore
       icon.url: https://readme.drone.io/logo.svg
       template: >
-            *{{ uppercasefirst build.status }}*: CRON Job `nightly_e2e_playwright` for *Landlords Make A Report* Playwright BDD tests completed.
-
-          Environment URL is configured via `NIGHTLY_E2E_BASE_URL`.
+            *{{ uppercasefirst build.status }}*: CRON Job `nightly_e2e_playwright` for *Landlords Make A Report* Playwright BDD tests completed.            
 
             Branch <https://github.com/{{ repo.owner }}/{{ repo.name }}/commits/{{ build.branch }}|{{build.branch}}> | Commit <https://github.com/{{ repo.owner }}/{{ repo.name }}/commit/{{ build.commit }}|{{ truncate build.commit 8 }}>
 
