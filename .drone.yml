@@ -591,11 +591,36 @@ steps:
   - name: cron_nightly_e2e_tests
     pull: if-not-exists
     image: mcr.microsoft.com/playwright:v1.60.0-noble
+    volumes:
+      - name: dockersock
+        path: /root/.dockersock
     commands:
       - yarn install --frozen-lockfile
       - yarn playwright install --with-deps
-      - test -n "$NIGHTLY_E2E_BASE_URL" || (echo "Missing NIGHTLY_E2E_BASE_URL environment value." && exit 1)
-      - CI=true PLAYWRIGHT_BASE_URL="$${NIGHTLY_E2E_BASE_URL}" yarn test:e2e
+      - |
+        test -n "$NIGHTLY_E2E_BASE_URL" || (echo "Missing NIGHTLY_E2E_BASE_URL environment value." && exit 1)
+
+        case "$NIGHTLY_E2E_BASE_URL" in
+          http://*|https://*) base_url="$NIGHTLY_E2E_BASE_URL" ;;
+          *) base_url="https://$NIGHTLY_E2E_BASE_URL" ;;
+        esac
+        echo "Using PLAYWRIGHT_BASE_URL=$base_url"
+
+        run_output_path="/root/.dockersock/nightly-playwright-run-output.txt"
+        summary_output_path="/root/.dockersock/nightly-playwright-summary.txt"
+
+        rm -f "$run_output_path" "$summary_output_path"
+        yarn bddgen
+
+        set +e
+        PLAYWRIGHT_BASE_URL="$base_url" yarn playwright test --reporter=line > "$run_output_path" 2>&1
+        playwright_exit_code=$?
+        set -e
+
+        tail -n 60 "$run_output_path" || true
+        node bin/summarise_playwright_report.js "$run_output_path" "$summary_output_path"
+
+        exit "$playwright_exit_code"
     when:
       cron: nightly_e2e_playwright
       event: cron
@@ -603,20 +628,55 @@ steps:
   # Slack notification for nightly E2E cron runs
   - name: cron_notify_slack_nightly_e2e
     pull: if-not-exists
-    image: plugins/slack:1.4.1
-    settings:
-      channel: hof-auto-tests
-      failure: ignore
-      icon.url: https://readme.drone.io/logo.svg
-      template: >
-            *{{ uppercasefirst build.status }}*: CRON Job `nightly_e2e_playwright` for *Landlords Make A Report* Playwright BDD tests completed.            
-
-            Branch <https://github.com/{{ repo.owner }}/{{ repo.name }}/commits/{{ build.branch }}|{{build.branch}}> | Commit <https://github.com/{{ repo.owner }}/{{ repo.name }}/commit/{{ build.commit }}|{{ truncate build.commit 8 }}>
-
-            *Build <{{build.link}}|#{{build.number}}>*
-      username: Drone_CI
-      webhook:
-        from_secret: slack_sas_hof_auto_tests_webhook
+    image: alpine:3.21
+    environment:
+      SLACK_WEBHOOK:
+        from_secret: slack_sas_hof_e2e_tests_webhook
+    volumes:
+      - name: dockersock
+        path: /root/.dockersock
+    commands:
+      - apk add --no-cache curl jq
+      - test -n "$SLACK_WEBHOOK" || (echo "Missing slack_sas_hof_e2e_tests_webhook secret." && exit 1)
+      - test -f /root/.dockersock/nightly-playwright-summary.txt || printf "Playwright Nightly Summary\nSummary artifact missing.\n" > /root/.dockersock/nightly-playwright-summary.txt
+      - |
+        payload=$(jq -n \
+          --arg status "$DRONE_BUILD_STATUS" \
+          --arg repo "$DRONE_REPO" \
+          --arg branch "$DRONE_BRANCH" \
+          --arg commit "$DRONE_COMMIT_SHA" \
+          --arg build_number "$DRONE_BUILD_NUMBER" \
+          --arg build_link "$DRONE_BUILD_LINK" \
+          --arg environment "$NIGHTLY_E2E_BASE_URL" \
+          --rawfile summary /root/.dockersock/nightly-playwright-summary.txt \
+          '{
+            text: ("Nightly Playwright Tests for " + $repo + " finished with status: " + $status),
+            blocks: [
+              {
+                type: "section",
+                text: {
+                  type: "mrkdwn",
+                  text: ("*Nightly Playwright Tests Summary*\nStatus: " + $status + "\nBranch: " + $branch + "\nEnvironment: " + $environment + "\nBuild: #" + $build_number + " " + $build_link)
+                }
+              },
+              {
+                type: "section",
+                text: {
+                  type: "mrkdwn",
+                  text: ("```" + $summary + "```")
+                }
+              }
+            ]
+          }')
+        http_code=$(curl -sS -o /tmp/slack_response.txt -w "%{http_code}" \
+          -X POST \
+          -H "Content-type: application/json" \
+          --data "$payload" \
+          "$SLACK_WEBHOOK")
+        echo "Slack webhook HTTP status: $http_code"
+        echo "Slack webhook response body:"
+        cat /tmp/slack_response.txt
+        test "$http_code" = "200" || (echo "Slack webhook call failed" && exit 1)
     when:
       cron: nightly_e2e_playwright
       event: cron
