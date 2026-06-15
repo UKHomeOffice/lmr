@@ -601,8 +601,10 @@ steps:
       - export PLAYWRIGHT_BASE_URL="$NIGHTLY_E2E_BASE_URL"
       - export PLAYWRIGHT_JSON_REPORT_PATH=/root/.dockersock/nightly-playwright-report.json
       - export PLAYWRIGHT_TEXT_SUMMARY_PATH=/root/.dockersock/nightly-playwright-summary.txt
+      - rm -f "$PLAYWRIGHT_JSON_REPORT_PATH" "$PLAYWRIGHT_TEXT_SUMMARY_PATH"
+      - yarn bddgen
       - set +e
-      - yarn bddgen && playwright test --reporter=list,json="$PLAYWRIGHT_JSON_REPORT_PATH"
+      - playwright test --reporter=json > "$PLAYWRIGHT_JSON_REPORT_PATH"
       - PLAYWRIGHT_EXIT_CODE=$?
       - set -e
       - node bin/summarise_playwright_report.js "$PLAYWRIGHT_JSON_REPORT_PATH" "$PLAYWRIGHT_TEXT_SUMMARY_PATH"
@@ -623,8 +625,8 @@ steps:
         path: /root/.dockersock
     commands:
       - apk add --no-cache curl jq
-      - test -n "$SLACK_WEBHOOK" || (echo "Missing slack_sas_hof_auto_tests_webhook secret." && exit 1)
-      - test -f /root/.dockersock/nightly-playwright-summary.txt || echo "Playwright Nightly Summary\nSummary artifact missing." > /root/.dockersock/nightly-playwright-summary.txt
+      - test -n "$SLACK_WEBHOOK" || (echo "Missing slack_sas_hof_e2e_tests_webhook secret." && exit 1)
+      - test -f /root/.dockersock/nightly-playwright-summary.txt || printf "Playwright Nightly Summary\nSummary artifact missing.\n" > /root/.dockersock/nightly-playwright-summary.txt
       - |
         payload=$(jq -n \
           --arg status "$DRONE_BUILD_STATUS" \
@@ -634,7 +636,7 @@ steps:
           --arg build_number "$DRONE_BUILD_NUMBER" \
           --arg build_link "$DRONE_BUILD_LINK" \
           --rawfile summary /root/.dockersock/nightly-playwright-summary.txt \
-          '{text: ("Nightly Playwright `nightly_e2e_playwright` for " + $repo + " finished with status: " + $status + "\nBranch: " + $branch + "\nCommit: " + ($commit[0:8]) + "\nBuild: #" + $build_number + " " + $build_link + "\n\n" + $summary)}')
+          '{text: ("Nightly Playwright nightly_e2e_playwright for " + $repo + "\nStatus: " + $status + "\nBranch: " + $branch + "\nCommit: " + ($commit[0:8]) + "\nBuild: #" + $build_number + " " + $build_link + "\n\n```" + $summary + "```") }')
         http_code=$(curl -sS -o /tmp/slack_response.txt -w "%{http_code}" \
           -X POST \
           -H "Content-type: application/json" \
