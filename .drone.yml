@@ -602,12 +602,26 @@ steps:
       event: cron
 
   # Slack notification for nightly E2E cron runs
+  - name: cron_check_slack_webhook_nightly_e2e
+    pull: if-not-exists
+    image: alpine:3.21
+    environment:
+      SLACK_WEBHOOK:
+        from_secret: slack_sas_hof_auto_tests_webhook
+    commands:
+      - test -n "$SLACK_WEBHOOK" || (echo "Missing slack_sas_hof_auto_tests_webhook for cron nightly notifications." && exit 1)
+      - echo "Nightly Slack webhook secret is present."
+    when:
+      cron: nightly_e2e_playwright
+      event: cron
+    depends_on:
+      - cron_nightly_e2e_tests
+
   - name: cron_notify_slack_nightly_e2e
     pull: if-not-exists
     image: plugins/slack:1.4.1
     settings:
       channel: hof-auto-tests
-      failure: ignore
       icon.url: https://readme.drone.io/logo.svg
       template: >
             *{{ uppercasefirst build.status }}*: CRON Job `nightly_e2e_playwright` for *Landlords Make A Report* Playwright BDD tests completed.            
@@ -625,7 +639,7 @@ steps:
         - success
         - failure
     depends_on:
-      - cron_nightly_e2e_tests
+      - cron_check_slack_webhook_nightly_e2e
 
 services:
   - name: docker
