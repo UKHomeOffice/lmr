@@ -595,7 +595,7 @@ steps:
       - yarn install --frozen-lockfile
       - yarn playwright install --with-deps
       - test -n "$NIGHTLY_E2E_BASE_URL" || (echo "Missing NIGHTLY_E2E_BASE_URL environment value." && exit 1)
-      - export PLAYWRIGHT_BASE_URL="$NIGHTLY_E2E_BASE_URL"
+      - export PLAYWRIGHT_BASE_URL=$${NIGHTLY_E2E_BASE_URL}
       - CI=true yarn test:e2e
     when:
       cron: nightly_e2e_playwright
