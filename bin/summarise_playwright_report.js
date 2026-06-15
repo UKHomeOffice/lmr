@@ -24,6 +24,15 @@ function parseDuration(text) {
 }
 
 function buildSummaryFromText(outputText) {
+  const commandFailure = outputText.match(/(?:playwright|yarn):\s+not found|command not found/i);
+  if (commandFailure) {
+    return [
+      'Playwright Nightly Summary',
+      'Unable to execute Playwright command.',
+      `Error: ${commandFailure[0]}`,
+    ].join('\n');
+  }
+
   const passed = parseCount(outputText, 'passed');
   const failed = parseCount(outputText, 'failed');
   const flaky = parseCount(outputText, 'flaky');
@@ -47,7 +56,7 @@ function main() {
   const outputPath = process.argv[3];
 
   if (!inputPath || !outputPath) {
-    console.error('Usage: node bin/summarise_playwright_report.js <input-json> <output-txt>');
+    console.error('Usage: node bin/summarise_playwright_report.js <input-text> <output-txt>');
     process.exit(1);
   }
 

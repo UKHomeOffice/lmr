@@ -604,7 +604,7 @@ steps:
       - rm -f "$PLAYWRIGHT_RUN_OUTPUT_PATH" "$PLAYWRIGHT_TEXT_SUMMARY_PATH"
       - yarn bddgen
       - set +e
-      - playwright test --reporter=line > "$PLAYWRIGHT_RUN_OUTPUT_PATH" 2>&1
+      - yarn playwright test --reporter=line > "$PLAYWRIGHT_RUN_OUTPUT_PATH" 2>&1
       - PLAYWRIGHT_EXIT_CODE=$?
       - set -e
       - tail -n 60 "$PLAYWRIGHT_RUN_OUTPUT_PATH" || true
