@@ -591,47 +591,59 @@ steps:
   - name: cron_nightly_e2e_tests
     pull: if-not-exists
     image: mcr.microsoft.com/playwright:v1.60.0-noble
+    volumes:
+      - name: dockersock
+        path: /root/.dockersock
     commands:
       - yarn install --frozen-lockfile
       - yarn playwright install --with-deps
       - test -n "$NIGHTLY_E2E_BASE_URL" || (echo "Missing NIGHTLY_E2E_BASE_URL environment value." && exit 1)
-      - export PLAYWRIGHT_BASE_URL=https://lmr.internal.uat.sas-notprod.homeoffice.gov.uk
-      - CI=true yarn test:e2e
+      - export PLAYWRIGHT_BASE_URL="$NIGHTLY_E2E_BASE_URL"
+      - export PLAYWRIGHT_JSON_REPORT_PATH=/root/.dockersock/nightly-playwright-report.json
+      - export PLAYWRIGHT_TEXT_SUMMARY_PATH=/root/.dockersock/nightly-playwright-summary.txt
+      - set +e
+      - yarn bddgen && playwright test --reporter=list,json="$PLAYWRIGHT_JSON_REPORT_PATH"
+      - PLAYWRIGHT_EXIT_CODE=$?
+      - set -e
+      - node bin/summarise_playwright_report.js "$PLAYWRIGHT_JSON_REPORT_PATH" "$PLAYWRIGHT_TEXT_SUMMARY_PATH"
+      - exit "$PLAYWRIGHT_EXIT_CODE"
     when:
       cron: nightly_e2e_playwright
       event: cron
 
   # Slack notification for nightly E2E cron runs
-  - name: cron_check_slack_webhook_nightly_e2e
+  - name: cron_notify_slack_nightly_e2e
     pull: if-not-exists
     image: alpine:3.21
     environment:
       SLACK_WEBHOOK:
-        from_secret: slack_sas_hof_auto_tests_webhook
+        from_secret: slack_sas_hof_e2e_tests_webhook
+    volumes:
+      - name: dockersock
+        path: /root/.dockersock
     commands:
-      - test -n "$SLACK_WEBHOOK" || (echo "Missing slack_sas_hof_auto_tests_webhook for cron nightly notifications." && exit 1)
-      - echo "Nightly Slack webhook secret is present."
-    when:
-      cron: nightly_e2e_playwright
-      event: cron
-    depends_on:
-      - cron_nightly_e2e_tests
-
-  - name: cron_notify_slack_nightly_e2e
-    pull: if-not-exists
-    image: plugins/slack:1.4.1
-    settings:
-      channel: hof-auto-tests
-      icon.url: https://readme.drone.io/logo.svg
-      template: >
-            *{{ uppercasefirst build.status }}*: CRON Job `nightly_e2e_playwright` for *Landlords Make A Report* Playwright BDD tests completed.            
-
-            Branch <https://github.com/{{ repo.owner }}/{{ repo.name }}/commits/{{ build.branch }}|{{build.branch}}> | Commit <https://github.com/{{ repo.owner }}/{{ repo.name }}/commit/{{ build.commit }}|{{ truncate build.commit 8 }}>
-
-            *Build <{{build.link}}|#{{build.number}}>*
-      username: Drone_CI
-      webhook:
-        from_secret: slack_sas_hof_auto_tests_webhook
+      - apk add --no-cache curl jq
+      - test -n "$SLACK_WEBHOOK" || (echo "Missing slack_sas_hof_auto_tests_webhook secret." && exit 1)
+      - test -f /root/.dockersock/nightly-playwright-summary.txt || echo "Playwright Nightly Summary\nSummary artifact missing." > /root/.dockersock/nightly-playwright-summary.txt
+      - |
+        payload=$(jq -n \
+          --arg status "$DRONE_BUILD_STATUS" \
+          --arg repo "$DRONE_REPO" \
+          --arg branch "$DRONE_BRANCH" \
+          --arg commit "$DRONE_COMMIT_SHA" \
+          --arg build_number "$DRONE_BUILD_NUMBER" \
+          --arg build_link "$DRONE_BUILD_LINK" \
+          --rawfile summary /root/.dockersock/nightly-playwright-summary.txt \
+          '{text: ("Nightly Playwright `nightly_e2e_playwright` for " + $repo + " finished with status: " + $status + "\nBranch: " + $branch + "\nCommit: " + ($commit[0:8]) + "\nBuild: #" + $build_number + " " + $build_link + "\n\n" + $summary)}')
+        http_code=$(curl -sS -o /tmp/slack_response.txt -w "%{http_code}" \
+          -X POST \
+          -H "Content-type: application/json" \
+          --data "$payload" \
+          "$SLACK_WEBHOOK")
+        echo "Slack webhook HTTP status: $http_code"
+        echo "Slack webhook response body:"
+        cat /tmp/slack_response.txt
+        test "$http_code" = "200" || (echo "Slack webhook call failed" && exit 1)
     when:
       cron: nightly_e2e_playwright
       event: cron
@@ -639,7 +651,7 @@ steps:
         - success
         - failure
     depends_on:
-      - cron_check_slack_webhook_nightly_e2e
+      - cron_nightly_e2e_tests
 
 services:
   - name: docker
