@@ -599,15 +599,16 @@ steps:
       - yarn playwright install --with-deps
       - test -n "$NIGHTLY_E2E_BASE_URL" || (echo "Missing NIGHTLY_E2E_BASE_URL environment value." && exit 1)
       - export PLAYWRIGHT_BASE_URL="$NIGHTLY_E2E_BASE_URL"
-      - export PLAYWRIGHT_JSON_REPORT_PATH=/root/.dockersock/nightly-playwright-report.json
+      - export PLAYWRIGHT_RUN_OUTPUT_PATH=/root/.dockersock/nightly-playwright-run-output.txt
       - export PLAYWRIGHT_TEXT_SUMMARY_PATH=/root/.dockersock/nightly-playwright-summary.txt
-      - rm -f "$PLAYWRIGHT_JSON_REPORT_PATH" "$PLAYWRIGHT_TEXT_SUMMARY_PATH"
+      - rm -f "$PLAYWRIGHT_RUN_OUTPUT_PATH" "$PLAYWRIGHT_TEXT_SUMMARY_PATH"
       - yarn bddgen
       - set +e
-      - playwright test --reporter=json > "$PLAYWRIGHT_JSON_REPORT_PATH"
+      - playwright test --reporter=line > "$PLAYWRIGHT_RUN_OUTPUT_PATH" 2>&1
       - PLAYWRIGHT_EXIT_CODE=$?
       - set -e
-      - node bin/summarise_playwright_report.js "$PLAYWRIGHT_JSON_REPORT_PATH" "$PLAYWRIGHT_TEXT_SUMMARY_PATH"
+      - tail -n 60 "$PLAYWRIGHT_RUN_OUTPUT_PATH" || true
+      - node bin/summarise_playwright_report.js "$PLAYWRIGHT_RUN_OUTPUT_PATH" "$PLAYWRIGHT_TEXT_SUMMARY_PATH"
       - exit "$PLAYWRIGHT_EXIT_CODE"
     when:
       cron: nightly_e2e_playwright
@@ -636,7 +637,25 @@ steps:
           --arg build_number "$DRONE_BUILD_NUMBER" \
           --arg build_link "$DRONE_BUILD_LINK" \
           --rawfile summary /root/.dockersock/nightly-playwright-summary.txt \
-          '{text: ("Nightly Playwright nightly_e2e_playwright for " + $repo + "\nStatus: " + $status + "\nBranch: " + $branch + "\nCommit: " + ($commit[0:8]) + "\nBuild: #" + $build_number + " " + $build_link + "\n\n```" + $summary + "```") }')
+          '{
+            text: ("Nightly Playwright nightly_e2e_playwright for " + $repo + " finished with status: " + $status),
+            blocks: [
+              {
+                type: "section",
+                text: {
+                  type: "mrkdwn",
+                  text: ("*Nightly Playwright nightly_e2e_playwright*\nStatus: " + $status + "\nBranch: " + $branch + "\nCommit: " + ($commit[0:8]) + "\nBuild: #" + $build_number + " " + $build_link)
+                }
+              },
+              {
+                type: "section",
+                text: {
+                  type: "mrkdwn",
+                  text: ("```" + $summary + "```")
+                }
+              }
+            ]
+          }')
         http_code=$(curl -sS -o /tmp/slack_response.txt -w "%{http_code}" \
           -X POST \
           -H "Content-type: application/json" \

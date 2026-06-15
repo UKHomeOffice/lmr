@@ -2,9 +2,8 @@
 
 const fs = require('node:fs');
 
-function readJson(path) {
-  const raw = fs.readFileSync(path, 'utf8');
-  return JSON.parse(raw);
+function readText(path) {
+  return fs.readFileSync(path, 'utf8');
 }
 
 function durationToSeconds(durationMs) {
@@ -14,24 +13,32 @@ function durationToSeconds(durationMs) {
   return (durationMs / 1000).toFixed(1);
 }
 
-function buildSummary(report) {
-  const stats = report?.stats || {};
+function parseCount(text, label) {
+  const match = text.match(new RegExp(String.raw`(\d+)\s+${label}`, 'i'));
+  return match ? Number(match[1]) : 0;
+}
 
-  const expected = Number.isFinite(stats.expected) ? stats.expected : 0;
-  const unexpected = Number.isFinite(stats.unexpected) ? stats.unexpected : 0;
-  const flaky = Number.isFinite(stats.flaky) ? stats.flaky : 0;
-  const skipped = Number.isFinite(stats.skipped) ? stats.skipped : 0;
-  const duration = durationToSeconds(stats.duration);
-  const total = expected + unexpected + flaky + skipped;
+function parseDuration(text) {
+  const match = text.match(/\(([^)]+)\)\s*$/m);
+  return match ? match[1] : 'unknown';
+}
+
+function buildSummaryFromText(outputText) {
+  const passed = parseCount(outputText, 'passed');
+  const failed = parseCount(outputText, 'failed');
+  const flaky = parseCount(outputText, 'flaky');
+  const skipped = parseCount(outputText, 'skipped');
+  const duration = parseDuration(outputText);
+  const total = passed + failed + flaky + skipped;
 
   return [
     'Playwright Nightly Summary',
     `Total: ${total}`,
-    `Passed: ${expected}`,
-    `Failed: ${unexpected}`,
+    `Passed: ${passed}`,
+    `Failed: ${failed}`,
     `Flaky: ${flaky}`,
     `Skipped: ${skipped}`,
-    `Duration (s): ${duration}`,
+    `Duration: ${duration}`,
   ].join('\n');
 }
 
@@ -46,10 +53,14 @@ function main() {
 
   let summary;
   try {
-    const report = readJson(inputPath);
-    summary = buildSummary(report);
+    const outputText = readText(inputPath);
+    summary = buildSummaryFromText(outputText);
+
+    if (!summary.includes('Passed:') || !summary.includes('Failed:')) {
+      throw new Error('Unable to detect Playwright totals in run output');
+    }
   } catch (error) {
-    summary = `Playwright Nightly Summary\nUnable to parse report: ${error.message || error}`;
+    summary = `Playwright Nightly Summary\nUnable to parse run output: ${error.message || error}`;
   }
 
   fs.writeFileSync(outputPath, `${summary}\n`, 'utf8');
