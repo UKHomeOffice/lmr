@@ -598,7 +598,12 @@ steps:
       - yarn install --frozen-lockfile
       - yarn playwright install --with-deps
       - test -n "$NIGHTLY_E2E_BASE_URL" || (echo "Missing NIGHTLY_E2E_BASE_URL environment value." && exit 1)
-      - export PLAYWRIGHT_BASE_URL="$NIGHTLY_E2E_BASE_URL"
+      - |
+        case "$NIGHTLY_E2E_BASE_URL" in
+          http://*|https://*) export PLAYWRIGHT_BASE_URL="$NIGHTLY_E2E_BASE_URL" ;;
+          *) export PLAYWRIGHT_BASE_URL="https://$NIGHTLY_E2E_BASE_URL" ;;
+        esac
+        echo "Using PLAYWRIGHT_BASE_URL=$PLAYWRIGHT_BASE_URL"
       - export PLAYWRIGHT_RUN_OUTPUT_PATH=/root/.dockersock/nightly-playwright-run-output.txt
       - export PLAYWRIGHT_TEXT_SUMMARY_PATH=/root/.dockersock/nightly-playwright-summary.txt
       - rm -f "$PLAYWRIGHT_RUN_OUTPUT_PATH" "$PLAYWRIGHT_TEXT_SUMMARY_PATH"
