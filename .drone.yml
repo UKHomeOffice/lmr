@@ -647,15 +647,16 @@ steps:
           --arg commit "$DRONE_COMMIT_SHA" \
           --arg build_number "$DRONE_BUILD_NUMBER" \
           --arg build_link "$DRONE_BUILD_LINK" \
+          --arg environment "$NIGHTLY_E2E_BASE_URL" \
           --rawfile summary /root/.dockersock/nightly-playwright-summary.txt \
           '{
-            text: ("Nightly Playwright nightly_e2e_playwright for " + $repo + " finished with status: " + $status),
+            text: ("Nightly Playwright Tests for " + $repo + " finished with status: " + $status),
             blocks: [
               {
                 type: "section",
                 text: {
                   type: "mrkdwn",
-                  text: ("*Nightly Playwright nightly_e2e_playwright*\nStatus: " + $status + "\nBranch: " + $branch + "\nBuild: #" + $build_number + " " + $build_link)
+                  text: ("*Nightly Playwright Tests Summary*\nStatus: " + $status + "\nBranch: " + $branch + "\nEnvironment: " + $environment + "\nBuild: #" + $build_number + " " + $build_link)
                 }
               },
               {
