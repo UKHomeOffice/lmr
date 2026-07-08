@@ -1,0 +1,150 @@
+# Default values for lmr-app Helm chart
+
+# Global settings
+global:
+  namespace: lmr-app
+  environment: dev
+
+# Application configuration
+app:
+  name: lmr-app
+  replicas: 1
+
+# Optional additional labels applied to app and redis resources
+commonLabels: {}
+
+# Image configuration
+image:
+  repository: ghcr.io/ukhomeoffice/lmr-app
+  tag: latest
+  pullPolicy: IfNotPresent
+
+# Container ports
+containerPorts:
+  app: 8080
+  nginx: 10443
+
+# Service configuration
+service:
+  type: ClusterIP
+  ports:
+    http: 10080
+    https: 10443
+
+# Ingress configuration
+ingress:
+  externalEnabled: false
+  internalEnabled: false
+  external:
+    className: ""
+    host: ""
+    annotations: {}
+  internal:
+    className: ""
+    host: ""
+    annotations: {}
+
+# Application environment variables
+env:
+  TZ: Europe/London
+  NODE_TLS_REJECT_UNAUTHORIZED: "0"
+  REDIS_PORT: "6379"
+  USE_MOCKS: "false"
+
+# Resource requests and limits
+resources:
+  app:
+    requests:
+      cpu: "20m"
+      memory: "100Mi"
+    limits:
+      cpu: "100m"
+      memory: "200Mi"
+  nginx:
+    requests:
+      memory: "10Mi"
+      cpu: "10m"
+    limits:
+      cpu: "250m"
+      memory: "256Mi"
+
+# Nginx proxy configuration
+nginx:
+  image: ghcr.io/nginxinc/nginx-unprivileged:1.27-alpine
+
+# Health checks
+healthChecks:
+  enabled: true
+  liveness:
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    path: /healthz/ping
+  readiness:
+    initialDelaySeconds: 15
+    periodSeconds: 5
+    path: /healthz/readiness
+
+# ConfigMap data
+configMap:
+  enabled: true
+  data: {}
+
+# External secrets
+externalSecrets:
+  enabled: false
+  refreshInterval: 1h
+  secretStoreRef:
+    name: ""
+    kind: SecretStore
+
+# Secrets
+secrets:
+  sessionSecret:
+    name: lmr-app-secrets
+    key: sessionSecret
+    remoteKey: ""
+    remoteProperty: ""
+  notifyKey:
+    name: lmr-app-secrets
+    key: notifyKey
+    remoteKey: ""
+    remoteProperty: ""
+  queryKey:
+    name: lmr-app-secrets
+    key: queryKey
+    remoteKey: ""
+    remoteProperty: ""
+
+# Redis configuration
+redis:
+  enabled: false
+  name: redis
+  image: redis:7.2-alpine
+  port: 6379
+  replicas: 1
+  resources:
+    requests:
+      cpu: "20m"
+      memory: "100Mi"
+    limits:
+      cpu: "100m"
+      memory: "200Mi"
+
+# Network policies
+networkPolicies:
+  enabled: true
+  externalIngress: true
+  internalIngress: true
+  internalIngressCIDRs: []
+  redisAccess: true
+  egress:
+    enabled: true
+    redisServiceCIDRs: []
+    externalHttpsCIDRs: []
+
+# Security context
+securityContext:
+  runAsNonRoot: true
+
+# Pod scheduling overrides
+tolerations: []

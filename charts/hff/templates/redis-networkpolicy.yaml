@@ -1,0 +1,27 @@
+{{- if .Values.networkPolicies.enabled }}
+{{- if .Values.networkPolicies.redisAccess }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: redis-permit-access-{{ .Values.app.name }}
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app.kubernetes.io/name: lmr-app
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  podSelector:
+    matchLabels:
+      name: {{ .Values.redis.name }}
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          name: {{ .Values.app.name }}
+    ports:
+    - port: {{ .Values.redis.port }}
+      protocol: TCP
+{{- end }}
+{{- end }}
