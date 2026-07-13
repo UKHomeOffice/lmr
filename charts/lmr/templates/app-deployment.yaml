@@ -19,7 +19,7 @@ spec:
     metadata:
       labels:
         name: {{ required "app.name is required" .Values.app.name }}
-        app.kubernetes.io/name: lmr-app
+        app.kubernetes.io/name: {{ .Values.app.name }}-app
         app.kubernetes.io/instance: {{ .Release.Name }}
         {{- include "lmr-app.commonLabels" . | nindent 8 }}
         app: {{ required "app.name is required" .Values.app.name }}

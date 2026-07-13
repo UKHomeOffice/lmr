@@ -6,7 +6,7 @@ metadata:
   name: {{ .Values.app.name }}-configmap
   namespace: {{ .Values.global.namespace }}
   labels:
-    app.kubernetes.io/name: lmr-app
+    app.kubernetes.io/name: {{ .Values.app.name }}-app
     app.kubernetes.io/instance: {{ .Release.Name }}
 data:
   {{- if .Values.configMap.data }}
