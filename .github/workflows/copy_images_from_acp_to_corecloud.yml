@@ -1,0 +1,33 @@
+name: Copying Images from ACP to Core Cloud to keep in Sync
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+jobs:
+  copy-images-from-acp-to-core-cloud:
+    # Reusable workflow lives in UKHomeOffice/core-cloud-migration-playbook on branch CCL-8893.
+    uses: UKHomeOffice/core-cloud-migration-playbook/.github/workflows/copy_ecr_images_between_accounts.yml@CCL-8893
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      source_aws_region: eu-west-2
+      source_aws_ecr_account_id: "340268328991"
+      source_registry: "340268328991.dkr.ecr.eu-west-2.amazonaws.com"
+      target_aws_region: eu-west-2
+      source_image_name: sas/hff
+      source_image_tag: ${{ github.event_name == 'pull_request' && format('pr-{0}-{1}', github.event.pull_request.number, github.sha) || github.sha }}
+      latest_image_count: "10"
+      target_image_name: hff/hff-app
+      target_image_tag: ${{ github.event_name == 'pull_request' && format('pr-{0}-{1}', github.event.pull_request.number, github.sha) || github.sha }}
+      tag_latest: true
+    secrets:
+      source_aws_access_key_id: ${{ secrets.ACP_AWS_ACCESS_KEY_ID }}
+      source_aws_secret_access_key: ${{ secrets.ACP_AWS_SECRET_ACCESS_KEY }}
+      target_aws_ecr_account_id: ${{ secrets.AWS_ECR_ACCOUNT_ID }}
+      target_role_to_assume: ${{ secrets.ROLE_TO_ASSUME }}
