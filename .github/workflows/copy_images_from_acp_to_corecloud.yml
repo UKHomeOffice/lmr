@@ -27,7 +27,7 @@ jobs:
       target_image_tag: ${{ github.event_name == 'pull_request' && format('pr-{0}-{1}', github.event.pull_request.number, github.sha) || github.sha }}
       tag_latest: true
     secrets:
-      source_aws_access_key_id: ${{ secrets.ACP_AWS_ACCESS_KEY_ID }}
-      source_aws_secret_access_key: ${{ secrets.ACP_AWS_SECRET_ACCESS_KEY }}
+      source_quay_robot_user_name: ${{ secrets.ACP_QUAY_ROBOT_TOKEN_USERNAME }}
+      source_quay_robot_password: ${{ secrets.ACP_QUAY_ROBOT_TOKEN_PASSWORD}}
       target_aws_ecr_account_id: ${{ secrets.AWS_ECR_ACCOUNT_ID }}
       target_role_to_assume: ${{ secrets.ROLE_TO_ASSUME }}
