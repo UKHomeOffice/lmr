@@ -3,10 +3,10 @@ name: Copying Images from ACP to Core Cloud to keep in Sync
 on:
   pull_request:
     branches:
-      - master
+      - main
   push:
     branches:
-      - master
+      - main
 
 jobs:
   copy-images-from-acp-to-core-cloud:
