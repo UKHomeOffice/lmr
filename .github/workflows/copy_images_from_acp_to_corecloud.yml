@@ -18,12 +18,12 @@ jobs:
     with:
       source_aws_region: eu-west-2
       source_aws_ecr_account_id: "340268328991"
-      source_registry: "340268328991.dkr.ecr.eu-west-2.amazonaws.com"
+      source_registry: "quay.io/ukhomeofficedigital"
       target_aws_region: eu-west-2
-      source_image_name: sas/hff
+      source_image_name: lmr
       source_image_tag: ${{ github.event_name == 'pull_request' && format('pr-{0}-{1}', github.event.pull_request.number, github.sha) || github.sha }}
       latest_image_count: "10"
-      target_image_name: hff/hff-app
+      target_image_name: lmr/lmr-app
       target_image_tag: ${{ github.event_name == 'pull_request' && format('pr-{0}-{1}', github.event.pull_request.number, github.sha) || github.sha }}
       tag_latest: true
     secrets:
