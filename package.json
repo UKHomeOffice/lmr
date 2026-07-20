@@ -28,12 +28,17 @@
   "dependencies": {
     "@cucumber/cucumber": "^13.0.0",
     "accessible-autocomplete": "^3.0.1",
-    "hof": "^23.1.0",
+    "hof": "^24.4.0",
     "jquery": "^3.6.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "notifications-node-client": "^8.2.1",
     "uuidv4": "^6.2.13"
+  },
+  "resolutions": {
+    "axios": "^1.18.1",
+    "form-data": "^4.0.6",
+    "serialize-javascript": "^7.0.3"
   },
   "devDependencies": {
     "@playwright/test": "^1.60.0",
