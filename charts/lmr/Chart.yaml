@@ -1,0 +1,11 @@
+apiVersion: v2
+name: lmr-app
+description: A Helm chart for lmr application deployment
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords:
+  - lmr
+  - application
+maintainers:
+  - name: Home Office Digital

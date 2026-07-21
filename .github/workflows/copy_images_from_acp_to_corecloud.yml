@@ -1,0 +1,33 @@
+name: Copying Images from ACP to Core Cloud to keep in Sync
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  copy-images-from-acp-to-core-cloud:
+    # Reusable workflow lives in UKHomeOffice/core-cloud-migration-playbook on branch CCL-8893.
+    uses: UKHomeOffice/core-cloud-migration-playbook/.github/workflows/copy_ecr_images_between_accounts.yml@CCL-8893
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      source_aws_region: eu-west-2
+      source_aws_ecr_account_id: "340268328991"
+      source_registry: "quay.io/ukhomeofficedigital"
+      target_aws_region: eu-west-2
+      source_image_name: lmr
+      source_image_tag: ${{ github.event_name == 'pull_request' && format('pr-{0}-{1}', github.event.pull_request.number, github.sha) || github.sha }}
+      latest_image_count: "10"
+      target_image_name: lmr/lmr-app
+      target_image_tag: ${{ github.event_name == 'pull_request' && format('pr-{0}-{1}', github.event.pull_request.number, github.sha) || github.sha }}
+      tag_latest: true
+    secrets:
+      source_quay_robot_user_name: ${{ secrets.ACP_QUAY_ROBOT_TOKEN_USERNAME }}
+      source_quay_robot_password: ${{ secrets.ACP_QUAY_ROBOT_TOKEN_PASSWORD}}
+      target_aws_ecr_account_id: ${{ secrets.AWS_ECR_ACCOUNT_ID }}
+      target_role_to_assume: ${{ secrets.ROLE_TO_ASSUME }}

@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.app.name }}
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app.kubernetes.io/name: lmr-app
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  selector:
+    app.kubernetes.io/name: lmr-app
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  type: {{ .Values.service.type }}
+  ports:
+  - name: http
+    port: {{ .Values.service.ports.http }}
+    targetPort: {{ .Values.containerPorts.app }}
+  - name: https
+    port: {{ .Values.service.ports.https }}
+    targetPort: {{ .Values.containerPorts.nginx }}

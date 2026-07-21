@@ -1,0 +1,38 @@
+{{- if .Values.redis.enabled }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-cache-config
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app.kubernetes.io/name: redis
+    app.kubernetes.io/instance: {{ .Release.Name }}
+data:
+  redis-config: |
+    # Redis configuration file
+    # For detailed documentation, see https://redis.io/documentation
+
+    # Network configuration
+    bind 0.0.0.0
+    port {{ .Values.redis.port }}
+
+    # Memory management
+    maxmemory 256mb
+    maxmemory-policy allkeys-lru
+
+    # Persistence (disabled for session cache)
+    save ""
+    appendonly no
+
+    # Logging
+    loglevel notice
+    logfile ""
+
+    # Database selection
+    databases 16
+
+    # Other settings
+    tcp-keepalive 300
+    timeout 0
+{{- end }}

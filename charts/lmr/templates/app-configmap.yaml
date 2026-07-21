@@ -1,0 +1,17 @@
+{{- if .Values.configMap.enabled }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.app.name }}-configmap
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app.kubernetes.io/name: {{ .Values.app.name }}-app
+    app.kubernetes.io/instance: {{ .Release.Name }}
+data:
+  {{- if .Values.configMap.data }}
+  {{- toYaml .Values.configMap.data | nindent 2 }}
+  {{- else }}
+  PLACEHOLDER: "true"
+  {{- end }}
+{{- end }}

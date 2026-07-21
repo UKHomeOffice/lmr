@@ -1,0 +1,28 @@
+{{- if .Values.ingress.externalEnabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ required "app.name is required" .Values.app.name }}-external
+  namespace: {{ required "global.namespace is required" .Values.global.namespace }}
+  labels:
+    app.kubernetes.io/name: lmr-app
+    app.kubernetes.io/instance: {{ .Release.Name }}
+{{- with .Values.ingress.external.annotations }}
+  annotations:
+{{- toYaml . | nindent 4 }}
+{{- end }}
+spec:
+  ingressClassName: {{ required "ingress.external.className is required" .Values.ingress.external.className }}
+  rules:
+  - host: {{ required "ingress.external.host is required" .Values.ingress.external.host }}
+    http:
+      paths:
+      - path: "/"
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ required "app.name is required" .Values.app.name }}
+            port:
+              number: {{ .Values.service.ports.https }}
+{{- end }}

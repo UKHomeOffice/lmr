@@ -1,0 +1,114 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ required "app.name is required" .Values.app.name }}
+  namespace: {{ required "global.namespace is required" .Values.global.namespace }}
+  labels:
+    app.kubernetes.io/name: lmr-app
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- include "lmr-app.commonLabels" . | nindent 4 }}
+    
+spec:
+  replicas: {{ .Values.app.replicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: lmr-app
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        name: {{ required "app.name is required" .Values.app.name }}
+        app.kubernetes.io/name: {{ .Values.app.name }}-app
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        {{- include "lmr-app.commonLabels" . | nindent 8 }}
+        app: {{ required "app.name is required" .Values.app.name }}
+        service: {{ required "app.name is required" .Values.app.name }}
+    spec:
+      {{- if .Values.tolerations }}
+      tolerations:
+        {{- toYaml .Values.tolerations | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.securityContext | nindent 8 }}
+      containers:
+      - name: {{ required "app.name is required" .Values.app.name }}
+        image: "{{ required "image.repository is required" .Values.image.repository }}:{{ required "image.tag is required" .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        {{- if .Values.command }}
+        command:
+          {{- toYaml .Values.command | nindent 10 }}
+        {{- end }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 10 }}
+        ports:
+        - containerPort: {{ .Values.containerPorts.app }}
+          name: app
+        envFrom:
+        - configMapRef:
+            name: {{ required "app.name is required" .Values.app.name }}-configmap
+        env:
+        - name: TZ
+          value: {{ .Values.env.TZ }}
+        - name: NODE_TLS_REJECT_UNAUTHORIZED
+          value: {{ .Values.env.NODE_TLS_REJECT_UNAUTHORIZED | quote }}
+        - name: REDIS_PORT
+          value: {{ .Values.env.REDIS_PORT | quote }}
+        - name: REDIS_HOST
+          value: {{ .Values.redis.name }}
+        - name: SESSION_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ required "secrets.sessionSecret.name is required" .Values.secrets.sessionSecret.name }}
+              key: {{ required "secrets.sessionSecret.key is required" .Values.secrets.sessionSecret.key }}
+        - name: NOTIFY_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ required "secrets.notifyKey.name is required" .Values.secrets.notifyKey.name }}
+              key: {{ required "secrets.notifyKey.key is required" .Values.secrets.notifyKey.key }}
+        - name: QUERY_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ required "secrets.queryKey.name is required" .Values.secrets.queryKey.name }}
+              key: {{ required "secrets.queryKey.key is required" .Values.secrets.queryKey.key }}
+        - name: USE_MOCKS
+          value: {{ .Values.env.USE_MOCKS | quote }}
+        {{- if .Values.healthChecks.enabled }}
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.healthChecks.liveness.path }}
+            port: {{ .Values.containerPorts.app }}
+          initialDelaySeconds: {{ .Values.healthChecks.liveness.initialDelaySeconds }}
+          periodSeconds: {{ .Values.healthChecks.liveness.periodSeconds }}
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.healthChecks.readiness.path }}
+            port: {{ .Values.containerPorts.app }}
+          initialDelaySeconds: {{ .Values.healthChecks.readiness.initialDelaySeconds }}
+          periodSeconds: {{ .Values.healthChecks.readiness.periodSeconds }}
+        {{- end }}
+        resources:
+          {{- toYaml .Values.resources.app | nindent 10 }}
+        volumeMounts:
+        - mountPath: /public
+          name: public
+
+      - name: nginx-proxy
+        image: {{ required "nginx.image is required" .Values.nginx.image }}
+        {{- if .Values.nginx.env }}
+        env:
+          {{- toYaml .Values.nginx.env | nindent 10 }}
+        {{- end }}
+        resources:
+          {{- toYaml .Values.resources.nginx | nindent 10 }}
+        ports:
+        - containerPort: {{ .Values.containerPorts.nginx }}
+          name: https
+        volumeMounts:
+        - mountPath: /public
+          name: public
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 10 }}
+      volumes:
+      - name: public
+        emptyDir: {}

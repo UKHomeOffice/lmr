@@ -1,0 +1,29 @@
+{{- if .Values.networkPolicies.enabled }}
+{{- if .Values.networkPolicies.externalIngress }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-network-policy-external-{{ .Values.app.name }}
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app.kubernetes.io/name: lmr-app
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  podSelector:
+    matchLabels:
+      name: {{ .Values.app.name }}
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: ingress-external
+    ports:
+    - port: {{ .Values.containerPorts.app }}
+      protocol: TCP
+    - port: {{ .Values.containerPorts.nginx }}
+      protocol: TCP
+{{- end }}
+{{- end }}
