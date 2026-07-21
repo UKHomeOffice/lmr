@@ -378,7 +378,7 @@
   dependencies:
     regexp-match-indices "1.0.2"
 
-"@cucumber/cucumber@^13.0.0":
+"@cucumber/cucumber@^13.2.0":
   version "13.2.0"
   resolved "https://registry.yarnpkg.com/@cucumber/cucumber/-/cucumber-13.2.0.tgz#c3953160a907184a838f227f010ddb9ea1d98fc1"
   integrity sha512-QjhTG6FWVdG66qkj1BGONecAIqEIDx4g+ZnTdaQVmhECDfGPYyfEcBX3k71p/h1YKvWEUWmhol77Y7FZ36pARA==
@@ -952,7 +952,7 @@
   resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
   integrity sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==
 
-"@playwright/test@^1.60.0":
+"@playwright/test@^1.61.1":
   version "1.61.1"
   resolved "https://registry.yarnpkg.com/@playwright/test/-/test-1.61.1.tgz#48568dc22af7819e55fa5e8e3bc79b7e6a3e6675"
   integrity sha512-8nKv6+0RJSL9FE4jYOEGXnPeM/Hg12qZpmqzZjRh3qM0Y7c3z1mrOTfFLids72RDQYVh9WpLEfR5WdpNX4fkig==
@@ -1280,7 +1280,7 @@
   resolved "https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==
 
-"@types/node@^25.9.2":
+"@types/node@^25.9.5":
   version "25.9.5"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-25.9.5.tgz#0fefc09e6e82e94cde291bacf43522e989eb01a4"
   integrity sha512-OScDchr2fwuUmWdf4kZ9h7PcJiYDVInhJizG/biAq3cAvqwYktuy/TYGGdZNMtNTFUP7rnb0NU4TUdm82kt4Rg==
@@ -3443,7 +3443,7 @@ hide-powered-by@1.1.0:
   resolved "https://registry.yarnpkg.com/hide-powered-by/-/hide-powered-by-1.1.0.tgz#be3ea9cab4bdb16f8744be873755ca663383fa7a"
   integrity sha512-Io1zA2yOA1YJslkr+AJlWSf2yWFkKjvkcL9Ni1XSUqnGLr/qRQe2UI3Cn/J9MsJht7yEVCe0SscY1HgVMujbgg==
 
-hof@^24.4.0:
+hof@~24.4.0:
   version "24.4.0"
   resolved "https://registry.yarnpkg.com/hof/-/hof-24.4.0.tgz#6a5af3a0bfcaa95b6f848e4ee71bcb5e69a21aee"
   integrity sha512-VwW6Raj9P78Mc6gyTREBSz8UIRxUYzuxB2lVdbrjajNCi3gsbapmeYk1cA9eJB89LDSNQT5NOP4VFGP8X9zOHg==
@@ -4919,7 +4919,7 @@ pkg-dir@^4.1.0:
   dependencies:
     find-up "^4.0.0"
 
-playwright-bdd@^9.0.0:
+playwright-bdd@^9.2.0:
   version "9.2.0"
   resolved "https://registry.yarnpkg.com/playwright-bdd/-/playwright-bdd-9.2.0.tgz#6276a52773e503fdb9791ba0bc05959ac73207a7"
   integrity sha512-1tBTmo4DpOhLsc+A6PB4isWO3DHKb4BQ3Tzw5+ze/PmgBW9W2m9c+nc0TPy2nByWJtw0gKSfMoexyBR+y82+pg==
