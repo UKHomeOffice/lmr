@@ -1,20 +1,27 @@
 #!/bin/bash
 
-# This script is intended for testing the report publishing logic locally. It simulates the environment variables that would be set in a Drone CI build and attempts to publish a Playwright report as a release asset on GitHub, then posts a comment to the PR with the download link.
+# This script is intended for testing the report publishing logic locally. It uses GitHub Actions-style environment variables and publishes a Playwright report as a release asset, then comments on the PR with the download link.
 # export GITHUB_APP_TOKEN="TOKEN_HERE"
-# export DRONE_PULL_REQUEST="PR_NUMBER_HERE"
-# export DRONE_REPO="UKHomeOffice/euss-web-messenger"
-# export DRONE_BUILD_NUMBER="BUILD_NUMBER_HERE"
-# export DRONE_BUILD_LINK="https://drone-gh.acp.homeoffice.gov.uk/UKHomeOffice/euss-web-messenger/BUILD_NUMBER_HERE"
+# export GITHUB_PULL_REQUEST="PR_NUMBER_HERE"
+# export GITHUB_REPO="UKHomeOffice/euss-web-messenger"
+# export GITHUB_ACTION_NUMBER="RUN_NUMBER_HERE"
+# export GITHUB_ACTION_LINK="https://github.com/UKHomeOffice/euss-web-messenger/actions/runs/RUN_ID"
 
 set -euo pipefail
 
 # Required environment variables
 : "${GITHUB_APP_TOKEN:?Missing GITHUB_APP_TOKEN}"
-: "${DRONE_PULL_REQUEST:?Missing DRONE_PULL_REQUEST}"
-: "${DRONE_REPO:?Missing DRONE_REPO}"
-: "${DRONE_BUILD_NUMBER:?Missing DRONE_BUILD_NUMBER}"
-: "${DRONE_BUILD_LINK:?Missing DRONE_BUILD_LINK}"
+
+# Prefer GitHub-native naming; keep Drone names as backward-compatible fallbacks.
+PR_NUMBER="${GITHUB_PULL_REQUEST:-${DRONE_PULL_REQUEST:-}}"
+REPO_SLUG="${GITHUB_REPO:-${DRONE_REPO:-}}"
+RUN_NUMBER="${GITHUB_ACTION_NUMBER:-${DRONE_BUILD_NUMBER:-}}"
+RUN_LINK="${GITHUB_ACTION_LINK:-${DRONE_BUILD_LINK:-}}"
+
+: "${PR_NUMBER:?Missing GITHUB_PULL_REQUEST (or DRONE_PULL_REQUEST)}"
+: "${REPO_SLUG:?Missing GITHUB_REPO (or DRONE_REPO)}"
+: "${RUN_NUMBER:?Missing GITHUB_ACTION_NUMBER (or DRONE_BUILD_NUMBER)}"
+: "${RUN_LINK:?Missing GITHUB_ACTION_LINK (or DRONE_BUILD_LINK)}"
 
 # Ensure playwright-report directory exists
 if [ ! -d "playwright-report" ]; then
@@ -23,12 +30,12 @@ if [ ! -d "playwright-report" ]; then
 fi
 
 # Archive the report
-REPORT_ARCHIVE="playwright-report-pr-${DRONE_PULL_REQUEST}-${DRONE_BUILD_NUMBER}.zip"
+REPORT_ARCHIVE="playwright-report-pr-${PR_NUMBER}-${RUN_NUMBER}.zip"
 zip -r "$REPORT_ARCHIVE" playwright-report
 
 # GitHub API setup
-GH_API="https://api.github.com/repos/${DRONE_REPO}"
-TAG_NAME="pr-${DRONE_PULL_REQUEST}-playwright-report"
+GH_API="https://api.github.com/repos/${REPO_SLUG}"
+TAG_NAME="pr-${PR_NUMBER}-playwright-report"
 
 RELEASE_RESPONSE_FILE="$(mktemp)"
 RELEASE_HTTP_CODE="$(curl -sS -o "$RELEASE_RESPONSE_FILE" -w "%{http_code}" \
@@ -41,7 +48,7 @@ if [ "$RELEASE_HTTP_CODE" = "404" ]; then
     -H "Authorization: Bearer ${GITHUB_APP_TOKEN}" \
     -H "Accept: application/vnd.github+json" \
     "${GH_API}/releases" \
-    -d "$(jq -n --arg tag "$TAG_NAME" --arg name "Playwright Report PR #${DRONE_PULL_REQUEST}" '{tag_name:$tag,name:$name,prerelease:true,draft:false}')")"
+    -d "$(jq -n --arg tag "$TAG_NAME" --arg name "Playwright Report PR #${PR_NUMBER}" '{tag_name:$tag,name:$name,prerelease:true,draft:false}')")"
 fi
 
 if ! [[ "$RELEASE_HTTP_CODE" =~ ^2 ]]; then
@@ -67,7 +74,7 @@ if [ -z "$RELEASE_ID" ]; then
   exit 1
 fi
 
-for ASSET_ID in $(jq -r --arg prefix "playwright-report-pr-${DRONE_PULL_REQUEST}-" '.assets[]? | select(.name | startswith($prefix)) | .id' "$RELEASE_RESPONSE_FILE"); do
+for ASSET_ID in $(jq -r --arg prefix "playwright-report-pr-${PR_NUMBER}-" '.assets[]? | select(.name | startswith($prefix)) | .id' "$RELEASE_RESPONSE_FILE"); do
   curl -sS -X DELETE \
     -H "Authorization: Bearer ${GITHUB_APP_TOKEN}" \
     -H "Accept: application/vnd.github+json" \
@@ -110,14 +117,14 @@ COMMENT_BODY=$(cat <<EOF
 Playwright HTML report for this PR build is available here:
 * ${DOWNLOAD_URL}
 
-Drone build: ${DRONE_BUILD_LINK}
+GitHub Actions run: ${RUN_LINK}
 EOF
 )
 
 GH_COMMENT_RESPONSE=$(curl -sS -X POST \
   -H "Authorization: Bearer ${GITHUB_APP_TOKEN}" \
   -H "Accept: application/vnd.github+json" \
-  "${GH_API}/issues/${DRONE_PULL_REQUEST}/comments" \
+  "${GH_API}/issues/${PR_NUMBER}/comments" \
   -d "$(jq -n --arg body "$COMMENT_BODY" '{body: $body}')")
 
 if ! echo "$GH_COMMENT_RESPONSE" | jq -e . >/dev/null 2>&1; then

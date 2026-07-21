@@ -9,7 +9,6 @@ Dockerfile
 docker-compose.yml
 .devcontainer
 .cache
-.drone.yml
 bin
 kube
 npm-debug.log
