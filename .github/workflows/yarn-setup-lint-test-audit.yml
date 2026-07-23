@@ -9,50 +9,65 @@ on:
       - main
 
 jobs:
-    setup:
-        name: yarn_setup_lint_unit_tests_audit
-        runs-on: ubuntu-latest
-        container:
-            image: node:24.15.0-alpine3.23@sha256:8e2c930fda481a6ec141fe5a88e8c249c69f8102fe98af505f38c081649ea749
-        env:
-            NOTIFY_KEY: USE_MOCK
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
-              with:
-                  fetch-depth: 0
+  resolve_base_image:
+    name: Resolve Dockerfile base image
+    runs-on: ubuntu-latest
+    outputs:
+      base_image: ${{ steps.get_base_image.outputs.base_image }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-            - name: Enable Corepack
-              run: corepack enable
+      - name: Extract base image from Dockerfile
+        id: get_base_image
+        run: |
+          BASE_IMAGE=$(awk 'toupper($1)=="FROM"{print $2; exit}' Dockerfile)
+          test -n "$BASE_IMAGE" || (echo "No FROM image found in Dockerfile" && exit 1)
+          echo "base_image=$BASE_IMAGE" >> "$GITHUB_OUTPUT"
 
-            - name: Install dependencies
-              run: yarn install --frozen-lockfile
+  setup_lint_unit_tests_audit:
+    name: "Setup, Lint, Unit Tests, Audit"
+    needs: resolve_base_image
+    runs-on: ubuntu-latest
+    container: ${{ needs.resolve_base_image.outputs.base_image }}
+    env:
+      NOTIFY_KEY: USE_MOCK
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-            - name: Run postinstall
-              run: yarn run postinstall
+      - name: Enable Corepack
+        run: corepack enable
 
-            - name: linting
-              run: yarn run test:lint
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
 
-            - name: unit_tests
-              run: yarn run test:unit
+      - name: Run postinstall
+        run: yarn run postinstall
 
-            - name: Yarn audit (fails only on high or critical)
-              run: |
-                  yarn audit --json > audit.jsonl || true
-                  node -e "const fs=require('fs');const lines=fs.readFileSync('audit.jsonl','utf8').trim().split(/\n+/).filter(Boolean);let summary=null;for(const line of lines){try{const obj=JSON.parse(line);if(obj.type==='auditSummary'){summary=obj.data;}}catch{}}if(!summary){console.error('Could not parse yarn audit summary');process.exit(1);}const high=Number(summary.vulnerabilities?.high||0);const critical=Number(summary.vulnerabilities?.critical||0);console.log('Audit summary:', summary.vulnerabilities);if(high>0||critical>0){console.error('High/Critical vulnerabilities detected');process.exit(1);}console.log('No high or critical vulnerabilities found.');"
+      - name: linting
+        run: yarn run test:lint
 
-    # sonar_scanner:
-    #     name: sonar_scanner
-    #     needs: setup
-    #     runs-on: ubuntu-latest
-    #     container:
-    #         image: quay.io/ukhomeofficedigital/sonar-scanner:latest
-    #     steps:
-    #         - name: Checkout repository
-    #           uses: actions/checkout@v4
-    #           with:
-    #               fetch-depth: 0
+      - name: unit_tests
+        run: yarn run test:unit
 
-    #         - name: Run Sonar scanner
-    #           run: sonar-scanner -Dproject.settings=./sonar-project.properties
+      - name: Yarn audit (fails only on high or critical)
+        run: |
+          yarn audit --json > audit.jsonl || true
+          node -e "const fs=require('fs');const lines=fs.readFileSync('audit.jsonl','utf8').trim().split(/\n+/).filter(Boolean);let summary=null;for(const line of lines){try{const obj=JSON.parse(line);if(obj.type==='auditSummary'){summary=obj.data;}}catch{}}if(!summary){console.error('Could not parse yarn audit summary');process.exit(1);}const high=Number(summary.vulnerabilities?.high||0);const critical=Number(summary.vulnerabilities?.critical||0);console.log('Audit summary:', summary.vulnerabilities);if(high>0||critical>0){console.error('High/Critical vulnerabilities detected');process.exit(1);}console.log('No high or critical vulnerabilities found.');"
+
+  # sonar_scanner:
+  #   name: sonar_scanner
+  #   needs: setup_lint_unit_tests_audit
+  #   runs-on: ubuntu-latest
+  #   container: quay.io/ukhomeofficedigital/sonar-scanner:latest
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 0
+  #
+  #     - name: Run Sonar scanner
+  #       run: sonar-scanner -Dproject.settings=./sonar-project.properties
