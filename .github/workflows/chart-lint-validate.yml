@@ -7,7 +7,6 @@ on:
       - CCL-*
   push:
     branches:
-      - CCL-*
       - main
   workflow_dispatch:
     inputs:

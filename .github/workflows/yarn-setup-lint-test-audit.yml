@@ -1,0 +1,15 @@
+name: Yarn CI - Setup, Lint, Unit Tests, Audit
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  yarn_setup_lint_unit_tests_audit:
+    uses: UKHomeOffice/core-cloud-migration-playbook/.github/workflows/yarn-setup-lint-test-audit.yml@LMR-60-Add-Reusable-Yarn-workflow-actions
+    permissions:
+      contents: read

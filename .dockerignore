@@ -8,8 +8,7 @@ Dockerfile
 .dockerignore
 docker-compose.yml
 .devcontainer
-.cache
-.drone.yml
+.cacheWe need flexibility to maintain and evolve these workflows within our own repositories, so our developers can adjust commands and behaviour as needed without being restricted by a common template.
 bin
 kube
 npm-debug.log
