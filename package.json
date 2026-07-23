@@ -13,7 +13,6 @@
     "test": "yarn run test:unit && yarn run test:lint",
     "test:lint": "eslint . --config ./node_modules/eslint-config-hof/default.js",
     "test:unit": "LOG_LEVEL=error nyc _mocha \"test/_unit/**/*.spec.js\"",
-    "test:snyk": "snyk config set api=SNYK_TOKEN && snyk test",
     "bddgen": "bddgen",
     "test:e2e": "bddgen && playwright test",
     "test:e2e:smoke": "bddgen && playwright test --grep-invert @history",
@@ -29,28 +28,25 @@
     "@cucumber/cucumber": "^13.2.0",
     "accessible-autocomplete": "^3.0.1",
     "hof": "~24.4.0",
-    "jquery": "^3.6.0",
-    "lodash": "^4.17.21",
-    "moment": "^2.29.4",
-    "notifications-node-client": "^8.2.1",
+    "jquery": "^4.0.0",
+    "lodash": "^4.18.1",
+    "moment": "^2.30.1",
+    "notifications-node-client": "^8.4.0",
     "uuidv4": "^6.2.13"
   },
   "resolutions": {
-    "axios": "^1.18.1",
-    "form-data": "^4.0.6",
-    "serialize-javascript": "^7.0.3"
+    "serialize-javascript": "^7.0.5"
   },
   "devDependencies": {
     "@playwright/test": "^1.61.1",
-    "@types/node": "^25.9.5",
-    "chai": "^5.2.1",
+    "@types/node": "^26.1.1",
+    "chai": "^6.2.2",
     "dotenv": "^17.4.2",
     "eslint": "8.57.0",
     "eslint-config-hof": "^1.3.4",
     "mocha": "^11.7.6",
     "nyc": "^17.1.0",
-    "playwright-bdd": "^9.2.0",
-    "snyk": "^1.1288.0"
+    "playwright-bdd": "^9.2.0"
   },
   "mocha": {
     "require": "test/setup.js"
