@@ -4,51 +4,41 @@ import dotenv from 'dotenv';
 
 dotenv.config({ quiet: true });
 
+//Note: The baseURL is set to the value of PLAYWRIGHT_BASE_URL from the .env file if it exists, otherwise it defaults to http://localhost:${port}.
 const port = Number(process.env.PLAYWRIGHT_PORT || 8080);
 const baseURL = process.env.PLAYWRIGHT_BASE_URL || `http://localhost:${port}`;
+
 
 const testDir = defineBddConfig({
   features: 'e2e-tests/features/**/*.feature',
   steps: [
     'e2e-tests/steps/**/*.step.ts',
-    'e2e-tests/fixture/fixtures.ts'
+    'e2e-tests/fixture/fixtures.ts',
   ],
-  outputDir: '.features-gen'
+  outputDir: '.features-gen',
 });
 
 export default defineConfig({
   testDir,
-  timeout: 30000, //This is 30 seconds
+  timeout: 30000,
   expect: {
-    timeout: 6000, //This is 6 seconds
+    timeout: 6000,
   },
-
-  /* Run tests in files in parallel */
   fullyParallel: true,
-  /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 2 : 1,
-
-  /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
-
-  /* Retry on CI only */
   retries: process.env.CI ? 2 : 1,
-
-  /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [['html', { open: 'never' }], ['list']],
-
-  /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     baseURL,
     viewport: null,
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
-    /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
-    headless: true,
+    headless: !!process.env.CI,
   },
-  
-  webServer: process.env.PLAYWRIGHT_BASE_URL
+
+    webServer: process.env.PLAYWRIGHT_BASE_URL
     ? undefined
     : {
       command: 'yarn start:dev',
@@ -56,18 +46,19 @@ export default defineConfig({
       reuseExistingServer: !process.env.CI,
       timeout: 120_000
     },
-
+    
   /* Configure projects for major browsers */
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'],
+      // use: { ...devices['Desktop Chrome'],
+      use: {
         browserName: 'chromium',
         launchOptions: {
           args: ['--start-maximized'],
         },
-        video: 'on', //Options => 'on', 'off', 'retain-on-failure' or 'on-first-retry'
-        screenshot: 'on',
+        video: 'on-first-retry', //Options => 'on', 'off', 'retain-on-failure' or 'on-first-retry'
+        screenshot: 'only-on-failure', //Options => 'on', 'off', 'only-on-failure' or 'on-first-retry'
       },
     },
   ],
