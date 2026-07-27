@@ -27,3 +27,6 @@ $ yarn start:dev
 ```
 Then visit: [http://localhost:8080/](http://localhost:8080/) to access the start page.
 > **Note**: You will need the html-pdf-converter service running on a separate port to this service in order to test the email functionality
+
+### Workaround for running E2E tests locally
+In order to run e2e test locally, set `PLAYWRIGHT_BASE_URL` in the `.env` file to a branch URL.
