@@ -8,7 +8,7 @@ RUN echo "http://uk.alpinelinux.org/alpine/v3.24/main" > /etc/apk/repositories ;
 
 # Base image ships with npm 11.x, which currently pulls vulnerable transitive
 # dependencies; pin npm to a patched release for deterministic image scans.
-RUN npm install -g npm@12.0.1
+RUN npm install -g npm@12.0.1 && npm --version
 
 # Setup nodejs group & nodejs user
 RUN addgroup --system nodejs --gid 998 && \
