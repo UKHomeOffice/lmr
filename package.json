@@ -38,8 +38,8 @@
     "serialize-javascript": "^7.0.5"
   },
   "devDependencies": {
-    "@playwright/test": "^1.61.1",
-    "@types/node": "^26.1.1",
+    "@playwright/test": "^1.62.1",
+    "@types/node": "^26.1.2",
     "chai": "^6.2.2",
     "dotenv": "^17.4.2",
     "eslint": "8.57.0",
