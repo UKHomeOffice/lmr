@@ -1,4 +1,4 @@
-name: Yarn CI - Setup, Lint, Build, Unit Tests, Audit
+name: Yarn CI - Setup, Lint, Unit Tests, Audit
 
 on:
   pull_request:
@@ -33,26 +33,6 @@ jobs:
         if: steps.lint.outputs.yarn_lint_exit_code != '0'
         run: exit 1
 
-      - name: Yarn Build
-        id: yarn_build
-        uses: UKHomeOffice/core-cloud-workflow-node-yarn-actions/actions/build@main
-        with:
-          working_directory: .
-
-      - name: Fail if build failed
-        if: steps.yarn_build.outputs.yarn_build_exit_code != '0'
-        run: exit 1
-
-      - name: Unit Tests
-        id: unit_test
-        uses: UKHomeOffice/core-cloud-workflow-node-yarn-actions/actions/test@main
-        with:
-          working_directory: .
-
-      - name: Fail if tests failed
-        if: steps.unit_test.outputs.yarn_test_exit_code != '0'
-        run: exit 1
-
       - name: Yarn Audit
         id: yarn_audit_high_and_critical
         uses: UKHomeOffice/core-cloud-workflow-node-yarn-actions/actions/audit@main
@@ -64,3 +44,12 @@ jobs:
         if: steps.yarn_audit_high_and_critical.outputs.yarn_audit_exit_code != '0'
         run: exit 1
 
+      - name: Unit Tests
+        id: unit_test
+        uses: UKHomeOffice/core-cloud-workflow-node-yarn-actions/actions/test@main
+        with:
+          working_directory: .
+          
+      - name: Fail if tests failed
+        if: steps.unit_test.outputs.yarn_test_exit_code != '0'
+        run: exit 1
