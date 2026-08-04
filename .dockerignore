@@ -8,8 +8,7 @@ Dockerfile
 .dockerignore
 docker-compose.yml
 .devcontainer
-.cacheWe need flexibility to maintain and evolve these workflows within our own repositories, so our developers can adjust commands and behaviour as needed without being restricted by a common template.
-bin
+.cache
 kube
 npm-debug.log
 yarn-error.log
@@ -24,3 +23,5 @@ coverage
 sonar-project.properties
 pull-request-template.md
 hof-services-config
+.github
+charts
