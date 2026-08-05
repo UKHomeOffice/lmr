@@ -10,7 +10,8 @@
   "scripts": {
     "start": "node server.js",
     "start:dev": "hof-build watch --env",
-    "local:test": "yarn run unit && yarn run lint",
+    "local:lint": "yarn run lint",
+    "local:unit": "yarn run unit",
     "lint": "eslint . --config ./node_modules/eslint-config-hof/default.js",
     "unit": "LOG_LEVEL=error nyc _mocha \"test/_unit/**/*.spec.js\"",
     "bddgen": "bddgen",
