@@ -1,4 +1,4 @@
-FROM node:24.19.0-alpine3.24@sha256:2a49bdf71e9fd965a58c1703fd9ddd205b34e5782b692a72dd1d248abb0beb43
+FROM quay.io/ukhomeofficedigital/hof-nodejs:24.19.0-alpine3.24@sha256:a70b2f29d55a9aebcf89690e7f64f4889725dab87a3b22663d102ca17c5f888e 
 
 USER root
 
@@ -6,10 +6,6 @@ USER root
 RUN echo "http://uk.alpinelinux.org/alpine/v3.24/main" > /etc/apk/repositories ; \
     echo "http://uk.alpinelinux.org/alpine/v3.24/community" >> /etc/apk/repositories ; \
     apk update && apk upgrade --no-cache
-
-# Base image ships with npm 11.x, which currently pulls vulnerable transitive
-# dependencies; pin npm to a patched release for deterministic image scans.
-RUN npm install -g npm@12.0.2
 
 # Setup nodejs group & nodejs user
 RUN addgroup --system nodejs --gid 998 && \
