@@ -584,8 +584,8 @@ steps:
       status:
         - failure
     depends_on:
-      - cron_trivy_scan_image_os
-      - cron_trivy_scan_node_packages
+      - cron_trivy_scan_base_image
+      - cron_trivy_scan_app_image
 
   # CRON job step that runs nightly Playwright E2E tests against a fixed environment
   - name: cron_nightly_e2e_tests
