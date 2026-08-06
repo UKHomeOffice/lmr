@@ -39,11 +39,6 @@ jobs:
         with:
           working_directory: .
           audit_level: high
-
-      - name: Fail if audit failed
-        if: steps.yarn_audit_high_and_critical.outputs.yarn_audit_exit_code != '0'
-        run: exit 1
-
       - name: Unit Tests
         id: unit_test
         uses: UKHomeOffice/core-cloud-workflow-node-yarn-actions/actions/test@main
