@@ -9,8 +9,6 @@ Dockerfile
 docker-compose.yml
 .devcontainer
 .cache
-.drone.yml
-bin
 kube
 npm-debug.log
 yarn-error.log
@@ -25,3 +23,5 @@ coverage
 sonar-project.properties
 pull-request-template.md
 hof-services-config
+.github
+charts

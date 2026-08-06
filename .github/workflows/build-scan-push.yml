@@ -7,7 +7,6 @@ on:
     push:
         branches:
             - main
-            - CCL-*
   
 jobs:
     build-scan:

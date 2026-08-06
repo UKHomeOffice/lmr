@@ -12,7 +12,6 @@ dump.rdb
 .idea
 .DS_Store
 coverage
-anchore-reports/
 acceptance-test/temp-downloads/
 
 # Playwright

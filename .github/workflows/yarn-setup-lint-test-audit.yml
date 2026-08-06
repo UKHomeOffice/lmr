@@ -1,0 +1,50 @@
+name: Yarn CI - Setup, Lint, Unit Tests, Audit
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  yarn_setup_lint_unit_tests_audit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node yarn setup
+        uses: UKHomeOffice/core-cloud-workflow-node-yarn-actions/actions/setup@main
+        with:
+          working_directory: .
+          node_version: "24.19.0"
+
+      - name: Yarn Linting
+        id: lint
+        uses: UKHomeOffice/core-cloud-workflow-node-yarn-actions/actions/lint@main
+        with:
+          working_directory: .
+
+      - name: Fail if lint failed
+        if: steps.lint.outputs.yarn_lint_exit_code != '0'
+        run: exit 1
+
+      - name: Yarn Audit
+        id: yarn_audit_high_and_critical
+        uses: UKHomeOffice/core-cloud-workflow-node-yarn-actions/actions/audit@main
+        with:
+          working_directory: .
+          audit_level: high
+      - name: Unit Tests
+        id: unit_test
+        uses: UKHomeOffice/core-cloud-workflow-node-yarn-actions/actions/test@main
+        with:
+          working_directory: .
+          
+      - name: Fail if tests failed
+        if: steps.unit_test.outputs.yarn_test_exit_code != '0'
+        run: exit 1
