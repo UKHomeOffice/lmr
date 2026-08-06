@@ -40,14 +40,14 @@ linting: &linting
   environment:
     NOTIFY_KEY: USE_MOCK
   commands:
-    - yarn run test:lint
+    - yarn run lint
 
 unit_tests: &unit_tests
   <<: *node_image
   environment:
     NOTIFY_KEY: USE_MOCK
   commands:
-    - yarn run test:unit
+    - yarn run unit
 
 sonar_scanner: &sonar_scanner
   pull: always
