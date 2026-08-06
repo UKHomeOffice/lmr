@@ -33,21 +33,21 @@ trigger:
 
 node_image: &node_image
   pull: if-not-exists
-  image: node:24.18.0-alpine3.24@sha256:4ba75f835bb8802193e4c114572113d4b26f95f6f094f4b5229d2a77773e0afc
+  image: quay.io/ukhomeofficedigital/hof-nodejs:24.19.0-alpine3.24@sha256:a70b2f29d55a9aebcf89690e7f64f4889725dab87a3b22663d102ca17c5f888e 
 
 linting: &linting
   <<: *node_image
   environment:
     NOTIFY_KEY: USE_MOCK
   commands:
-    - yarn run test:lint
+    - yarn run lint
 
 unit_tests: &unit_tests
   <<: *node_image
   environment:
     NOTIFY_KEY: USE_MOCK
   commands:
-    - yarn run test:unit
+    - yarn run unit
 
 sonar_scanner: &sonar_scanner
   pull: always
@@ -179,8 +179,8 @@ steps:
       - linting
       - unit_tests
 
-  # Trivy Security Scannner for scanning OS related vulnerabilities in Base image of Dockerfile
-  - name: scan_base_image_os
+  # Trivy Security Scannner for scanning OS, npm packages in Base image of Dockerfile
+  - name: scan_base_image
     pull: always
     image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/trivy/client:latest
     resources:
@@ -188,7 +188,7 @@ steps:
         cpu: 1000
         memory: 1024Mi
     environment:
-      IMAGE_NAME: node:24.18.0-alpine3.24@sha256:4ba75f835bb8802193e4c114572113d4b26f95f6f094f4b5229d2a77773e0afc
+      IMAGE_NAME: quay.io/ukhomeofficedigital/hof-nodejs:24.19.0-alpine3.24@sha256:a70b2f29d55a9aebcf89690e7f64f4889725dab87a3b22663d102ca17c5f888e 
       SERVICE_URL: https://acp-trivy-helm.acp-trivy.svc.cluster.local:443
       SEVERITY: MEDIUM,HIGH,CRITICAL --pkg-types os,library --dependency-tree
       FAIL_ON_DETECTION: false
@@ -219,8 +219,8 @@ steps:
     depends_on:
       - build_image
 
-  # Trivy Security Scannner for scanning nodejs packages in Yarn
-  - name: scan_node_packages
+  # Trivy Security Scannner for scanning app image
+  - name: scan_app_image
     pull: always
     image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/trivy/client:latest
     resources:
@@ -503,11 +503,11 @@ steps:
       cron: security_scans
       event: cron
 
-  - name: cron_trivy_scan_image_os
+  - name: cron_trivy_scan_base_image
     image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/trivy/client:latest
     pull: always
     environment:
-        IMAGE_NAME: node:24.18.0-alpine3.24@sha256:4ba75f835bb8802193e4c114572113d4b26f95f6f094f4b5229d2a77773e0afc
+        IMAGE_NAME: quay.io/ukhomeofficedigital/hof-nodejs:24.19.0-alpine3.24@sha256:a70b2f29d55a9aebcf89690e7f64f4889725dab87a3b22663d102ca17c5f888e 
         SEVERITY: UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL --pkg-types os,library --dependency-tree
         FAIL_ON_DETECTION: true
         IGNORE_UNFIXED: false
@@ -518,7 +518,7 @@ steps:
     depends_on:
       - cron_clone_repos
       
-  - name: cron_trivy_scan_node_packages
+  - name: cron_trivy_scan_app_image
     image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/trivy/client:latest
     pull: always
     environment:
@@ -584,8 +584,8 @@ steps:
       status:
         - failure
     depends_on:
-      - cron_trivy_scan_image_os
-      - cron_trivy_scan_node_packages
+      - cron_trivy_scan_base_image
+      - cron_trivy_scan_app_image
 
   # CRON job step that runs nightly Playwright E2E tests against a fixed environment
   - name: cron_nightly_e2e_tests
