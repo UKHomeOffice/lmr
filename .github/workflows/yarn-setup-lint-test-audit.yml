@@ -21,7 +21,7 @@ jobs:
         uses: UKHomeOffice/core-cloud-workflow-node-yarn-actions/actions/setup@main
         with:
           working_directory: .
-          node_version: "24.15.0"
+          node_version: "24.19.0"
 
       - name: Yarn Linting
         id: lint
