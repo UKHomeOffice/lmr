@@ -37,8 +37,8 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
       containers:
         - name: redis
-          # redis:v7.0.15
-          image: quay.io/ukhomeofficedigital/hof-docker-redis:7.0.15@sha256:cd4965fbb8aa6e4eba058985cc52f6a3ececdfa6d79ba44206f051f72a1f0611
+          # redis:latest
+          image: quay.io/ukhomeofficedigital/hof-docker-redis:test@5sha256:bdd89857fe5da039bad239a47774d6c56e952b988425a794b8bc3edb3a57bd8f 
           ports:
             - containerPort: 6379
           startupProbe:
