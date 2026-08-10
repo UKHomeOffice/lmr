@@ -38,7 +38,7 @@ spec:
       containers:
         - name: redis
           # redis:latest
-          image: quay.io/ukhomeofficedigital/hof-docker-redis@5sha256:bdd89857fe5da039bad239a47774d6c56e952b988425a794b8bc3edb3a57bd8f 
+          image: quay.io/ukhomeofficedigital/hof-docker-redis@sha256:bdd89857fe5da039bad239a47774d6c56e952b988425a794b8bc3edb3a57bd8f
           ports:
             - containerPort: 6379
           startupProbe:
