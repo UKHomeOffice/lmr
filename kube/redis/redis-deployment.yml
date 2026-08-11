@@ -37,8 +37,12 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
       containers:
         - name: redis
-          # redis:v7.0.15
-          image: quay.io/ukhomeofficedigital/hof-docker-redis:7.0.15@sha256:cd4965fbb8aa6e4eba058985cc52f6a3ececdfa6d79ba44206f051f72a1f0611
+          # redis:latest
+          image: quay.io/ukhomeofficedigital/hof-docker-redis@sha256:921422bacbcc6af3615dd031499e285fbf955770f491d241956dd11ce4a67228
+          env:
+            # Enable shell command tracing in run.sh for troubleshooting startup issues. Keep false by default to avoid noisy pod logs.   
+            - name: DEBUG
+              value: "false"
           ports:
             - containerPort: 6379
           startupProbe:
