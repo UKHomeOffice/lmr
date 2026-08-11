@@ -38,7 +38,11 @@ spec:
       containers:
         - name: redis
           # redis:latest
-          image: quay.io/ukhomeofficedigital/hof-docker-redis@sha256:bdd89857fe5da039bad239a47774d6c56e952b988425a794b8bc3edb3a57bd8f
+          image: quay.io/ukhomeofficedigital/hof-docker-redis@sha256:d5dbff542090cb5b616bb3ae4c9e183d1dd159f1d9b3a2c8b13e8c03c17b424b
+          env:
+            # Enable shell command tracing in run.sh for troubleshooting startup issues. Keep false by default to avoid noisy pod logs.   
+            - name: DEBUG
+              value: "false"
           ports:
             - containerPort: 6379
           startupProbe:
