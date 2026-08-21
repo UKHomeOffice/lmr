@@ -90,8 +90,11 @@ spec:
             {{ if or (eq .KUBE_NAMESPACE .BRANCH_ENV) (eq .KUBE_NAMESPACE .UAT_ENV) }}
             - name: ALLOW_SKIP
               value: "true"
-            - name: SKIP_EMAIL
-              value: "sas-hof-test@digital.homeoffice.gov.uk"
+            - name: HOF_TEST_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: sas-hof-email
+                  key: sas-hof-email
             {{ end }}
             - name: SESSION_SECRET
               valueFrom:
