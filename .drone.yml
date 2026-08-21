@@ -268,7 +268,10 @@ steps:
   # Run playwright tests against the pull request branch environment
   - name: e2e_tests
     pull: if-not-exists
-    image: mcr.microsoft.com/playwright:v1.60.0-noble
+    image: mcr.microsoft.com/playwright:v1.61.1
+    environment:
+      SAS_HOF_EMAIL:
+        from_secret: SAS_HOF_EMAIL
     volumes:
       - name: dockersock
         path: /root/.dockersock
@@ -590,7 +593,10 @@ steps:
   # CRON job step that runs nightly Playwright E2E tests against a fixed environment
   - name: cron_nightly_e2e_tests
     pull: if-not-exists
-    image: mcr.microsoft.com/playwright:v1.60.0-noble
+    image: mcr.microsoft.com/playwright:v1.61.1
+    environment:
+      SAS_HOF_EMAIL:
+        from_secret: SAS_HOF_EMAIL
     volumes:
       - name: dockersock
         path: /root/.dockersock

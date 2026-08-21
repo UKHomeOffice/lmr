@@ -26,7 +26,7 @@ The tests use Playwright Test together with `playwright-bdd` and feature files w
 
 ## Tools used
 
-- Node.js (project requires Node `>=24.15.0 <25.0.0`)
+- Node.js (project requires Node `>=24.19.0 <25.0.0`)
 - Yarn
 - Playwright Test (`@playwright/test`)
 - playwright-bdd
