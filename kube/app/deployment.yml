@@ -90,7 +90,7 @@ spec:
             {{ if or (eq .KUBE_NAMESPACE .BRANCH_ENV) (eq .KUBE_NAMESPACE .UAT_ENV) }}
             - name: ALLOW_SKIP
               value: "true"
-            - name: HOF_TEST_EMAIL
+            - name: SAS_HOF_EMAIL
               valueFrom:
                 secretKeyRef:
                   name: sas-hof-email
