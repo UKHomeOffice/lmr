@@ -33,7 +33,7 @@ trigger:
 
 node_image: &node_image
   pull: if-not-exists
-  image: node:24.18.0-alpine3.24@sha256:4ba75f835bb8802193e4c114572113d4b26f95f6f094f4b5229d2a77773e0afc
+  image: quay.io/ukhomeofficedigital/hof-nodejs:24.19.0-alpine3.24-v2@sha256:2cb5ad2a042e372a063d16af5b4f05656f3ba1adba5b09a402254b57cef69409
 
 linting: &linting
   <<: *node_image
@@ -188,7 +188,7 @@ steps:
         cpu: 1000
         memory: 1024Mi
     environment:
-      IMAGE_NAME: node:24.18.0-alpine3.24@sha256:4ba75f835bb8802193e4c114572113d4b26f95f6f094f4b5229d2a77773e0afc
+      IMAGE_NAME: quay.io/ukhomeofficedigital/hof-nodejs:24.19.0-alpine3.24-v2@sha256:2cb5ad2a042e372a063d16af5b4f05656f3ba1adba5b09a402254b57cef69409
       SERVICE_URL: https://acp-trivy-helm.acp-trivy.svc.cluster.local:443
       SEVERITY: MEDIUM,HIGH,CRITICAL --pkg-types os,library --dependency-tree
       FAIL_ON_DETECTION: false
@@ -268,11 +268,18 @@ steps:
   # Run playwright tests against the pull request branch environment
   - name: e2e_tests
     pull: if-not-exists
-    image: mcr.microsoft.com/playwright:v1.60.0-noble
+    image: mcr.microsoft.com/playwright:v1.61.1-noble
+    environment:
+      SAS_HOF_EMAIL:
+        from_secret: SAS_HOF_EMAIL
     volumes:
       - name: dockersock
         path: /root/.dockersock
     commands:
+      - npm install -g n
+      - n 24.19.0
+      - hash -r
+      - node --version
       - yarn install --frozen-lockfile
       - yarn playwright install --with-deps
       - test -s /root/.dockersock/branch_url.txt || (echo "Missing deployed branch URL at /root/.dockersock/branch_url.txt" && exit 1)
@@ -507,7 +514,7 @@ steps:
     image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/trivy/client:latest
     pull: always
     environment:
-        IMAGE_NAME: node:24.18.0-alpine3.24@sha256:4ba75f835bb8802193e4c114572113d4b26f95f6f094f4b5229d2a77773e0afc
+        IMAGE_NAME: quay.io/ukhomeofficedigital/hof-nodejs:24.19.0-alpine3.24-v2@sha256:2cb5ad2a042e372a063d16af5b4f05656f3ba1adba5b09a402254b57cef69409
         SEVERITY: UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL --pkg-types os,library --dependency-tree
         FAIL_ON_DETECTION: true
         IGNORE_UNFIXED: false
@@ -590,11 +597,18 @@ steps:
   # CRON job step that runs nightly Playwright E2E tests against a fixed environment
   - name: cron_nightly_e2e_tests
     pull: if-not-exists
-    image: mcr.microsoft.com/playwright:v1.60.0-noble
+    image: mcr.microsoft.com/playwright:v1.61.1-noble
+    environment:
+      SAS_HOF_EMAIL:
+        from_secret: SAS_HOF_EMAIL
     volumes:
       - name: dockersock
         path: /root/.dockersock
     commands:
+      - npm install -g n
+      - n 24.19.0
+      - hash -r
+      - node --version
       - yarn install --frozen-lockfile
       - yarn playwright install --with-deps
       - |
