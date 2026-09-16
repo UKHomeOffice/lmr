@@ -158,8 +158,12 @@ module.exports = class CreateAndSendPDF {
       const html = await this.renderHTML(req, res, locals);
 
       const pdfModel = new PDFModel();
+      console.time('pdf-generation');
+
       pdfModel.set({ template: html });
       const pdfData = await pdfModel.save();
+
+      console.timeEnd('pdf-generation');
 
       await this.sendLandlordEmailWithAttachment(req, pdfData);
       await this.sendCaseworkerEmailWithAttachment(req, pdfData);
