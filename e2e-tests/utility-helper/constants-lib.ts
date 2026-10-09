@@ -6,7 +6,7 @@ export const ConstantsLib = {
   POSTCODE: 'M11 1HH',
   COUNTRY_UK: 'United Kingdom',
   TELEPHONE: '01616699548',
-  SAS_HOF_EMAIL: process.env.SAS_HOF_EMAIL,
+  SAS_HOF_EMAIL: requiredEnv('SAS_HOF_EMAIL'),
   LAND_LORD_AGENT_NAME: 'HOF LandLord Agent',
   LANDLORD_NAME: 'HOF LandLord',
   COMPANY_NAME: 'Test UK Ltd',
@@ -14,3 +14,12 @@ export const ConstantsLib = {
   NATIONALITY: 'Spain',
   YESTERDAY_S_DATE: "yesterday's date",
 } as const;
+
+
+function requiredEnv(name: string): string {
+    const value = process.env[name];
+    if (!value) {
+        throw new Error(`${name} is not configured`);
+    }
+    return value;
+}
