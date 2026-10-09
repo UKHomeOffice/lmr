@@ -3,7 +3,7 @@ import { Page, Locator, expect } from '@playwright/test';
 export class basePage {
     readonly page: Page;
 
-    // Common locators (example)
+    // Common locators
     readonly headerText: Locator;
     readonly continueButton: Locator;
     readonly thereIsAProblemText: Locator;
@@ -42,7 +42,7 @@ export class basePage {
         return await locator.isVisible();
     }
 
-    async selectCheckboxOptionWithText(page: Page, optionText: string){
+    async selectCheckboxOptionWithText(page: Page, optionText: string) {
         if (!optionText || optionText.trim() === '') {
             throw new Error('Checkbox option text value cannot be null or blank.');
         }
@@ -85,14 +85,14 @@ export class basePage {
             "yesterday's date": () => addDays(now, -1),
             "today's date": () => now,
             "tomorrow's date": () => addDays(now, 1),
-            "more than one year in the future": () => addDays(addYears(now, 1), 1),
-            "more than 100 years in the future": () => addDays(addYears(now, 100), 1),
-            "more than one year in the past": () => addDays(addYears(now, -1), -1),
-            "within the last 3 years": () => addDays(addYears(now, -3), 1),
-            "more than 3 years ago": () => addYears(now, -3),
+            "less than 3 years ago": () => addDays(addYears(now, -3), 1),
             "less than 16 years ago": () => addDays(addYears(now, -16), 1),
             "less than 18 years ago": () => addDays(addYears(now, -18), 1),
             "19 years ago": () => addYears(now, -19),
+            "more than 1 year in the future": () => addDays(addYears(now, 1), 1),
+            "more than 100 years in the future": () => addDays(addYears(now, 100), 1),
+            "more than 1 year ago": () => addDays(addYears(now, -1), -1),
+            "more than 3 years ago": () => addDays(addYears(now, -3), -1),
             "more than 50 years ago": () => addDays(addYears(now, -50), -1),
             "more than 100 years ago": () => addDays(addYears(now, -100), -1),
             "more than 120 years ago": () => addDays(addYears(now, -120), -1),
@@ -118,7 +118,7 @@ export class basePage {
         const dateParts = formattedDate.split('/');
 
         if (dateParts.length !== 3) {
-            throw new Error('Invalid date format. Expected format: dd/MM/yyyy');
+            throw new Error('Invalid date format. Expected format: dd/mm/yyyy');
         }
 
         const [dayVal, monthVal, yearVal] = dateParts;
@@ -144,14 +144,4 @@ export class basePage {
         return await this.errorSummaryList.textContent();
     }
 
-
-
-    // // Assertion helper (optional)
-    // async expectToBeVisible(locator: Locator) {
-    //     await expect(locator).toBeVisible();
-    // }
-
-    // async expectToHaveText(locator: Locator, text: string) {
-    //     await expect(locator).toHaveText(text);
-    // }
 }
