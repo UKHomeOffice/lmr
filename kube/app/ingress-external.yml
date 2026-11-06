@@ -1,5 +1,5 @@
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   {{ if eq .KUBE_NAMESPACE .BRANCH_ENV }}
@@ -9,6 +9,7 @@ metadata:
   {{ end }}
 {{ file .INGRESS_EXTERNAL_ANNOTATIONS | indent 2 }}
 spec:
+  ingressClassName: nginx-external
   tls:
     - hosts:
       {{ if eq .KUBE_NAMESPACE .BRANCH_ENV }}
@@ -38,10 +39,13 @@ spec:
       http:
         paths:
           - path: /
+            pathType: Prefix
             backend:
-              {{ if eq .KUBE_NAMESPACE .BRANCH_ENV }}
-              serviceName: {{ .APP_NAME }}-{{ .DRONE_SOURCE_BRANCH }}
-              {{ else }}
-              serviceName: {{ .APP_NAME }}
-              {{ end }}
-              servicePort: 10443
+              service:
+                {{ if eq .KUBE_NAMESPACE .BRANCH_ENV }}
+                name: {{ .APP_NAME }}-{{ .DRONE_SOURCE_BRANCH }}
+                {{ else }}
+                name: {{ .APP_NAME }}
+                {{ end }}
+                port:
+                  number: 10443
