@@ -1,5 +1,5 @@
 ---
-apiVersion: networking.k8s.io/v1
+apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   {{ if eq .KUBE_NAMESPACE .BRANCH_ENV }}
@@ -35,13 +35,10 @@ spec:
       http:
         paths:
           - path: /
-            pathType: Prefix
             backend:
-              service:
-                {{ if eq .KUBE_NAMESPACE .BRANCH_ENV }}
-                name: {{ .APP_NAME }}-{{ .DRONE_SOURCE_BRANCH }}
-                {{ else }}
-                name: {{ .APP_NAME }}
-                {{ end }}
-                port:
-                  number: 10443
+              {{ if eq .KUBE_NAMESPACE .BRANCH_ENV }}
+              serviceName: {{ .APP_NAME }}-{{ .DRONE_SOURCE_BRANCH }}
+              {{ else }}
+              serviceName: {{ .APP_NAME }}
+              {{ end }}
+              servicePort: 10443
