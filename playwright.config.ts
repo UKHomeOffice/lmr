@@ -38,7 +38,7 @@ export default defineConfig({
     headless: !!process.env.CI,
   },
 
-    webServer: process.env.PLAYWRIGHT_BASE_URL
+  webServer: process.env.PLAYWRIGHT_BASE_URL
     ? undefined
     : {
       command: 'yarn start:dev',
@@ -46,13 +46,13 @@ export default defineConfig({
       reuseExistingServer: !process.env.CI,
       timeout: 120_000
     },
-    
-  /* Configure projects for major browsers */
+
   projects: [
     {
-      name: 'chromium',
+      name: 'Google Chrome',
       use: {
         browserName: 'chromium',
+        channel: 'chrome',
         launchOptions: {
           args: ['--start-maximized'],
         },

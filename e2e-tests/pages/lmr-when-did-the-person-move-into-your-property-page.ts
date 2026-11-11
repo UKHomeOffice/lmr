@@ -16,6 +16,7 @@ export class lmrWhenDidThePersonMoveIntoYourPropertyPage extends basePage {
     }
 
     async completeWhenDidThePersonMoveIntoYourPropertyPage(dateValue: string) {
+		await this.assertAccessibility();
         await this.assertPageTitle(this.page, await this.expectedPageTitle());
         await this.enterDateOrDob(dateValue);
         await this.click(this.continueButton);

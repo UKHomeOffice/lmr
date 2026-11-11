@@ -16,6 +16,7 @@ export class lmrReportSubmittedPage extends basePage {
     }
 
     async completeReportSubmittedPage() {
+		await this.assertAccessibility();
         await this.assertPageTitle(this.page, await this.expectedPageTitle());
     }
 }

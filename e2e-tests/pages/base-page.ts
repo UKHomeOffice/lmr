@@ -1,4 +1,5 @@
 import { Page, Locator, expect } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
 
 export class basePage {
     readonly page: Page;
@@ -20,6 +21,22 @@ export class basePage {
     // Assertion page title
     async assertPageTitle(page: Page, title: string) {
         await expect(page).toHaveTitle(title);
+    }
+
+    async assertAccessibility() {
+        const results = await this.scanForAccessibilityIssues();
+        expect(results.violations, JSON.stringify(results.violations)).toEqual([]);
+    }
+
+    async scanForAccessibilityIssues() {
+        await this.page.waitForLoadState('load');
+
+        return new AxeBuilder({ page: this.page })
+            .withTags([
+                'wcag2a',
+                'wcag2aa',
+            ])
+            .analyze();
     }
 
     // Generic click
