@@ -13,6 +13,6 @@ Feature: LMR Test
 
   Scenario: Landlord make a report - links
     Given I visit the Landlord's make a report Page
-    Then link text "checking their relevant documents" is displayed and is associated to url "https://www.gov.uk/government/publications/right-to-rent-document-checks-a-user-guide"
+    Then link text "checking their relevant documents X" is displayed and is associated to url "https://www.gov.uk/government/publications/right-to-rent-document-checks-a-user-guide"
     And link text "verification from the Home Office" is displayed and is associated to url "https://eforms.homeoffice.gov.uk/outreach/lcs-application.ofml"
     And link text "immigration crime reporting service" is displayed and is associated to url "https://www.gov.uk/report-immigration-crime"
