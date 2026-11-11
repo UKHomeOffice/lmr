@@ -49,16 +49,15 @@ export default defineConfig({
 
   projects: [
     {
-      name: 'Google Chrome',
+      name: 'chromium',
       use: {
         browserName: 'chromium',
-        channel: 'chrome',
         launchOptions: {
           args: ['--start-maximized'],
         },
         video: 'on-first-retry', //Options => 'on', 'off', 'retain-on-failure' or 'on-first-retry'
         screenshot: 'only-on-failure', //Options => 'on', 'off', 'only-on-failure' or 'on-first-retry'
       },
-    },
+    }
   ],
 });

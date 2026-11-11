@@ -2,52 +2,25 @@
 
 const fs = require('node:fs');
 
-function readText(path) {
-  return fs.readFileSync(path, 'utf8');
-}
-
-function durationToSeconds(durationMs) {
-  if (!Number.isFinite(durationMs)) {
-    return 'unknown';
-  }
-  return (durationMs / 1000).toFixed(1);
-}
-
-function parseCount(text, label) {
-  const match = text.match(new RegExp(String.raw`(\d+)\s+${label}`, 'i'));
-  return match ? Number(match[1]) : 0;
-}
-
-function parseDuration(text) {
-  const match = text.match(/\(([^)]+)\)\s*$/m);
-  return match ? match[1] : 'unknown';
-}
-
-function buildSummaryFromText(outputText) {
-  const commandFailure = outputText.match(/(?:playwright|yarn):\s+not found|command not found/i);
-  if (commandFailure) {
-    return [
-      'Playwright Nightly Summary',
-      'Unable to execute Playwright command.',
-      `Error: ${commandFailure[0]}`,
-    ].join('\n');
+function buildSummary(report) {
+  const stats = report.stats;
+  const counts = ['expected', 'unexpected', 'flaky', 'skipped'];
+  if (!stats || counts.some(key => !Number.isInteger(stats[key]) || stats[key] < 0) ||
+      !Number.isFinite(stats.duration) || stats.duration < 0) {
+    throw new Error('Missing or invalid Playwright report statistics');
   }
 
-  const passed = parseCount(outputText, 'passed');
-  const failed = parseCount(outputText, 'failed');
-  const flaky = parseCount(outputText, 'flaky');
-  const skipped = parseCount(outputText, 'skipped');
-  const duration = parseDuration(outputText);
-  const total = passed + failed + flaky + skipped;
+  const total = counts.reduce((sum, key) => sum + stats[key], 0);
 
   return [
     'Playwright Nightly Summary',
     `Total: ${total}`,
-    `Passed: ${passed}`,
-    `Failed: ${failed}`,
-    `Flaky: ${flaky}`,
-    `Skipped: ${skipped}`,
-    `Duration: ${duration}`,
+    `Passed: ${stats.expected}`,
+    `Failed: ${stats.unexpected}`,
+    `Flaky: ${stats.flaky}`,
+    `Skipped: ${stats.skipped}`,
+    `Duration: ${(stats.duration / 1000).toFixed(1)}s`,
+    `Run errors: ${(report.errors || []).length}`,
   ].join('\n');
 }
 
@@ -56,20 +29,17 @@ function main() {
   const outputPath = process.argv[3];
 
   if (!inputPath || !outputPath) {
-    console.error('Usage: node bin/summarise_playwright_report.js <input-text> <output-txt>');
+    console.error('Usage: node bin/summarise_playwright_report.js <report-json> <output-txt>');
     process.exit(1);
   }
 
   let summary;
   try {
-    const outputText = readText(inputPath);
-    summary = buildSummaryFromText(outputText);
-
-    if (!summary.includes('Passed:') || !summary.includes('Failed:')) {
-      throw new Error('Unable to detect Playwright totals in run output');
-    }
+    summary = buildSummary(JSON.parse(fs.readFileSync(inputPath, 'utf8')));
   } catch (error) {
-    summary = `Playwright Nightly Summary\nUnable to parse run output: ${error.message || error}`;
+    summary = `Playwright Nightly Summary\nUnable to parse report: ${error.message}`;
+    console.error(summary);
+    process.exitCode = 1;
   }
 
   fs.writeFileSync(outputPath, `${summary}\n`, 'utf8');
