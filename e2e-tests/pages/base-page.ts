@@ -25,11 +25,14 @@ export class basePage {
 
     async assertAccessibility() {
         const results = await this.scanForAccessibilityIssues();
-        expect(results.violations, JSON.stringify(results.violations)).toEqual([]);
+        // Record violations without stopping the test; it still fails in the final report.That what the expect.soft does.
+        // Format violation details as JSON with two-space indentation for readability.
+        expect.soft(results.violations, JSON.stringify(results.violations, null, 2)).toEqual([]);
     }
 
     async scanForAccessibilityIssues() {
         await this.page.waitForLoadState('load');
+        await expect(this.headerText).toBeVisible();
 
         return new AxeBuilder({ page: this.page })
             .withTags([
