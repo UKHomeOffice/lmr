@@ -46,6 +46,8 @@ sanitize_branch_name() {
   local dependabot_dependency
   local sanitized_branch
 
+  raw_branch=$(printf '%s' "$raw_branch" | tr '[:upper:]' '[:lower:]')
+
   # Rewrite Dependabot npm/yarn base-branch update branches to a shorter, meaningful slug.
   # Example: dependabot-npm_and_yarn-master-eslint-10.4.1 -> dependabot-pr-eslint
   if [[ "$raw_branch" =~ ^dependabot[-/]npm_and_yarn[-/](master|main)[-/](.+)$ ]]; then
