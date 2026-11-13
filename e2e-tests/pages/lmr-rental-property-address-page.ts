@@ -27,6 +27,7 @@ export class lmrRentalPropertyAddressPage extends basePage {
     }
 
     async completeRentalPropertyAddressPage(addressLine1: string, addressLine2: string, townOrCity: string, county: string, postCode: string) {
+		await this.assertAccessibility();
         await this.assertPageTitle(this.page, await this.expectedPageTitle());
         await this.type(this.addressLine1TextField, addressLine1);
         await this.type(this.addressLine2TextField, addressLine2);

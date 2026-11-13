@@ -24,6 +24,7 @@ export class lmrLandlordOrAgentsInformationPage extends basePage {
     }
 
     async completeLandlordOrAgentInformationPage(fullName: string, companyName: string, email: string, phoneNumber: string) {
+		await this.assertAccessibility();
         await this.assertPageTitle(this.page, await this.expectedPageTitle());
         await this.type(this.fullNameField, fullName);
         await this.type(this.companyNameField, companyName);
