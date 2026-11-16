@@ -8,7 +8,6 @@ export class ConstantsLib {
   static readonly TELEPHONE = '01616699548';
   static readonly SAS_HOF_EMAIL = requiredEnv('SAS_HOF_EMAIL');
   static readonly LAND_LORD_AGENT_NAME = 'HOF LandLord Agent';
-//   static readonly LANDLORD_NAME = 'HOF LandLord';
   static readonly COMPANY_NAME = 'Test UK Ltd';
   static readonly DOB_1978 = '01/01/1978';
   static readonly NATIONALITY = 'Spain';
