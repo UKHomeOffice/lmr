@@ -38,7 +38,7 @@ export default defineConfig({
     headless: !!process.env.CI,
   },
 
-    webServer: process.env.PLAYWRIGHT_BASE_URL
+  webServer: process.env.PLAYWRIGHT_BASE_URL
     ? undefined
     : {
       command: 'yarn start:dev',
@@ -46,8 +46,7 @@ export default defineConfig({
       reuseExistingServer: !process.env.CI,
       timeout: 120_000
     },
-    
-  /* Configure projects for major browsers */
+
   projects: [
     {
       name: 'chromium',
@@ -59,6 +58,6 @@ export default defineConfig({
         video: 'on-first-retry', //Options => 'on', 'off', 'retain-on-failure' or 'on-first-retry'
         screenshot: 'only-on-failure', //Options => 'on', 'off', 'only-on-failure' or 'on-first-retry'
       },
-    },
+    }
   ],
 });

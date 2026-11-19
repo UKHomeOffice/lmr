@@ -21,6 +21,7 @@ export class lmrExistingTenantsInformationPage extends basePage {
 	}
 
 	async completeExistingTenantsInformationPage(fullName: string, dob: string, nationality: string) {
+		await this.assertAccessibility();
 		await this.assertPageTitle(this.page, await this.expectedPageTitle());
 		await this.type(this.fullNameField, fullName);
 		await this.enterDateOrDob(dob);
