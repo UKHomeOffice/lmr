@@ -35,6 +35,8 @@ export class basePage {
         await expect(this.headerText).toBeVisible();
 
         return new AxeBuilder({ page: this.page })
+            // Runs axe in legacy mode: analyses/scans the current page context, without opening a new page
+            .setLegacyMode()
             .withTags([
                 'wcag2a',
                 'wcag2aa',
@@ -62,17 +64,13 @@ export class basePage {
         return await locator.isVisible();
     }
 
-    async selectCheckboxOptionWithText(page: Page, optionText: string) {
+    async selectCheckboxOptionWithText(optionText: string) {
         if (!optionText || optionText.trim() === '') {
             throw new Error('Checkbox option text value cannot be null or blank.');
         }
 
-        const checkboxOption: Locator = page.getByRole('checkbox', { name: optionText });
-
-        // Check the option
-        await checkboxOption.check();
+        await this.page.getByRole('checkbox', { name: optionText }).check();
     }
-
 
     convertTextToDate(dateValue: string | null): string | null {
         if (dateValue == null) return null;
@@ -163,5 +161,4 @@ export class basePage {
     async getErrorSummaryListText(): Promise<string | null> {
         return await this.errorSummaryList.textContent();
     }
-
 }
