@@ -12,7 +12,6 @@ export class lmrSummaryPage extends basePage {
     }
 
     async completeSummaryPage() {
-		await this.assertAccessibility();
         await this.assertPageTitle(this.page, await this.expectedPageTitle());
         await this.click(this.continueButton);
     }

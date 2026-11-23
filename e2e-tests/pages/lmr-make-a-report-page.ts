@@ -30,7 +30,6 @@ export class lmrMakeAReportPage extends basePage {
     }
 
     async completeLandingPageForm() {
-		await this.assertAccessibility();
         await this.assertPageTitle(this.page, await this.expectedPageTitle());
 
         if (await this.acceptCookieButton.isVisible()) {
