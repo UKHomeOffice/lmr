@@ -17,6 +17,7 @@
     "test:e2e": "bddgen && playwright test",
     "test:e2e:smoke": "bddgen && playwright test --grep-invert @history",
     "test:e2e:history": "bddgen && playwright test --grep @history",
+    "test:e2e:accessibility": "bddgen && playwright test --grep @LmrAccessibilityTest",
     "test:e2e:headed": "bddgen && playwright test --headed",
     "test:e2e:debug": "bddgen && playwright test --debug",
     "test:e2e:report": "playwright show-report",

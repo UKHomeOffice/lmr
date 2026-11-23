@@ -95,6 +95,8 @@ This script runs:
   - Runs tests while excluding `@history` tagged scenarios.
 - `yarn test:e2e:history`
   - Runs only scenarios tagged with `@history`.
+- `yarn test:e2e:accessibility`
+  - Runs only the `@LmrAccessibilityTest` scenario, which scans every page (including validation error states) for WCAG 2 A/AA violations. It submits a report, so it needs `SAS_HOF_EMAIL`.
 
 ## Environment variables
 

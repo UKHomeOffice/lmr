@@ -11,12 +11,14 @@ function buildSummary(report) {
   }
 
   const total = counts.reduce((sum, key) => sum + stats[key], 0);
+  const passedPercentage = total ? (stats.expected / total * 100).toFixed(1) : '0.0';
+  const failedPercentage = total ? (stats.unexpected / total * 100).toFixed(1) : '0.0';
 
   return [
-    'Playwright Nightly Summary',
-    `Total: ${total}`,
-    `Passed: ${stats.expected}`,
-    `Failed: ${stats.unexpected}`,
+    'Test Results:',
+    `Passed: ${passedPercentage}% No Of Tests: ${stats.expected}`,
+    `Failed: ${failedPercentage}% No Of Tests: ${stats.unexpected}`,
+    `Total Results Reported: ${total} of ${total}`,
     `Flaky: ${stats.flaky}`,
     `Skipped: ${stats.skipped}`,
     `Duration: ${(stats.duration / 1000).toFixed(1)}s`,
