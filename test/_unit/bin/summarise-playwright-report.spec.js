@@ -37,10 +37,10 @@ describe('Playwright nightly summary', () => {
 
     assert.equal(result.status, 0, result.stderr);
     assert.equal(result.summary, [
-      'Playwright Nightly Summary',
-      'Total: 14',
-      'Passed: 8',
-      'Failed: 2',
+      'Test Results:',
+      'Passed: 57.1% No Of Tests: 8',
+      'Failed: 14.3% No Of Tests: 2',
+      'Total Results Reported: 14 of 14',
       'Flaky: 1',
       'Skipped: 3',
       'Duration: 12.3s',
@@ -56,7 +56,9 @@ describe('Playwright nightly summary', () => {
     });
 
     assert.equal(result.status, 0, result.stderr);
-    assert.match(result.summary, /Total: 0/);
+    assert.match(result.summary, /Passed: 0\.0% No Of Tests: 0/);
+    assert.match(result.summary, /Failed: 0\.0% No Of Tests: 0/);
+    assert.match(result.summary, /Total Results Reported: 0 of 0/);
     assert.match(result.summary, /Run errors: 1/);
   });
 

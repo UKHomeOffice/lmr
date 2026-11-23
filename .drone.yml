@@ -664,14 +664,13 @@ steps:
       - |
         if [ ! -s /root/.dockersock/nightly-playwright-summary.txt ]; then
           echo "Nightly summary missing; check the E2E step for a setup or execution failure." >&2
-          printf "Playwright Nightly Summary\nSummary unavailable; check the E2E build logs for a setup or execution failure.\n" > /root/.dockersock/nightly-playwright-summary.txt
+          printf "Test Results:\nSummary unavailable; check the E2E build logs for a setup or execution failure.\n" > /root/.dockersock/nightly-playwright-summary.txt
         fi
       - |
         payload=$(jq -n \
           --arg status "$DRONE_BUILD_STATUS" \
           --arg repo "$DRONE_REPO" \
           --arg branch "$DRONE_BRANCH" \
-          --arg commit "$DRONE_COMMIT_SHA" \
           --arg build_number "$DRONE_BUILD_NUMBER" \
           --arg build_link "$DRONE_BUILD_LINK" \
           --arg environment "$NIGHTLY_E2E_BASE_URL" \
@@ -683,14 +682,14 @@ steps:
                 type: "section",
                 text: {
                   type: "mrkdwn",
-                  text: ("*Nightly Playwright Tests Summary*\nStatus: " + $status + "\nBranch: " + $branch + "\nEnvironment: " + $environment + "\nBuild: #" + $build_number + " " + $build_link)
+                  text: ("*Nightly Playwright Tests*\nService Name: Landlords Make A Report\nService Abbreviation: LMR\nStatus: " + $status + "\nBranch: " + $branch + "\nEnvironment: " + $environment + "\nBuild: <" + $build_link + "|#" + $build_number + ">")
                 }
               },
               {
                 type: "section",
                 text: {
                   type: "mrkdwn",
-                  text: ("```" + $summary + "```")
+                  text: ($summary + "\n<" + $build_link + "|View Test Report>")
                 }
               }
             ]
