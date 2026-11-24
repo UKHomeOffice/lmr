@@ -3,25 +3,33 @@
 set -euo pipefail
 
 : "${GITHUB_APP_TOKEN:?Missing GITHUB_APP_TOKEN}"
-: "${DRONE_PULL_REQUEST:?Missing DRONE_PULL_REQUEST}"
 : "${DRONE_REPO:?Missing DRONE_REPO}"
 : "${DRONE_BUILD_NUMBER:?Missing DRONE_BUILD_NUMBER}"
 : "${DRONE_BUILD_LINK:?Missing DRONE_BUILD_LINK}"
 : "${DRONE_COMMIT_SHA:?Missing DRONE_COMMIT_SHA}"
 
-if [ ! -f playwright-report/index.html ]; then
-  echo "Missing Playwright HTML report at playwright-report/index.html" >&2
+REPORT_FILE="${REPORT_FILE:-allure-report/index.html}"
+if [ ! -s "$REPORT_FILE" ]; then
+  echo "Missing Allure report at ${REPORT_FILE}" >&2
   exit 1
+fi
+
+# Pull requests get a PR comment; other builds (nightly cron) only publish the asset.
+if [ -n "${DRONE_PULL_REQUEST:-}" ]; then
+  REPORT_ID="pr-${DRONE_PULL_REQUEST}"
+  RELEASE_NAME="Allure Report PR #${DRONE_PULL_REQUEST}"
+else
+  REPORT_ID="nightly"
+  RELEASE_NAME="Nightly Allure Report"
 fi
 
 WORK_DIR="$(mktemp -d)"
 trap 'rm -rf "$WORK_DIR"' EXIT
 
-REPORT_ARCHIVE="playwright-report-pr-${DRONE_PULL_REQUEST}.zip"
-zip -qr "${WORK_DIR}/${REPORT_ARCHIVE}" playwright-report
-
 GH_API="https://api.github.com/repos/${DRONE_REPO}"
-TAG_NAME="pr-${DRONE_PULL_REQUEST}-playwright-report"
+TAG_NAME="${REPORT_ID}-allure-report"
+ASSET_PREFIX="allure-report-${REPORT_ID}"
+REPORT_ASSET="${ASSET_PREFIX}-build-${DRONE_BUILD_NUMBER}.html"
 COMMENT_MARKER="<!-- lmr-playwright-report -->"
 RESPONSE_FILE="${WORK_DIR}/response.json"
 
@@ -55,7 +63,7 @@ if [ "$HTTP_CODE" = "404" ]; then
   github_request POST "${GH_API}/releases" '^201$' \
     -H "Content-Type: application/json" \
     --data "$(jq -n --arg tag "$TAG_NAME" \
-      --arg name "Playwright Report PR #${DRONE_PULL_REQUEST}" \
+      --arg name "$RELEASE_NAME" \
       --arg commit "$DRONE_COMMIT_SHA" \
       '{tag_name:$tag,name:$name,target_commitish:$commit,prerelease:true,draft:false}')"
 fi
@@ -67,8 +75,8 @@ page=1
 while :; do
   github_request GET "${GH_API}/releases/${RELEASE_ID}/assets?per_page=100&page=${page}" '^200$'
   jq -er 'type == "array"' "$RESPONSE_FILE" >/dev/null
-  jq -r --arg prefix "playwright-report-pr-${DRONE_PULL_REQUEST}" \
-    '.[] | select(.name == ($prefix + ".zip") or (.name | startswith($prefix + "-"))) | .id' \
+  jq -r --arg prefix "$ASSET_PREFIX" \
+    '.[] | select(.name | startswith($prefix + "-")) | .id' \
     "$RESPONSE_FILE" >> "${WORK_DIR}/asset-ids.txt"
   [ "$(jq 'length' "$RESPONSE_FILE")" -eq 100 ] || break
   page=$((page + 1))
@@ -79,12 +87,21 @@ while IFS= read -r asset_id; do
 done < "${WORK_DIR}/asset-ids.txt"
 
 github_request POST \
-  "https://uploads.github.com/repos/${DRONE_REPO}/releases/${RELEASE_ID}/assets?name=${REPORT_ARCHIVE}" \
-  '^201$' -H "Content-Type: application/zip" \
-  --data-binary @"${WORK_DIR}/${REPORT_ARCHIVE}"
+  "https://uploads.github.com/repos/${DRONE_REPO}/releases/${RELEASE_ID}/assets?name=${REPORT_ASSET}" \
+  '^201$' -H "Content-Type: text/html" \
+  --data-binary @"$REPORT_FILE"
 DOWNLOAD_URL="$(jq -er '.browser_download_url | strings | select(length > 0)' "$RESPONSE_FILE")"
+echo "Uploaded report asset: ${DOWNLOAD_URL}"
 
-COMMENT_BODY="$(printf '%s\nPlaywright HTML report for PR build #%s:\n* %s\n\nDrone build: %s\n' \
+if [ -n "${REPORT_URL_FILE:-}" ]; then
+  printf '%s\n' "$DOWNLOAD_URL" > "$REPORT_URL_FILE"
+fi
+
+if [ -z "${DRONE_PULL_REQUEST:-}" ]; then
+  exit 0
+fi
+
+COMMENT_BODY="$(printf '%s\nAllure report for PR build #%s (download and open in a browser):\n* %s\n\nDrone build: %s\n' \
   "$COMMENT_MARKER" "$DRONE_BUILD_NUMBER" "$DOWNLOAD_URL" "$DRONE_BUILD_LINK")"
 COMMENT_PAYLOAD="$(jq -n --arg body "$COMMENT_BODY" '{body:$body}')"
 
@@ -110,5 +127,4 @@ else
 fi
 COMMENT_URL="$(jq -er '.html_url | strings | select(length > 0)' "$RESPONSE_FILE")"
 
-echo "Uploaded report asset: ${DOWNLOAD_URL}"
 echo "Published PR comment: ${COMMENT_URL}"

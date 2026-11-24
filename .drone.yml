@@ -286,8 +286,17 @@ steps:
       - node --version
       - yarn install --frozen-lockfile
       - yarn playwright install --with-deps
+      - apt-get update && apt-get install -y --no-install-recommends default-jre-headless
       - test -s /root/.dockersock/branch_url.txt || (echo "Missing deployed branch URL at /root/.dockersock/branch_url.txt" && exit 1)
-      - CI=true PLAYWRIGHT_BASE_URL="https://$(cat /root/.dockersock/branch_url.txt)" yarn test:e2e
+      - |
+        set +e
+        CI=true PLAYWRIGHT_BASE_URL="https://$(cat /root/.dockersock/branch_url.txt)" yarn test:e2e
+        test_exit_code=$?
+        set -e
+
+        yarn allure generate allure-results --clean --single-file -o allure-report || echo "Allure report generation failed." >&2
+
+        exit "$test_exit_code"
     when:
       branch:
         <<: *include_default_and_feature_branches
@@ -309,7 +318,7 @@ steps:
     depends_on:
       - e2e_tests
 
-  # Upload Playwright HTML report for PR and comment a download link
+  # Upload Allure report for PR and comment a download link
   - name: publish_e2e_report_to_pr
     pull: if-not-exists
     image: alpine:3.21
@@ -317,7 +326,7 @@ steps:
       - name: dockersock
         path: /root/.dockersock
     commands:
-      - apk add --no-cache bash curl jq zip
+      - apk add --no-cache bash curl jq
       - test -n "$DRONE_PULL_REQUEST" || (echo "Missing DRONE_PULL_REQUEST. This step only supports pull_request builds." && exit 1)
       - export DRONE_REPO="$${DRONE_REPO:-$GIT_REPO}"
       - test -n "$DRONE_REPO" || (echo "Missing repository slug (DRONE_REPO/GIT_REPO)." && exit 1)
@@ -618,6 +627,7 @@ steps:
       - node --version
       - yarn install --frozen-lockfile
       - yarn playwright install --with-deps
+      - apt-get update && apt-get install -y --no-install-recommends default-jre-headless
       - |
         test -n "$NIGHTLY_E2E_BASE_URL" || (echo "Missing NIGHTLY_E2E_BASE_URL environment value." && exit 1)
 
@@ -632,21 +642,60 @@ steps:
         summary_output_path="/root/.dockersock/nightly-playwright-summary.txt"
 
         rm -f "$run_output_path" "$json_output_path" "$summary_output_path"
+        rm -rf allure-results allure-report
         yarn bddgen
 
         set +e
         CI=true PLAYWRIGHT_BASE_URL="$base_url" PLAYWRIGHT_JSON_OUTPUT_NAME="$json_output_path" \
-          yarn playwright test --reporter=line,json > "$run_output_path" 2>&1
+          yarn playwright test --reporter=line,json,allure-playwright > "$run_output_path" 2>&1
         playwright_exit_code=$?
         set -e
 
         tail -n 60 "$run_output_path"
         node bin/summarise_playwright_report.js "$json_output_path" "$summary_output_path"
+        yarn allure generate allure-results --clean --single-file -o allure-report || echo "Allure report generation failed." >&2
 
         exit "$playwright_exit_code"
     when:
       cron: nightly_e2e_playwright
       event: cron
+
+  # Generate short-lived GitHub App installation token for nightly report publishing
+  - name: cron_generate_github_app_token
+    <<: *github_app_token_step
+    environment:
+      <<: *github_app_token_secrets_ukho
+      OUTPUT_TOKEN_FILE: /root/.dockersock/github_app_token.txt
+    when:
+      cron: nightly_e2e_playwright
+      event: cron
+      status: [success, failure]
+    depends_on:
+      - cron_nightly_e2e_tests
+
+  # Upload the nightly Allure report so Slack can link to it
+  - name: cron_publish_nightly_allure_report
+    pull: if-not-exists
+    image: alpine:3.21
+    volumes:
+      - name: dockersock
+        path: /root/.dockersock
+    commands:
+      - apk add --no-cache bash curl jq
+      - rm -f /root/.dockersock/nightly-allure-report-url.txt
+      - export DRONE_REPO="$${DRONE_REPO:-$GIT_REPO}"
+      - test -n "$DRONE_REPO" || (echo "Missing repository slug (DRONE_REPO/GIT_REPO)." && exit 1)
+      - test -s /root/.dockersock/github_app_token.txt || (echo "Missing GitHub App token file from cron_generate_github_app_token step." && exit 1)
+      - export GITHUB_APP_TOKEN="$(cat /root/.dockersock/github_app_token.txt)"
+      - trap 'rm -f /root/.dockersock/github_app_token.txt' EXIT
+      - unset DRONE_PULL_REQUEST
+      - REPORT_URL_FILE=/root/.dockersock/nightly-allure-report-url.txt bash bin/publish_e2e_test_report.sh
+    when:
+      cron: nightly_e2e_playwright
+      event: cron
+      status: [success, failure]
+    depends_on:
+      - cron_generate_github_app_token
 
   # Slack notification for nightly E2E cron runs
   - name: cron_notify_slack_nightly_e2e
@@ -667,6 +716,13 @@ steps:
           printf "Test Results:\nSummary unavailable; check the E2E build logs for a setup or execution failure.\n" > /root/.dockersock/nightly-playwright-summary.txt
         fi
       - |
+        report_url="$DRONE_BUILD_LINK"
+        report_label="View Drone Build (Allure report unavailable)"
+        if [ -s /root/.dockersock/nightly-allure-report-url.txt ]; then
+          report_url="$(head -n 1 /root/.dockersock/nightly-allure-report-url.txt)"
+          report_label="Download Allure Report"
+        fi
+
         payload=$(jq -n \
           --arg status "$DRONE_BUILD_STATUS" \
           --arg repo "$DRONE_REPO" \
@@ -674,6 +730,8 @@ steps:
           --arg build_number "$DRONE_BUILD_NUMBER" \
           --arg build_link "$DRONE_BUILD_LINK" \
           --arg environment "$NIGHTLY_E2E_BASE_URL" \
+          --arg report_url "$report_url" \
+          --arg report_label "$report_label" \
           --rawfile summary /root/.dockersock/nightly-playwright-summary.txt \
           '{
             text: ("Nightly Playwright Tests for " + $repo + " finished with status: " + $status),
@@ -689,7 +747,7 @@ steps:
                 type: "section",
                 text: {
                   type: "mrkdwn",
-                  text: ($summary + "\n<" + $build_link + "|View Test Report>")
+                  text: ($summary + "\n<" + $report_url + "|" + $report_label + ">")
                 }
               }
             ]
@@ -710,7 +768,7 @@ steps:
         - success
         - failure
     depends_on:
-      - cron_nightly_e2e_tests
+      - cron_publish_nightly_allure_report
 
 services:
   - name: docker
