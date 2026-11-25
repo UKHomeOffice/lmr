@@ -51,11 +51,13 @@ The token file is removed after publishing, including on failure.
 The existing `nightly_e2e_playwright` Drone cron runs against
 `NIGHTLY_E2E_BASE_URL`. Configure its schedule in Drone; this change does not
 create or change the schedule. The nightly Slack notification uses
-`slack_sas_hof_e2e_tests_webhook` and includes outcome counts, duration, and run
-errors from Playwright's JSON report. Setup or missing-report failures are
-reported explicitly instead of appearing as zero passing/failing tests. The
+`slack_sas_hof_e2e_tests_webhook` and includes a test status derived from the
+Playwright exit code, plus outcome counts and percentages from its JSON report.
+The Drone build status is shown separately. Setup, missing-status, or
+missing-report failures are reported explicitly instead of appearing as zero
+passing/failing tests. The
 nightly run also publishes its Allure report to the `nightly-allure-report`
-prerelease and links it from Slack; each run replaces the previous nightly asset.
+prerelease and links it from Slack for download; each run replaces the previous nightly asset.
 If publishing fails, Slack links to the Drone build instead.
 
 [`bin/publish_e2e_test_report.sh`](bin/publish_e2e_test_report.sh) requires Bash,
