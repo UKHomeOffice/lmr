@@ -2,50 +2,121 @@
 
 const fs = require('node:fs');
 
-function buildSummary(report) {
-  const stats = report.stats;
-  const counts = ['expected', 'unexpected', 'flaky', 'skipped'];
-  if (!stats || counts.some(key => !Number.isInteger(stats[key]) || stats[key] < 0) ||
-      !Number.isFinite(stats.duration) || stats.duration < 0) {
-    throw new Error('Missing or invalid Playwright report statistics');
-  }
+const CATEGORIES = ['expected', 'unexpected', 'flaky', 'skipped'];
+const LABELS = { expected: 'Passed', unexpected: 'Failed', flaky: 'Flaky', skipped: 'Skipped' };
 
-  const total = counts.reduce((sum, key) => sum + stats[key], 0);
-  const passedPercentage = total ? (stats.expected / total * 100).toFixed(1) : '0.0';
-  const failedPercentage = total ? (stats.unexpected / total * 100).toFixed(1) : '0.0';
-
+function invalid(reason) {
   return [
-    'Test Results:',
-    `Passed: ${passedPercentage}% No Of Tests: ${stats.expected}`,
-    `Failed: ${failedPercentage}% No Of Tests: ${stats.unexpected}`,
-    `Total Results Reported: ${total} of ${total}`,
-    `Flaky: ${stats.flaky}`,
-    `Skipped: ${stats.skipped}`,
-    `Duration: ${(stats.duration / 1000).toFixed(1)}s`,
-    `Run errors: ${(report.errors || []).length}`,
+    'Passed: N/A No Of Tests: N/A',
+    'Failed: N/A No Of Tests: N/A',
+    'Flaky: N/A No Of Tests: N/A',
+    'Skipped: N/A No Of Tests: N/A',
+    'Total Results Reported: unknown',
+    `Results: INVALID (${reason})`
   ].join('\n');
 }
 
-function main() {
-  const inputPath = process.argv[2];
-  const outputPath = process.argv[3];
+function collectOutcomes(suites) {
+  if (!Array.isArray(suites)) {
+    throw new Error('test suites are missing or invalid');
+  }
 
-  if (!inputPath || !outputPath) {
-    console.error('Usage: node bin/summarise_playwright_report.js <report-json> <output-txt>');
-    process.exit(1);
+  const outcomes = [];
+  for (const suite of suites) {
+    if (!suite || typeof suite !== 'object' ||
+        (suite.specs !== undefined && !Array.isArray(suite.specs))) {
+      throw new Error('test suites are invalid');
+    }
+
+    for (const spec of suite.specs || []) {
+      if (!spec || !Array.isArray(spec.tests)) {
+        throw new Error('test entries are missing or invalid');
+      }
+      for (const test of spec.tests) {
+        if (!test || !CATEGORIES.includes(test.status)) {
+          throw new Error('test outcomes are missing or invalid');
+        }
+        outcomes.push(test.status);
+      }
+    }
+
+    outcomes.push(...collectOutcomes(suite.suites === undefined ? [] : suite.suites));
+  }
+  return outcomes;
+}
+
+function buildSummary(report) {
+  try {
+    if (!report || typeof report !== 'object' || Array.isArray(report) ||
+        !report.stats || typeof report.stats !== 'object' || !Array.isArray(report.errors)) {
+      throw new Error('Playwright statistics or run errors are missing or invalid');
+    }
+
+    const outcomes = collectOutcomes(report.suites);
+    if (!outcomes.length) {
+      throw new Error('no test outcomes were reported');
+    }
+
+    const counts = {};
+    for (const category of CATEGORIES) {
+      const count = report.stats[category];
+      if (!Number.isSafeInteger(count) || count < 0) {
+        throw new Error(`stats.${category} must be a non-negative integer`);
+      }
+      counts[category] = count;
+    }
+
+    const reported = CATEGORIES.reduce((sum, category) => sum + counts[category], 0);
+    if (!Number.isSafeInteger(reported)) {
+      throw new Error('result count exceeds the supported integer range');
+    }
+
+    const matches = CATEGORIES.every(category =>
+      counts[category] === outcomes.filter(status => status === category).length);
+    const lines = [
+      ...CATEGORIES.map(category => {
+        const percentage = (counts[category] / outcomes.length * 100).toFixed(1);
+        return `${LABELS[category]}: ${percentage}% No Of Tests: ${counts[category]}`;
+      }),
+      `Total Results Reported: ${reported} of ${outcomes.length}`
+    ];
+
+    if (!matches) {
+      lines.push('Results: INVALID (Playwright statistics do not match test outcomes)');
+    }
+    if (report.errors.length) {
+      lines.push(`Results: INVALID (${report.errors.length} Playwright run error(s); see build logs)`);
+    }
+    return lines.join('\n');
+  } catch (error) {
+    return invalid(error.message);
+  }
+}
+
+function main() {
+  const [input, output] = process.argv.slice(2);
+  if (!input || !output) {
+    process.stderr.write('Usage: node bin/summarise_playwright_report.js <playwright-json> <summary-txt>\n');
+    process.exitCode = 1;
+    return;
   }
 
   let summary;
   try {
-    summary = buildSummary(JSON.parse(fs.readFileSync(inputPath, 'utf8')));
+    summary = buildSummary(JSON.parse(fs.readFileSync(input, 'utf8')));
   } catch (error) {
-    summary = `Playwright Nightly Summary\nUnable to parse report: ${error.message}`;
-    console.error(summary);
-    process.exitCode = 1;
+    summary = invalid(`unable to read Playwright results: ${error.message}`);
   }
 
-  fs.writeFileSync(outputPath, `${summary}\n`, 'utf8');
-  console.log(summary);
+  fs.writeFileSync(output, `${summary}\n`);
+  process.stdout.write(`${summary}\n`);
+  if (summary.includes('Results: INVALID')) {
+    process.exitCode = 1;
+  }
 }
 
-main();
+if (require.main === module) {
+  main();
+}
+
+module.exports = { buildSummary };

@@ -16,7 +16,6 @@ environment:
   HOF_CONFIG: hof-services-config/Landlords_Make_A_Report
   NON_PROD_AVAILABILITY: Mon-Fri 08:00-23:00 Europe/London
   READY_FOR_TEST_DELAY: 20s
-  NIGHTLY_E2E_BASE_URL: lmr.internal.uat.sas-notprod.homeoffice.gov.uk
 
 include_default_branch: &include_default_branch
   include:
@@ -28,6 +27,7 @@ include_default_and_feature_branches: &include_default_and_feature_branches
     - feature/*
     - deps-*
     - deps/*
+    - LMR-*
 
 trigger:
   branch:
@@ -286,8 +286,23 @@ steps:
       - node --version
       - yarn install --frozen-lockfile
       - yarn playwright install --with-deps
+      - apt-get update && apt-get install -y --no-install-recommends default-jre-headless
       - test -s /root/.dockersock/branch_url.txt || (echo "Missing deployed branch URL at /root/.dockersock/branch_url.txt" && exit 1)
-      - CI=true PLAYWRIGHT_BASE_URL="https://$(cat /root/.dockersock/branch_url.txt)" yarn test:e2e
+      - |
+        rm -rf allure-results allure-report
+        set +e
+        CI=true PLAYWRIGHT_BASE_URL="https://$(cat /root/.dockersock/branch_url.txt)" yarn test:e2e
+        test_exit_code=$?
+        report_exit_code=1
+        if [ -d allure-results ] && find allure-results -name '*-result.json' -print -quit | grep -q .; then
+          yarn allure:generate
+          report_exit_code=$?
+        else
+          echo "No Allure results were produced; report cannot be generated" >&2
+        fi
+        set -e
+        if [ "$test_exit_code" -ne 0 ]; then exit "$test_exit_code"; fi
+        exit "$report_exit_code"
     when:
       branch:
         <<: *include_default_and_feature_branches
@@ -309,7 +324,7 @@ steps:
     depends_on:
       - e2e_tests
 
-  # Upload Playwright HTML report for PR and comment a download link
+  # Upload single-file Allure report for PR and comment a download link
   - name: publish_e2e_report_to_pr
     pull: if-not-exists
     image: alpine:3.21
@@ -317,7 +332,7 @@ steps:
       - name: dockersock
         path: /root/.dockersock
     commands:
-      - apk add --no-cache bash curl jq zip
+      - apk add --no-cache bash curl jq
       - test -n "$DRONE_PULL_REQUEST" || (echo "Missing DRONE_PULL_REQUEST. This step only supports pull_request builds." && exit 1)
       - export DRONE_REPO="$${DRONE_REPO:-$GIT_REPO}"
       - test -n "$DRONE_REPO" || (echo "Missing repository slug (DRONE_REPO/GIT_REPO)." && exit 1)
@@ -606,6 +621,8 @@ steps:
     pull: if-not-exists
     image: mcr.microsoft.com/playwright:v1.64.1-noble
     environment:
+      NIGHTLY_E2E_BASE_URL:
+        from_secret: NIGHTLY_E2E_BASE_URL    
       SAS_HOF_EMAIL:
         from_secret: SAS_HOF_EMAIL
     volumes:
@@ -618,6 +635,7 @@ steps:
       - node --version
       - yarn install --frozen-lockfile
       - yarn playwright install --with-deps
+      - apt-get update && apt-get install -y --no-install-recommends default-jre-headless
       - |
         test -n "$NIGHTLY_E2E_BASE_URL" || (echo "Missing NIGHTLY_E2E_BASE_URL environment value." && exit 1)
 
@@ -630,31 +648,85 @@ steps:
         run_output_path="/root/.dockersock/nightly-playwright-run-output.txt"
         json_output_path="/root/.dockersock/nightly-playwright-report.json"
         summary_output_path="/root/.dockersock/nightly-playwright-summary.txt"
-
-        rm -f "$run_output_path" "$json_output_path" "$summary_output_path"
-        yarn bddgen
-
+        exit_code_path="/root/.dockersock/nightly-playwright-exit-code.txt"
+        rm -f "$run_output_path" "$json_output_path" "$summary_output_path" "$exit_code_path" \
+          /root/.dockersock/nightly-allure-report-url.txt
+        rm -rf allure-results allure-report
         set +e
-        CI=true PLAYWRIGHT_BASE_URL="$base_url" PLAYWRIGHT_JSON_OUTPUT_NAME="$json_output_path" \
-          yarn playwright test --reporter=line,json > "$run_output_path" 2>&1
+        yarn bddgen
         playwright_exit_code=$?
-        set -e
-
-        tail -n 60 "$run_output_path"
+        if [ "$playwright_exit_code" -eq 0 ]; then
+          CI=true PLAYWRIGHT_BASE_URL="$base_url" PLAYWRIGHT_JSON_OUTPUT_NAME="$json_output_path" \
+            yarn playwright test --reporter=line,json,allure-playwright > "$run_output_path" 2>&1
+          playwright_exit_code=$?
+          tail -n 60 "$run_output_path"
+        fi
+        printf '%s\n' "$playwright_exit_code" > "$exit_code_path"
+        status_write_exit_code=$?
         node bin/summarise_playwright_report.js "$json_output_path" "$summary_output_path"
-
-        exit "$playwright_exit_code"
+        summary_exit_code=$?
+        report_exit_code=1
+        if [ -d allure-results ] && find allure-results -name '*-result.json' -print -quit | grep -q .; then
+          yarn allure:generate
+          report_exit_code=$?
+        else
+          echo "No Allure results were produced; report cannot be generated" >&2
+        fi
+        set -e
+        if [ "$playwright_exit_code" -ne 0 ]; then exit "$playwright_exit_code"; fi
+        if [ "$status_write_exit_code" -ne 0 ]; then exit "$status_write_exit_code"; fi
+        if [ "$summary_exit_code" -ne 0 ]; then exit "$summary_exit_code"; fi
+        exit "$report_exit_code"
     when:
       cron: nightly_e2e_playwright
       event: cron
 
-  # Slack notification for nightly E2E cron runs
+  - name: cron_generate_github_app_token_for_report
+    <<: *github_app_token_step
+    environment:
+      <<: *github_app_token_secrets_ukho
+      OUTPUT_TOKEN_FILE: /root/.dockersock/nightly-report-token.txt
+    volumes:
+      - name: dockersock
+        path: /root/.dockersock
+    when:
+      cron: nightly_e2e_playwright
+      event: cron
+      status: [success, failure]
+    depends_on:
+      - cron_nightly_e2e_tests
+
+  - name: cron_publish_nightly_allure_report
+    <<: *node_image
+    volumes:
+      - name: dockersock
+        path: /root/.dockersock
+    commands:
+      - apk add --no-cache bash curl jq
+      - rm -f /root/.dockersock/nightly-allure-report-url.txt
+      - test -s /root/.dockersock/nightly-report-token.txt || (echo "Missing GitHub App report token file" && exit 1)
+      - export DRONE_REPO="$${DRONE_REPO:-$GIT_REPO}"
+      - export GITHUB_APP_TOKEN="$(cat /root/.dockersock/nightly-report-token.txt)"
+      - trap 'rm -f /root/.dockersock/nightly-report-token.txt' EXIT
+      - unset DRONE_PULL_REQUEST
+      - REPORT_URL_FILE=/root/.dockersock/nightly-allure-report-url.txt bash bin/publish_e2e_test_report.sh
+    when:
+      cron: nightly_e2e_playwright
+      event: cron
+      status: [success, failure]
+    depends_on:
+      - cron_generate_github_app_token_for_report
+      - cron_nightly_e2e_tests
+
+  # Notify Slack for successful and failed nightly runs.
   - name: cron_notify_slack_nightly_e2e
     pull: if-not-exists
     image: alpine:3.21
     environment:
       SLACK_WEBHOOK:
         from_secret: slack_sas_hof_e2e_tests_webhook
+      NIGHTLY_E2E_BASE_URL:
+        from_secret: NIGHTLY_E2E_BASE_URL      
     volumes:
       - name: dockersock
         path: /root/.dockersock
@@ -663,46 +735,48 @@ steps:
       - test -n "$SLACK_WEBHOOK" || (echo "Missing slack_sas_hof_e2e_tests_webhook secret." && exit 1)
       - |
         if [ ! -s /root/.dockersock/nightly-playwright-summary.txt ]; then
-          echo "Nightly summary missing; check the E2E step for a setup or execution failure." >&2
-          printf "Test Results:\nSummary unavailable; check the E2E build logs for a setup or execution failure.\n" > /root/.dockersock/nightly-playwright-summary.txt
+          printf '%s\n' \
+            'Passed: N/A No Of Tests: N/A' \
+            'Failed: N/A No Of Tests: N/A' \
+            'Flaky: N/A No Of Tests: N/A' \
+            'Skipped: N/A No Of Tests: N/A' \
+            'Total Results Reported: unknown' \
+            'Results: INVALID (Playwright summary artifact is missing; check build logs)' \
+            > /root/.dockersock/nightly-playwright-summary.txt
         fi
       - |
+        environment="not configured"
+        if [ -n "$NIGHTLY_E2E_BASE_URL" ]; then
+          case "$NIGHTLY_E2E_BASE_URL" in
+            http://*|https://*) environment_url="$NIGHTLY_E2E_BASE_URL" ;;
+            *) environment_url="https://$NIGHTLY_E2E_BASE_URL" ;;
+          esac
+          environment="<$environment_url>"
+        fi
+        report_link="View Test Report: unavailable (Allure report was not published)"
+        if [ -s /root/.dockersock/nightly-allure-report-url.txt ]; then
+          report_url="$(cat /root/.dockersock/nightly-allure-report-url.txt)"
+          report_link="<$report_url|View Test Report> (downloads the single-file Allure HTML report)"
+        fi
+        test_status="failed (Playwright exit code unavailable)"
+        if [ -s /root/.dockersock/nightly-playwright-exit-code.txt ]; then
+          case "$(cat /root/.dockersock/nightly-playwright-exit-code.txt)" in
+            0) test_status="success" ;;
+            ''|*[!0-9]*) test_status="failed (Playwright exit code invalid)" ;;
+            *) test_status="failed" ;;
+          esac
+        fi
         payload=$(jq -n \
-          --arg status "$DRONE_BUILD_STATUS" \
-          --arg repo "$DRONE_REPO" \
+          --arg status "${DRONE_BUILD_STATUS:-unknown}" \
+          --arg test_status "$test_status" \
           --arg branch "$DRONE_BRANCH" \
           --arg build_number "$DRONE_BUILD_NUMBER" \
           --arg build_link "$DRONE_BUILD_LINK" \
-          --arg environment "$NIGHTLY_E2E_BASE_URL" \
+          --arg environment "$environment" \
+          --arg report_link "$report_link" \
           --rawfile summary /root/.dockersock/nightly-playwright-summary.txt \
-          '{
-            text: ("Nightly Playwright Tests for " + $repo + " finished with status: " + $status),
-            blocks: [
-              {
-                type: "section",
-                text: {
-                  type: "mrkdwn",
-                  text: ("*Nightly Playwright Tests*\nService Name: Landlords Make A Report\nService Abbreviation: LMR\nStatus: " + $status + "\nBranch: " + $branch + "\nEnvironment: " + $environment + "\nBuild: <" + $build_link + "|#" + $build_number + ">")
-                }
-              },
-              {
-                type: "section",
-                text: {
-                  type: "mrkdwn",
-                  text: ($summary + "\n<" + $build_link + "|View Test Report>")
-                }
-              }
-            ]
-          }')
-        http_code=$(curl -sS -o /tmp/slack_response.txt -w "%{http_code}" \
-          -X POST \
-          -H "Content-type: application/json" \
-          --data "$payload" \
-          "$SLACK_WEBHOOK")
-        echo "Slack webhook HTTP status: $http_code"
-        echo "Slack webhook response body:"
-        cat /tmp/slack_response.txt
-        test "$http_code" = "200" || (echo "Slack webhook call failed" && exit 1)
+          '{text: ("`****************** Start of LMR Test Report ******************`\nNightly Playwright Tests\nService Name: LMR\nService Abbreviation: LMR\nStatus: " + $status + "\nBranch: " + $branch + "\nEnvironment: " + $environment + "\nBuild: <" + $build_link + "|#" + $build_number + ">\n\nTest Results:\nTest Status: " + $test_status + "\n" + $summary + "\n" + $report_link + "\n\n`****************** End of LMR Test Report ******************`")}')
+        curl --fail-with-body -sS -X POST -H 'Content-Type: application/json' --data "$payload" "$SLACK_WEBHOOK"
     when:
       cron: nightly_e2e_playwright
       event: cron
@@ -710,7 +784,7 @@ steps:
         - success
         - failure
     depends_on:
-      - cron_nightly_e2e_tests
+      - cron_publish_nightly_allure_report
 
 services:
   - name: docker

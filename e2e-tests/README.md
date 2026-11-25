@@ -29,6 +29,7 @@ The tests use Playwright Test together with `playwright-bdd` and feature files w
 - Node.js (project requires Node `>=24.19.0 <25.0.0`)
 - Yarn
 - Playwright Test (`@playwright/test`)
+- Allure (`allure-playwright`, `allure-commandline`)
 - playwright-bdd
 - @cucumber/cucumber
 - Chai
@@ -47,6 +48,7 @@ The tests use Playwright Test together with `playwright-bdd` and feature files w
 - `baseURL` is set from `PLAYWRIGHT_BASE_URL`, or defaults to `http://localhost:${PLAYWRIGHT_PORT || 8080}`.
 - A local web server is launched with `yarn start:dev` unless `PLAYWRIGHT_BASE_URL` is provided.
 - Tests run headless by default.
+- The list and Allure reporters are enabled; Playwright HTML reporting is disabled.
 - The Chromium project is configured using `devices['Desktop Chrome']`.
 - Screenshots and video recording are enabled for failures.
 - Retry and worker behavior changes when `CI` is set.
@@ -90,7 +92,11 @@ This script runs:
 - `yarn test:e2e:debug`
   - Runs Playwright in debug mode.
 - `yarn test:e2e:report`
-  - Opens the Playwright HTML report.
+  - Opens the generated Allure report.
+- `yarn allure:generate`
+  - Generates a single-file HTML report from `allure-results`.
+- `yarn allure:open`
+  - Opens the generated Allure report.
 - `yarn test:e2e:smoke`
   - Runs tests while excluding `@history` tagged scenarios.
 - `yarn test:e2e:history`
@@ -106,6 +112,9 @@ This script runs:
   - Default port used when the local `yarn start:dev` server is launched (defaults to `8080`).
 - `CI`
   - When set, the config adjusts retries and worker count for CI-friendly execution.
+- `NIGHTLY_E2E_BASE_URL`
+  - Drone secret used by the nightly cron as the environment to test. The tests
+    require a deployed, reachable LMR environment.
 
 ## Notes
 

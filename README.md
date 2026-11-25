@@ -33,29 +33,37 @@ In order to run e2e test locally, set `PLAYWRIGHT_BASE_URL` in the `.env` file t
 
 ### Playwright in Drone
 
-The existing branch filters in [`.drone.yml`](.drone.yml) apply unchanged. Pull
-requests run E2E tests against the deployed branch URL. After either a passing or
-failing test run, Drone publishes the HTML report as a ZIP on the
-`pr-<number>-playwright-report` prerelease and creates or updates one marked bot
-comment on the PR. Reruns replace the report asset rather than accumulating
-assets or comments. Publishing fails explicitly if no HTML report was generated.
+Playwright uses the Allure reporter instead of Playwright HTML reporting. Pull
+requests run E2E tests against the deployed branch URL; after either a passing or
+failing test run, Drone generates and publishes a single-file Allure report as a
+GitHub release asset and creates or updates a marked PR comment. Nightly runs on
+the existing `nightly_e2e_playwright` cron run against the configured
+`NIGHTLY_E2E_BASE_URL`, generate a Playwright JSON summary and single-file Allure report,
+publish the report, and send a Slack notification on both success and failure.
+Configure the cron schedule in Drone; this change does not create or change it.
+
+The Slack message reports Drone build status separately from Playwright test
+status. Test status comes from the test-generation/Playwright exit code, not the
+Drone build status. The summary contains only passed, failed, flaky, and skipped
+counts and percentages; missing, inconsistent, or invalid results are reported
+as invalid rather than as zero passing/failing tests. The report link downloads
+the single-file HTML report, which must be opened in a browser. Slack receives a
+single long text message so its native “Show more” behavior can apply.
 
 Report publishing uses a short-lived GitHub App installation token, not a PAT.
 Configure Drone secrets `hof_ukho_gh_app_id`, `hof_ukho_gh_app_pk`, and
 `hof_ukho_gh_app_install_id`. The App must be installed on this repository with
-**Contents: read/write** (releases) and **Issues: read/write** (PR comments).
-The existing `HOF_GH_APP_*` secrets remain responsible for cloning configuration.
-The token file is removed after publishing, including on failure.
-
-The existing `nightly_e2e_playwright` Drone cron runs against
-`NIGHTLY_E2E_BASE_URL`. Configure its schedule in Drone; this change does not
-create or change the schedule. The nightly Slack notification uses
-`slack_sas_hof_e2e_tests_webhook` and includes outcome counts, duration, and run
-errors from Playwright's JSON report. Setup or missing-report failures are
-reported explicitly instead of appearing as zero passing/failing tests.
+**Contents: read/write** access for release assets and **Issues: read/write**
+access for PR comments. The existing `HOF_GH_APP_*` secrets remain responsible
+for cloning configuration. Configure `SAS_HOF_EMAIL` and
+`slack_sas_hof_e2e_tests_webhook` for nightly runs. `NIGHTLY_E2E_BASE_URL` is
+configured in the Drone pipeline environment and should point to a deployed,
+reachable LMR environment. The token file is removed after publishing,
+including on failure.
 
 [`bin/publish_e2e_test_report.sh`](bin/publish_e2e_test_report.sh) requires Bash,
-curl, jq, zip, `playwright-report/index.html`, and the environment variables
-`GITHUB_APP_TOKEN`, `DRONE_REPO`, `DRONE_PULL_REQUEST`, `DRONE_BUILD_NUMBER`,
-`DRONE_BUILD_LINK`, and `DRONE_COMMIT_SHA`. Local execution publishes real GitHub
-assets and comments; never put tokens in the script or commit them.
+curl, jq, `allure-report/index.html`, and the environment variables
+`GITHUB_APP_TOKEN`, `DRONE_REPO`, `DRONE_BUILD_NUMBER`, `DRONE_BUILD_LINK`, and
+`DRONE_COMMIT_SHA`; PR publishing additionally requires `DRONE_PULL_REQUEST`.
+Local execution publishes real GitHub assets and comments; never put tokens in
+the script or commit them.
