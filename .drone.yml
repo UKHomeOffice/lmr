@@ -28,6 +28,7 @@ include_default_and_feature_branches: &include_default_and_feature_branches
     - feature/*
     - deps-*
     - deps/*
+    - LMR-*
 
 trigger:
   branch:
