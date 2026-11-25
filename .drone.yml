@@ -759,14 +759,19 @@ steps:
           report_link="<$report_url|View Test Report> (downloads the single-file Allure HTML report)"
         fi
         test_status="failed (Playwright exit code unavailable)"
+        test_status_color="danger"
         if [ -s /root/.dockersock/nightly-playwright-exit-code.txt ]; then
           case "$(cat /root/.dockersock/nightly-playwright-exit-code.txt)" in
-            0) test_status="success" ;;
+            0)
+              test_status="success"
+              test_status_color="good"
+              ;;
             ''|*[!0-9]*) test_status="failed (Playwright exit code invalid)" ;;
             *) test_status="failed" ;;
           esac
         fi
         payload=$(jq -n \
+          --arg color "$test_status_color" \
           --arg status "${DRONE_BUILD_STATUS:-unknown}" \
           --arg test_status "$test_status" \
           --arg branch "$DRONE_BRANCH" \
@@ -775,7 +780,7 @@ steps:
           --arg environment "$environment" \
           --arg report_link "$report_link" \
           --rawfile summary /root/.dockersock/nightly-playwright-summary.txt \
-          '{text: ("`****************** Start of LMR Test Report ******************`\nNightly Playwright Tests\nService Name: LMR\nService Abbreviation: LMR\nStatus: " + $status + "\nBranch: " + $branch + "\nEnvironment: " + $environment + "\nBuild: <" + $build_link + "|#" + $build_number + ">\n\nTest Results:\nTest Status: " + $test_status + "\n" + $summary + "\n" + $report_link + "\n\n`****************** End of LMR Test Report ******************`")}')
+          '{attachments: [{color: $color, text: ("`****************** Start of LMR Test Report ******************`\nNightly Playwright Tests\nService Name: LMR\nService Abbreviation: LMR\nStatus: " + $status + "\nBranch: " + $branch + "\nEnvironment: " + $environment + "\nBuild: <" + $build_link + "|#" + $build_number + ">\n\nTest Results:\nTest Status: " + $test_status + "\n" + $summary + "\n" + $report_link + "\n\n`****************** End of LMR Test Report ******************`")}] }')
         curl --fail-with-body -sS -X POST -H 'Content-Type: application/json' --data "$payload" "$SLACK_WEBHOOK"
     when:
       cron: nightly_e2e_playwright
