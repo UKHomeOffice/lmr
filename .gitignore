@@ -22,3 +22,5 @@ acceptance-test/temp-downloads/
 /playwright/.cache/
 /playwright/.auth/
 .features-gen/
+/allure-results/
+/allure-report/

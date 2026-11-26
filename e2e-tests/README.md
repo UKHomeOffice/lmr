@@ -90,7 +90,7 @@ This script runs:
 - `yarn test:e2e:debug`
   - Runs Playwright in debug mode.
 - `yarn test:e2e:report`
-  - Opens the Playwright HTML report.
+  - Generates and opens the Allure report from `allure-results`.
 - `yarn test:e2e:smoke`
   - Runs tests while excluding `@history` tagged scenarios.
 - `yarn test:e2e:history`
