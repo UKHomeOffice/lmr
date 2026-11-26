@@ -814,7 +814,6 @@ steps:
           'Nightly Playwright Tests' \
           "Status: $test_status")"
         full_report="$(printf '%s\n' \
-          '****************** Start of LMR Test Report ******************' \
           'Service Name: LMR' \
           'Service Abbreviation: LMR' \
           "Status: ${DRONE_BUILD_STATUS:-unknown}" \
